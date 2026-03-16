@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.set("layout", path.join(path.resolve(), "/src/views/layout.ejs"));
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(path.resolve(), "/public")));
 app.use("/libs", express.static("node_modules"));
