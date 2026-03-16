@@ -16,6 +16,7 @@ const auth = new authenticated();
 const app = express();
 
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "src/views"));
 app.use(expressejs);
 app.use(express.json());
 app.use(cookieParser());
@@ -24,10 +25,10 @@ app.set("layout", path.join(path.resolve(), "/src/views/layout.ejs"));
 
 const port = process.env.PORT || 3000;
 
-app.use(express.static(path.join(path.resolve(), "/public")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/libs", express.static("node_modules"));
 
-app.use("/", (req, res, next) => {
+app.use((req, res, next) => {
   const cookies = req.cookies;
 
   const token = cookies.token;
@@ -41,16 +42,13 @@ app.get("/", (req, res) => {
   let token = req.cookies.token;
 
   if (!token) {
-    return res.render(path.join(path.resolve(), "/src/views/pages/home.ejs"), {
+    return res.render("pages/home", {
       title: "",
     });
   } else {
-    return res.render(
-      path.join(path.resolve(), "/src/views/pages/simulations.ejs"),
-      {
-        title: "",
-      }
-    );
+    return res.render("pages/simulations", {
+      title: "",
+    });
   }
 });
 
@@ -58,11 +56,5 @@ app.use("/", userRoute);
 app.use("/", pagesRoute);
 app.use("/admin", adminRoute);
 app.use("/", simulationsRoute);
-
-if (process.env.ENV === "development") {
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
 
 module.exports = app;

@@ -12,17 +12,17 @@ const user = new User();
 
 router.get("/api/users", user.getAllUsers);
 router.get("/login", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/login.ejs"), {
+  res.render("pages/login", {
     title: "Login",
   });
 });
 router.get("/signup", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/signup.ejs"), {
+  res.render("pages/signup", {
     title: "Sign Up",
   });
 });
 router.get("/dashboard", auth.authenticated, (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/dashboard.ejs"), {
+  res.render("pages/dashboard", {
     title: "Dashboard",
   });
 });

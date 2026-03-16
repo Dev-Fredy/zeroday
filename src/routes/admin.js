@@ -14,12 +14,12 @@ const auth = new Auth();
 const router = express.Router();
 
 router.get("/", auth.isAdmin, (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/admin/admin.ejs"), {
+  res.render("admin/admin", {
     title: "Admin",
   });
 });
 router.get("/users", auth.isAdmin, (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/admin/users.ejs"), {
+  res.render("admin/users", {
     title: "Users",
   });
 });

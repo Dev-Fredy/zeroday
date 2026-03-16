@@ -4,17 +4,17 @@ const path = require("path");
 const router = express.Router();
 
 router.get("/privacy", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/privacy.ejs"), {
+  res.render("pages/privacy", {
     title: "Privacy",
   });
 });
 router.get("/contact", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/contact.ejs"), {
+  res.render("pages/contact", {
     title: "Contact",
   });
 });
 router.get("/about", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/about.ejs"), {
+  res.render("pages/about", {
     title: "About",
   });
 });

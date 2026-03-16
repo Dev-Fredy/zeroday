@@ -6,6 +6,7 @@ const fetchDBConfig = () => {
     HOST: process.env.MYSQL_HOST,
     PASSWORD: process.env.MYSQL_PASSWORD,
     DATABASE: process.env.MYSQL_DATABASE,
+    PORT: process.env.MYSQL_PORT,
   };
 };
 
@@ -16,6 +17,7 @@ const db = mysql.createPool({
   host: config.HOST,
   password: config.PASSWORD,
   database: config.DATABASE,
+  port: config.PORT,
 });
 
 module.exports = db;

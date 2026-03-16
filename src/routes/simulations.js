@@ -6,13 +6,13 @@ const simulate = require("../controller/simulate");
 const router = express.Router();
 
 router.get("/simulations", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/pages/simulations.ejs"), {
+  res.render("pages/simulations", {
     title: "Simulations",
   });
 });
 
 router.get("/simulations/runway", (req, res) => {
-  res.render(path.join(path.resolve(), "/src/views/simulations/runway.ejs"), {
+  res.render("simulations/runway", {
     title: "Runway",
   });
 });
