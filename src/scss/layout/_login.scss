@@ -1,0 +1,71 @@
+.loginSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.4rem;
+
+    @media (max-width: 480px) {
+      flex: 1;
+      padding: 1rem;
+    }
+
+    legend {
+      flex: 1;
+      margin-inline: auto;
+      font-weight: 700;
+      font-size: 2.2rem;
+    }
+
+    section {
+      display: flex;
+      flex: 1;
+      justify-content: space-around;
+    }
+
+    div {
+      display: grid;
+      grid-template-columns: 80px 0.8fr;
+      gap: 1rem;
+
+      @media (max-width: 480px) {
+        display: block;
+      }
+
+      label {
+        @media (max-width: 480px) {
+          font-size: larger;
+        }
+      }
+
+      input {
+        padding: 0.4rem 0.2rem;
+        border: transparent;
+        outline: transparent;
+        border-radius: 0.6rem;
+        background: whitesmoke;
+
+        @media (max-width: 480px) {
+          font-size: larger;
+        }
+
+        &:focus {
+          border: transparent;
+          outline: transparent;
+          background-color: whitesmoke;
+        }
+
+        &:focus-visible {
+          background-color: whitesmoke;
+        }
+      }
+    }
+  }
+}

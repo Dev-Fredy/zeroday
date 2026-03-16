@@ -1,0 +1,16 @@
+.burnChart {
+  background-color: white;
+  border-radius: 0.4rem;
+  width: max-content;
+  text-align: center;
+  height: 300px;
+}
+
+.burnSection {
+  flex: 1;
+  margin-inline: auto;
+
+  h3 {
+    text-align: center;
+  }
+}

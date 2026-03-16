@@ -1,0 +1,33 @@
+<header>
+  <nav>
+    <h1>
+      <a href="/">
+        <img src="/Images/ZeroDayFinance.png" alt="" />
+      </a>
+    </h1>
+    <ul>
+      <li></li>
+    </ul>
+    <ul>
+      <li>
+        <% if (authenticated) {%>
+        <a href="/dashboard">
+          <img src="/images/user.png" width="20px" alt="user" />
+        </a>
+        <% } else { %>
+
+        <a href="/login" class="buttonLink jsLoginButton">Login</a>
+
+        <% } %>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  let pathnames = window.location.pathname.split("/");
+
+  if (pathnames.includes("login") || pathnames.includes("signup")) {
+    document.querySelector(".jsLoginButton").style.display = "none";
+  }
+</script>

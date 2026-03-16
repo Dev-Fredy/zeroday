@@ -1,0 +1,31 @@
+<aside class="sidebar">
+  <nav>
+    <ul>
+      <li>
+        <a class="buttonLink" href="/admin">Admin</a>
+      </li>
+      <li>
+        <a class="buttonLink jsUsers" href="/admin/users">Users</a>
+      </li>
+      <li>
+        <a href="/admin/faqs" class="buttonLink">Faqs</a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+<script>
+  const usersButton = document.querySelector(".jsUsers");
+
+  usersButton.addEventListener("click", () => {
+    getUsers();
+  });
+
+  async function getUsers() {
+    let res = await fetch("/api/users");
+
+    let data = await res.json();
+
+    console.log(data);
+  }
+</script>

@@ -1,0 +1,105 @@
+.signUpSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+
+  .text {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  form {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.4rem;
+
+    @media (max-width: 480px) {
+      flex: 1;
+      padding: 1rem;
+    }
+
+    legend {
+      flex: 1;
+      margin-inline: auto;
+      font-weight: 700;
+      font-size: 2.2rem;
+    }
+
+    section {
+      display: flex;
+      gap: 1rem;
+
+      div {
+        flex-direction: column;
+      }
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+      }
+    }
+
+    .action {
+      display: flex;
+      flex: 1;
+      justify-content: space-around;
+    }
+
+    div {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1rem;
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+      }
+
+      label {
+        @media (max-width: 480px) {
+          font-size: larger;
+        }
+      }
+
+      input {
+        border: transparent;
+        outline: transparent;
+        border-radius: 0.6rem;
+        background: whitesmoke;
+        padding: 0.4rem;
+
+        @media (max-width: 480px) {
+          font-size: larger;
+        }
+
+        &:focus {
+          border: transparent;
+          outline: transparent;
+          background-color: whitesmoke;
+        }
+
+        &:focus-visible {
+          background-color: whitesmoke;
+        }
+      }
+      button {
+        width: max-content;
+        border: none;
+        border-radius: 0.6rem;
+        padding: 0.4rem;
+        background-color: rgba(128, 128, 128, 0.2);
+        font-size: 1.2rem;
+        font-weight: bold;
+
+        &:hover {
+          cursor: pointer;
+          background-color: rgba(128, 128, 128, 0.6);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,222 @@
+<main>
+  <section class="simulationContainer">
+    <h1>Predict your financial future</h1>
+    <section>
+      <div>
+        <label for="income">Income</label>
+        <div>
+          <span>Ksh</span>
+          <input type="text" id="income" class="jsIncome" value="1000" />
+        </div>
+      </div>
+      <div>
+        <label for="expenses"> Expenses </label>
+        <div>
+          <span>Ksh</span>
+          <input class="jsExpenses" type="text" id="Expenses" value="50" />
+        </div>
+      </div>
+      <div>
+        <label for="savings">Savings</label>
+        <div>
+          <span>Ksh</span>
+          <input type="text" id="savings" class="jsSavings" value="300" />
+        </div>
+      </div>
+      <div>
+        <label for="debt">Debt</label>
+        <div>
+          <span>Ksh</span>
+          <input type="text" id="debt" value="120" class="jsDebt" />
+        </div>
+      </div>
+      <div>
+        <label for="interest">Interest Rate</label>
+        <div class="interest-rate">
+          <input type="text" id="interest" value="2" class="jsInterest" /><span
+            >%</span
+          >
+        </div>
+      </div>
+    </section>
+  </section>
+  <section class="chartsSection">
+    <section class="burnSection">
+      <div class="burnChart"></div>
+    </section>
+    <section class="runwaySection">
+      <div class="runwayChart"></div>
+      <div class="hint">Dive Deeper</div>
+    </section>
+  </section>
+  <section>
+    <h4>
+      Want to take this a step further, optin today as a member and use the
+      realtime system that learns from your bank account and make your
+      predictions accurately with ai
+    </h4>
+    <button class="buttonLink">Opt in today</button>
+  </section>
+</main>
+
+<script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
+<script>
+  document.querySelector(".runwaySection").addEventListener("mouseover", () => {
+    document.querySelector(".hint").style.display = "block";
+  });
+  document
+    .querySelector(".runwaySection")
+    .addEventListener("mouseleave", () => {
+      document.querySelector(".hint").style.display = "none";
+    });
+
+  document.querySelector(".jsIncome").addEventListener("input", () => {
+    getChartData();
+  });
+  document.querySelector(".jsExpenses").addEventListener("input", () => {
+    getChartData();
+  });
+  document.querySelector(".jsSavings").addEventListener("input", () => {
+    getChartData();
+  });
+  document.querySelector(".jsInterest").addEventListener("input", () => {
+    getChartData();
+  });
+  document.querySelector(".jsDebt").addEventListener("input", () => {
+    getChartData();
+  });
+
+  getChartData();
+
+  async function getChartData() {
+    let income = document.querySelector(".jsIncome").value;
+    let expenses = document.querySelector(".jsExpenses").value;
+    let savings = document.querySelector(".jsSavings").value;
+    let debt = document.querySelector(".jsDebt").value;
+    let interest = document.querySelector(".jsInterest").value;
+    let res = await fetch("/simulate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ income, expenses, savings, debt, interest }),
+    });
+
+    let response = await res.json();
+
+    if (response.success) {
+      let burnRate = response.burnRate;
+      let { runWay } = response;
+
+      document.querySelector(".burnChart").innerHTML = "";
+      document.querySelector(".runwayChart").innerHTML = "";
+      runBurnChart(burnRate);
+      runRunWayChart(runWay, response.burnRate, savings);
+    }
+  }
+
+  function runBurnChart(burnRate) {
+    let options = {
+      chart: {
+        type: "radialBar",
+        height: 400,
+      },
+      colors: [
+        burnRate.burnRate < 50
+          ? "#00E396"
+          : burnRate.burnRate < 80
+          ? "#FEB019"
+          : "#FF4560",
+      ],
+      title: {
+        text: "Burn Rate",
+        style: {
+          fontSize: "18px",
+        },
+      },
+      subtitle: {
+        text: `Risk: ${burnRate.risk}`,
+        offsetX: 30,
+        style: {
+          fontSize: "14px",
+          cssClass: "apexcharts-yaxis-title",
+        },
+      },
+      series: [burnRate.burnRate],
+      plotOptions: {
+        radialBar: {
+          hollow: {
+            size: "50%",
+          },
+          dataLabels: {
+            value: {
+              formatter: function (val) {
+                return val + "%";
+              },
+              fontSize: "28px",
+            },
+          },
+        },
+      },
+      labels: ["Burn Rate"],
+    };
+
+    let chart = new ApexCharts(document.querySelector(".burnChart"), options);
+
+    chart.render();
+  }
+  function runRunWayChart(runWay, burnRate) {
+    let options = {
+      title: {
+        text: "Runway chart",
+        style: {
+          fontSize: "18px",
+        },
+      },
+      chart: {
+        type: "area",
+        group: "sparklines",
+        height: 350,
+        sparkline: {
+          enabled: true,
+        },
+        toolbar: { show: false },
+
+        events: {
+          click: function () {
+            sessionStorage.setItem("runwayData", JSON.stringify(runWay));
+
+            window.location.href = "/simulations/runway";
+          },
+          mouseMove: function (event, chartContext, config) {
+            event.target.style.cursor = "pointer";
+          },
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      series: [
+        {
+          name: "Savings",
+          data: runWay,
+        },
+      ],
+      tooltip: { enabled: false, followCursor: true },
+      dataLabels: { enabled: false },
+      markers: { size: 0 },
+      xaxis: {
+        labels: { show: false },
+      },
+      yaxis: {
+        labels: { show: false },
+        grid: { show: true },
+      },
+      stroke: {
+        curve: "smooth",
+      },
+    };
+
+    new ApexCharts(document.querySelector(".runwayChart"), options).render();
+  }
+</script>

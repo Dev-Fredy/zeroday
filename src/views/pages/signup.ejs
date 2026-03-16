@@ -1,0 +1,117 @@
+<section class="signUpSection">
+  <form class="">
+    <legend>Sign Up</legend>
+    <section>
+      <div class="">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" class="jsFirstName" />
+      </div>
+      <div class="">
+        <label for="last_name"> Last Name </label>
+        <input type="text" id="last_name" class="jsLastName" />
+      </div>
+    </section>
+    <div class="">
+      <label for="phone">Phone</label>
+      <input
+        type="tel"
+        name="phone"
+        id="phone"
+        placeholder="+1012345678"
+        class="jsPhone"
+      />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" class="jsEmail" />
+    </div>
+    <div class="">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="jsPassword" />
+    </div>
+    <div class="">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" class="jsConfirmPassword" />
+    </div>
+    <div class="action">
+      <button class="jsSignUp">Sign Up</button>
+    </div>
+    <div class="text">
+      <p>Already have an account? <a href="/login"> Login </a></p>
+    </div>
+  </form>
+</section>
+
+<script>
+  document.querySelector(".jsSignUp").addEventListener("click", (e) => {
+    e.preventDefault();
+    signUp();
+  });
+  document.querySelector(".jsFirstName").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      signUp(e);
+    }
+  });
+  document.querySelector(".jsLastName").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      signUp(e);
+    }
+  });
+  document.querySelector(".jsPhone").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      signUp(e);
+    }
+  });
+  document.querySelector(".jsEmail").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      signUp(e);
+    }
+  });
+  document.querySelector(".jsPassword").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      signUp(e);
+    }
+  });
+  document
+    .querySelector(".jsConfirmPassword")
+    .addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        signUp(e);
+      }
+    });
+
+  async function signUp(e) {
+    const firstName = document.querySelector(".jsFirstName").value;
+    const lastName = document.querySelector(".jsLastName").value;
+    const phone = document.querySelector(".jsPhone").value;
+    const email = document.querySelector(".jsEmail").value;
+    const password = document.querySelector(".jsPassword").value;
+    const confirmPassword = document.querySelector(".jsConfirmPassword").value;
+
+    if (password !== confirmPassword) {
+      alert('Passwords don"t match');
+    }
+
+    const data = {
+      first_name: firstName,
+      last_name: lastName,
+      phone,
+      email,
+      password,
+    };
+
+    let res = await fetch("/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    let response = await res.json();
+
+    if (response.success === true) {
+      window.location.href = "/login";
+    }
+  }
+</script>

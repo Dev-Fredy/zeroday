@@ -1,0 +1,155 @@
+<main>
+  <section class="chartSelector">
+    <div class="lineChart selected">
+      <label for="line">Line</label>
+      <input type="radio" checked name="chart" id="line" />
+    </div>
+    <div class="barChart">
+      <label for="bar">Bar</label>
+      <input type="radio" name="chart" id="bar" class="buttonLink" />
+    </div>
+    <div class="areaChart">
+      <label for="area">Area</label>
+      <input type="radio" name="chart" id="area" />
+    </div>
+  </section>
+  <section id="runwaychart"></section>
+  <section class="chartAnalysisSection">
+    <h3>Chart analysis</h3>
+    <section id="analysisFeed"></section>
+  </section>
+</main>
+
+<script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
+<script>
+  let runway = JSON.parse(sessionStorage.getItem("runwayData"));
+  function addAnalysis(message) {
+    const feed = document.querySelector("#analysisFeed");
+
+    let item = document.createElement("div");
+
+    item.className = "analysis-item";
+
+    const text = document.createElement("p");
+    const img = document.createElement("img");
+    img.src = "/images/favicon.png";
+    img.alt = "thinker";
+    img.width = "20";
+
+    item.appendChild(img);
+    item.appendChild(text);
+
+    feed.appendChild(item);
+
+    item.scrollIntoView({ behavior: "smooth" });
+
+    typeText(text, message);
+  }
+
+  function typeText(element, message) {
+    let i = 0;
+
+    function type() {
+      if (i < message.length) {
+        element.textContent += message.charAt(i);
+        i++;
+        setTimeout(type, 20);
+      }
+    }
+
+    type();
+  }
+  getChartRunWay("line");
+  window.onload = () => {
+    const lastPoint = runway[runway.length - 1];
+
+    const date = new Date();
+    date.setDate(date.getDate() + lastPoint.x);
+
+    const message = `At your current spending trend, you will run out of money on ${date.toLocaleString()}`;
+
+    addAnalysis(message);
+  };
+
+  document.querySelector("#area").addEventListener("input", (event) => {
+    if (event.target.checked === true) {
+      getChartRunWay("area");
+      document.querySelector(".areaChart").classList.add("selected");
+      document.querySelector(".lineChart").classList.remove("selected");
+      document.querySelector(".barChart").classList.remove("selected");
+    }
+  });
+  document.querySelector("#bar").addEventListener("input", (event) => {
+    if (event.target.checked === true) {
+      getChartRunWay("bar");
+      document.querySelector(".barChart").classList.add("selected");
+      document.querySelector(".areaChart").classList.remove("selected");
+      document.querySelector(".lineChart").classList.remove("selected");
+    }
+  });
+
+  document.querySelector("#line").addEventListener("input", (event) => {
+    if (event.target.checked === true) {
+      getChartRunWay("line");
+      document.querySelector(".areaChart").classList.remove("selected");
+      document.querySelector(".lineChart").classList.add("selected");
+      document.querySelector(".barChart").classList.remove("selected");
+    }
+  });
+
+  function getChartRunWay(charttype) {
+    document.querySelector("#runwaychart").innerHTML = "";
+    var options = {
+      title: {
+        text: "Runway chart",
+        style: {
+          fontSize: "18px",
+        },
+      },
+      chart: {
+        height: "350px",
+        type: charttype,
+
+        events: {
+          click: function (event, chartContext, config) {
+            console.log(event, chartContext, config);
+            const index = config.dataPointIndex;
+
+            if (index === -1) return;
+            const point = chartContext.w.config.series[0].data[index];
+            console.log(point);
+
+            const day = point.x;
+            const money = point.y;
+
+            const date = new Date();
+            date.setDate(date.getDate() + day);
+
+            const message = `On ${date.toDateString()}, you will have approximately Ksh ${money} remaining.`;
+
+            addAnalysis(message);
+          },
+        },
+      },
+
+      series: [
+        {
+          name: "Savings",
+          data: runway,
+        },
+      ],
+      markers: { size: 5 },
+      xaxis: {
+        title: { text: "Days from now" },
+      },
+      yaxis: {
+        title: { text: "Money remaining" },
+      },
+      stroke: {
+        curve: "smooth",
+      },
+    };
+
+    new ApexCharts(document.querySelector("#runwaychart"), options).render();
+  }
+</script>

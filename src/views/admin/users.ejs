@@ -1,0 +1,94 @@
+<main>
+  <section class="admin">
+    <%- include('./partials/title.ejs') %>
+    <section class="main">
+      <%- include('./partials/sidebar.ejs') %>
+      <div class="container">
+        <div class="inputLabel">
+          <label for="search">Search</label>
+          <input
+            type="search"
+            name="search"
+            id="search"
+            class="jsSearch"
+            placeholder="Email ..."
+          />
+        </div>
+        <div class="jsListUsers listUsers"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+  let userslistings = "";
+  document.querySelector(".jsSearch").addEventListener("input", (e) => {
+    let searchValue = document.querySelector(".jsSearch").value;
+    if (searchValue.length > 0) {
+      search(searchValue);
+    } else {
+      getUsers();
+    }
+  });
+  async function search(searchValue) {
+    let res = await fetch(`/admin/searchusers?s=${searchValue}`);
+
+    let response = await res.json();
+
+    if (response.success === true) {
+      let list = response.data.map((value, index) => {
+        return `<div class="userContainer">
+            <div class="user"><div class="name">${value.first_name} ${value.last_name}</div>
+            <div class="email">${value.email}</div>
+            <button class="buttonLink warning">Warn</button>
+            <button class="buttonLink danger" onclick="
+            deleteUser(${value.id});
+            
+            
+            ">Delete</button></div>
+          </div>`;
+      });
+      userslistings = list;
+      document.querySelector(".jsListUsers").innerHTML = userslistings;
+    }
+
+    // document.querySelector(
+    //   ".jsUsersList"
+    // ).innerHTML = `<li>${response.data[0].first_name}</li>`;
+  }
+  let usersList = document.querySelector(".jsListUsers").innerHTML;
+  getUsers();
+
+  async function getUsers() {
+    let res = await fetch("/api/users");
+
+    let response = await res.json();
+
+    // let data = response?.data.map((value, index) => {
+    //   return `<li>
+    //         <p>${value.first_name} ${value.last_name}</p>
+    //         <p>${value.email}</p>
+    //         <button>Warn</button>
+    //         <button onclick="
+    //         deleteUser(${value.id});
+
+    //         ">Delete</button>
+    //       </li>`;
+    // });
+
+    let data = `<div class="stats">
+      <div class="active"><div class="activeUsers">Active users: </div><div class="activeUsersNum">${response.data.length}</div></div><div class="active"><div class="usersNotified">Users with active notifications:</div><div class="usersNotifiedData">10</div></div</div>`;
+
+    userslistings = data;
+    document.querySelector(".jsListUsers").innerHTML = userslistings;
+  }
+
+  async function deleteUser(id) {
+    let res = await fetch(`/api/user/${id}`, {
+      method: "DELETE",
+    });
+    let response = await res.json();
+    console.log(response);
+    getUsers();
+  }
+</script>

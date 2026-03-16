@@ -1,0 +1,39 @@
+html {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+}
+
+body {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-inline: auto;
+  max-width: 1400px;
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  @media (max-width: 720px) {
+    padding: 0.4rem;
+  }
+}
+
+.skeleton {
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  background-color: rgb(128, 128, 128, 0.2);
+}
+
+.analysis-item {
+}

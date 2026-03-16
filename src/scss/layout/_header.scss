@@ -1,0 +1,56 @@
+header {
+  padding: 1rem;
+  background-color: white;
+
+  nav {
+    display: flex;
+    align-items: center;
+
+    h1 {
+      flex: 1;
+      margin: 0;
+
+      a {
+        text-decoration: none;
+        color: black;
+        width: 5rem;
+        height: auto;
+
+        img {
+          width: inherit;
+          height: inherit;
+        }
+      }
+    }
+    ul {
+      list-style: none;
+
+      li {
+        button {
+          border: none;
+          border-radius: 0.4rem;
+          padding: 0.4rem 0.8rem;
+          font-weight: 600;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .buttonLink {
+          text-decoration: none;
+          color: black;
+          border: none;
+          border-radius: 0.4rem;
+          padding: 0.4rem 0.8rem;
+          font-weight: 600;
+          background-color: rgb(240, 240, 240);
+          font-size: 0.8rem;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
