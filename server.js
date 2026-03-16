@@ -59,8 +59,10 @@ app.use("/", pagesRoute);
 app.use("/admin", adminRoute);
 app.use("/", simulationsRoute);
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+if (process.env.ENV === "development") {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
 
 module.exports = app;
