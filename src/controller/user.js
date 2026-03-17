@@ -21,13 +21,17 @@ class User {
   }
 
   async register(req, res) {
-    const data = req.body;
+    try {
+      const data = req.body;
 
-    console.log(data);
+      console.log(data);
 
-    const results = await user.create(data);
+      const results = await user.create(data);
 
-    res.json({ success: true });
+      res.json({ success: true });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getAllUsers(req, res) {
