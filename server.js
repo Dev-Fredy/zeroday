@@ -57,4 +57,8 @@ app.use("/", pagesRoute);
 app.use("/admin", adminRoute);
 app.use("/", simulationsRoute);
 
+app.listen("3000", () => {
+  console.log(`Server is listening on ${port}`);
+});
+
 module.exports = app;

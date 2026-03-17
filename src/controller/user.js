@@ -6,6 +6,19 @@ const path = require("path");
 const user = new UserModel();
 
 class User {
+  async getDashboard(req, res) {
+    let token = req.cookies.token;
+
+    const secret = process.env.JWT_SECRET;
+
+    let decoded = await jwt.verify(token, secret);
+    let [dbuser] = await user.readUser(decoded.email);
+
+    res.render("pages/dashboard", {
+      title: "Dashboard",
+      user: dbuser,
+    });
+  }
   async deleteuser(req, res) {
     let { id } = await req.params;
     let result = await user.deleteUser(id);

@@ -21,11 +21,7 @@ router.get("/signup", (req, res) => {
     title: "Sign Up",
   });
 });
-router.get("/dashboard", auth.authenticated, (req, res) => {
-  res.render("pages/dashboard", {
-    title: "Dashboard",
-  });
-});
+router.get("/dashboard", auth.authenticated, user.getDashboard);
 
 router.post("/signup", user.register);
 router.post("/api/user", user.getUser);
