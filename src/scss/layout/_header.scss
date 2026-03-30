@@ -1,10 +1,19 @@
 header {
-  padding: 1rem;
+  padding: 0.4rem 1rem;
   background-color: white;
+
+  @media (max-width: 480px) {
+    padding: 0.2rem 0.5rem;
+  }
 
   nav {
     display: flex;
+    gap: 1rem;
     align-items: center;
+
+    @media (max-width: 480px) {
+      gap: 0.4rem;
+    }
 
     h1 {
       flex: 1;
@@ -13,44 +22,54 @@ header {
       a {
         text-decoration: none;
         color: black;
-        width: 5rem;
+        width: 3.5rem;
         height: auto;
 
         img {
           width: inherit;
           height: inherit;
+          margin-bottom: -0.3rem;
         }
       }
     }
     ul {
       list-style: none;
+      display: flex;
+      gap: 1rem;
+
+      @media (max-width: 480px) {
+        gap: 0.4rem;
+      }
 
       li {
-        button {
-          border: none;
-          border-radius: 0.4rem;
-          padding: 0.4rem 0.8rem;
-          font-weight: 600;
-          &:hover {
-            cursor: pointer;
-          }
-        }
-
-        .buttonLink {
+        a {
           text-decoration: none;
           color: black;
-          border: none;
-          border-radius: 0.4rem;
-          padding: 0.4rem 0.8rem;
-          font-weight: 600;
-          background-color: rgb(240, 240, 240);
-          font-size: 0.8rem;
 
-          &:hover {
-            cursor: pointer;
+          img {
+            border: none;
+            border-radius: 1000px;
+            padding: 0.2rem;
+            width: 30px;
+            height: auto;
+            object-fit: contain;
+            &:hover {
+              background-color: whitesmoke;
+            }
           }
         }
       }
     }
+  }
+}
+
+.menuIcon {
+  width: 1.4rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 0.4rem;
+
+  &:hover {
+    background-color: whitesmoke;
   }
 }

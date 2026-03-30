@@ -1,0 +1,70 @@
+<section class="loginSection jsLoginSection">
+  <form class="resetForm">
+    <legend>Reset</legend>
+    <div>
+      <label for="password">New Password</label>
+      <input type="password" id="password" class="jsPassword" />
+    </div>
+    <div>
+      <label for="confirm">Confirm Password</label>
+      <input type="password" id="confirm" class="jsConfirm" />
+    </div>
+    <section class="">
+      <p class="jsSuccessMessage"></p>
+    </section>
+    <section class="">
+      <button class="jsLogin buttonLink">Submit</button>
+    </section>
+  </form>
+</section>
+
+<script>
+  document.querySelector(".resetForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    handleSubmit();
+  });
+
+  document.querySelector(".jsPassword").addEventListener("input", () => {
+    document.querySelector(".jsSuccessMessage").innerHTML = "";
+  });
+  document.querySelector(".jsConfirm").addEventListener("input", () => {
+    document.querySelector(".jsSuccessMessage").innerHTML = "";
+  });
+
+  async function handleSubmit() {
+    let password = document.querySelector(".jsPassword").value;
+    let confirm = document.querySelector(".jsConfirm").value;
+
+    if (password !== confirm) {
+      document.querySelector(".jsSuccessMessage").style.color = "red";
+      return (document.querySelector(
+        ".jsSuccessMessage"
+      ).innerHTML = `Passwords don't match`);
+    }
+
+    let tk = window.location.search.split("?").pop().split("=").pop();
+
+    let res = await fetch(`/auth/reset/${tk}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password }),
+    });
+
+    let response = await res.json();
+
+    if (response.success === false) {
+      document.querySelector(".jsSuccessMessage").style.color = "red";
+      document.querySelector(".jsSuccessMessage").innerHTML = response.message;
+    }
+
+    document.querySelector(".jsSuccessMessage").style.color = "green";
+    document.querySelector(".jsSuccessMessage").innerHTML = response.message;
+
+    setTimeout(() => {
+      window.location.href = "/auth/login";
+    }, 2000);
+  }
+</script>

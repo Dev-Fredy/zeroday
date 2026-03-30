@@ -1,0 +1,69 @@
+<section class="loginSection jsLoginSection">
+  <form class="">
+    <legend>Login</legend>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" class="jsEmail" />
+    </div>
+    <div class="">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="jsPassword" />
+    </div>
+    <section class="">
+      <button class="jsLogin buttonLink">Login</button>
+    </section>
+    <section class="">
+      <p>
+        Don't have an account? <a href="/auth/signup">Sign up</a> Forgot
+        password?
+        <a href="/auth/reset"> Reset </a>
+      </p>
+    </section>
+  </form>
+</section>
+
+<script>
+  document.querySelector(".jsLogin").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    login();
+  });
+
+  document.querySelector(".jsEmail").addEventListener("click", (e) => {
+    if (e.key === "Enter") {
+      login();
+    }
+  });
+
+  document.querySelector(".jsPassword").addEventListener("click", (e) => {
+    if (e.key === "Enter") {
+      login();
+    }
+  });
+
+  async function login() {
+    const email = document.querySelector(".jsEmail").value;
+    const password = document.querySelector(".jsPassword").value;
+
+    const data = {
+      email,
+      password,
+    };
+
+    let res = await fetch("/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    let response = await res.json();
+
+    console.log(response);
+
+    if (response.success === true) {
+      window.location.href = document.referrer || "/";
+    }
+  }
+</script>

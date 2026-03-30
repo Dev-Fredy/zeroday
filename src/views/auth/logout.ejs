@@ -6,7 +6,7 @@
     logout();
   });
   function logout() {
-    fetch("/logout", { method: "POST" }).then(() => {
+    fetch("/auth/logout", { method: "POST" }).then(() => {
       window.location.reload();
     });
   }

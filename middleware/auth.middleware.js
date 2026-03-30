@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const user = require("./../src/models/user");
-
-const User = new user();
+const User = require("../src/models/user.model");
 
 class Auth {
   async isAdmin(req, res, next) {
@@ -38,11 +36,11 @@ class Auth {
     const { token } = cookies;
 
     if (!token) {
-      res.redirect("/login");
+      return res.redirect("/auth/login");
     }
 
     next();
   }
 }
 
-module.exports = Auth;
+module.exports = new Auth();

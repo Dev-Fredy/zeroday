@@ -19,6 +19,22 @@ class User {
     return result;
   }
 
+  async findByEmail(email) {
+    let query = `select * from user where user.email = ?`;
+
+    let [result] = await db.execute(query, [email]);
+
+    return [result];
+  }
+
+  async updateToken({ token, id }) {
+    console.log(token, id);
+    let query = `update user set token = ? where id = ?`;
+
+    await db.execute(query, [token, id]);
+    return;
+  }
+
   async searchUser(data) {
     const query = `select * from user where user.email like ? order by user.first_name desc;`;
 
@@ -51,6 +67,14 @@ class User {
 
     return results;
   }
+
+  async updatePassword({ password, id }) {
+    let query = `update user set password = ? where id = ?`;
+
+    let [result] = await db.execute(query, [password, id]);
+
+    return result;
+  }
 }
 
-module.exports = User;
+module.exports = new User();

@@ -1,0 +1,35 @@
+.searchSection {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+
+  @media (max-width: 768px) {
+    padding: 0.4rem;
+  }
+
+  input {
+    flex: 0.5;
+    padding: 0.4rem;
+    border: solid 0.1rem gray;
+    border-radius: 1rem;
+    outline: none;
+
+    &:focus {
+      border: solid transparent 0.1rem;
+      background-color: whitesmoke;
+    }
+  }
+  input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.adminArea {
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+}

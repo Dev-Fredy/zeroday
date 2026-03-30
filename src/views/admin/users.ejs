@@ -1,24 +1,18 @@
-<main>
-  <section class="admin">
-    <%- include('./partials/title.ejs') %>
-    <section class="main">
-      <%- include('./partials/sidebar.ejs') %>
-      <div class="container">
-        <div class="inputLabel">
-          <label for="search">Search</label>
-          <input
-            type="search"
-            name="search"
-            id="search"
-            class="jsSearch"
-            placeholder="Email ..."
-          />
-        </div>
-        <div class="jsListUsers listUsers"></div>
-      </div>
-    </section>
-  </section>
-</main>
+<section class="adminArea">
+  <div class="container">
+    <div class="searchSection">
+      <label for="search">Search</label>
+      <input
+        type="search"
+        name="search"
+        id="search"
+        class="jsSearch"
+        placeholder="a123....@gmail.com"
+      />
+    </div>
+    <div class="jsListUsers listUsers"></div>
+  </div>
+</section>
 
 <script>
   let userslistings = "";
