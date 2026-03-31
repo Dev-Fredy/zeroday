@@ -23,11 +23,9 @@ class App {
   }
 
   runApp() {
-    //after update
-   
     this.app.set("view engine", "ejs");
-     this.app.use(expressejs);
     this.app.set("views", path.join(__dirname, "views"));
+    this.app.use(expressejs);
     this.app.use(cookieParser());
     this.app.use(express.json());
 
