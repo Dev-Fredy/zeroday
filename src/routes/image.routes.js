@@ -10,13 +10,15 @@ class Image {
 
   initializeRoutes() {
     const storage = multer.diskStorage({
-      destination: "uploads/",
+      destination: "/tmp",
       filename: (req, file, cb) => {
         const unique = Date.now() + "-" + file.originalname;
         cb(null, unique);
       },
     });
+
     const upload = multer({ storage });
+
     this.router.post(
       "/uploads",
       upload.single("image"),
