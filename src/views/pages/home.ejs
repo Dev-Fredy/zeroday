@@ -1,0 +1,115 @@
+<section class="hero">
+  <div class="heroTopText">Financial Simulator</div>
+  <h1 class="heroTop">
+    Know your financial future
+    <span class="heroTextGradient">before it happens</span>
+  </h1>
+  <p>
+    Track accounts, import transactions, and run thousands of simulations to
+    understand your financial trajectory with real confidence intervals.
+  </p>
+  <div class="heroActions">
+    <a href="/auth/login" id="start"> Start Free </a>
+    <a href="/simulations" class="live">Live Demo</a>
+  </div>
+  <div class="heroExpectations">
+    <div>
+      <img src="/Images/star.png" alt="" />
+      <div>No credit card required</div>
+    </div>
+    <div>
+      <img src="/Images/star.png" alt="" />
+      <div>Import CSV instantly</div>
+    </div>
+    <div>
+      <img src="/Images/star.png" alt="" />
+      <div>1000+ simulations</div>
+    </div>
+  </div>
+</section>
+<section class="liveChartDemo">
+  <div>
+    <h4>Try Demo with no sign up</h4>
+  </div>
+  <div class="liveChart"></div>
+  <div class="demoHint">
+    <a href="/simulations" class="live">Live Demo</a>
+  </div>
+</section>
+<section class="tools">
+  <h3>Everything you need to plan ahead</h3>
+  <div>
+    <div class="toolBox">
+      <h4>Projections</h4>
+      <div>
+        Run 1000+ simulations to see your financial future with confidence bands
+      </div>
+    </div>
+    <div class="toolBox">
+      <h4>CSV Bank Import</h4>
+      <div>
+        Upload your bank statement CSV and auto-categorize transactions
+        instantly
+      </div>
+    </div>
+    <div class="toolBox">
+      <h4>Scenario Planning</h4>
+      <div>
+        Adjust income/expense parameters and watch projections update in
+        real-time.
+      </div>
+    </div>
+  </div>
+</section>
+<section class="takeAction">
+  <div>
+    <h3>Ready to take control of your finances?</h3>
+    <div>Join thousands running intelligent financial simulations.</div>
+    <div>
+      <button>Get Started Free</button>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
+<script>
+  document.querySelector(".demoHint").addEventListener("click", () => {
+    window.location.href = "/simulations";
+  });
+  let monteData = `<%- JSON.stringify(monteData) %>`;
+  let monteDataParsed = JSON.parse(monteData);
+  console.log(monteDataParsed);
+  function runRunWayChart() {
+    let options = {
+      chart: {
+        type: "line",
+        height: 350,
+        zoom: { enabled: false },
+        animations: { enabled: true, speed: 800 },
+      },
+      stroke: {
+        width: 2,
+        curve: "smooth",
+        opacity: 0.5,
+      },
+      fill: {
+        opacity: 1,
+      },
+      series: monteDataParsed,
+      tooltip: { shared: false },
+      dataLabels: { enabled: false },
+      markers: { size: 0 },
+      xaxis: {
+        title: { text: "Years from now" },
+        categories: Array.from({ length: 21 }, (_, i) => i),
+      },
+      yaxis: {
+        labels: { formatter: (val) => `$${val}` },
+      },
+    };
+
+    new ApexCharts(document.querySelector(".liveChart"), options).render();
+  }
+  runRunWayChart();
+</script>

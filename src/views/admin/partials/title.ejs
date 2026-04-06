@@ -1,0 +1,20 @@
+<section class="title">
+  <h5 class="jsAdminTitle"></h5>
+</section>
+
+<script>
+  document.querySelector(".jsAdminTitle").innerHTML = assignTitle();
+  function assignTitle() {
+    let adminTitle;
+
+    let path = window.location.href.split("/").pop();
+
+    if (path) {
+      adminTitle = path;
+    } else {
+      adminTitle = "Admin";
+    }
+
+    return adminTitle.toLocaleUpperCase();
+  }
+</script>

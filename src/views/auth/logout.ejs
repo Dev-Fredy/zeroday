@@ -1,0 +1,13 @@
+<button class="jsLogout">Logout</button>
+
+<script>
+  const logoutButton = document.querySelector(".jsLogout");
+  logoutButton.addEventListener("click", () => {
+    logout();
+  });
+  function logout() {
+    fetch("/auth/logout", { method: "POST" }).then(() => {
+      window.location.reload();
+    });
+  }
+</script>

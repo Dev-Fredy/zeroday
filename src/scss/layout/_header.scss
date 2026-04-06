@@ -1,0 +1,129 @@
+header {
+  padding: 0.4rem 1rem;
+  background-color: white;
+
+  @media (max-width: 480px) {
+    padding: 0.2rem 0.5rem;
+  }
+
+  nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    @media (max-width: 480px) {
+      gap: 0.4rem;
+    }
+
+    h1 {
+      flex: 1;
+      margin: 0;
+
+      a {
+        text-decoration: none;
+        color: black;
+        width: 3.5rem;
+        height: auto;
+
+        img {
+          width: inherit;
+          height: inherit;
+          margin-bottom: -0.3rem;
+        }
+      }
+    }
+    ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+
+      @media (max-width: 480px) {
+        gap: 0.4rem;
+      }
+
+      li {
+        a {
+          text-decoration: none;
+          color: black;
+
+          img {
+            border: none;
+            border-radius: 1000px;
+            padding: 0.2rem;
+            width: 30px;
+            height: auto;
+            object-fit: contain;
+            &:hover {
+              background-color: whitesmoke;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.menuHeader {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+
+  .menuItem {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  .demo {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: rgb(75, 75, 75);
+    border: transparent solid 0.2rem;
+    border-radius: 0.4rem;
+    background-color: transparent;
+    padding: 0.2rem 0.6rem;
+    font-size: small;
+    font-weight: 600;
+
+    &:hover {
+      background-color: whitesmoke;
+      border: whitesmoke solid 0.2rem;
+    }
+  }
+
+  .getStarted {
+    background-color: black;
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: small;
+    font-weight: 600;
+
+    &:hover {
+      background-color: whitesmoke;
+      color: black;
+    }
+  }
+}
+
+.menuToggle {
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.menuIcon {
+  width: 1.4rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 0.4rem;
+
+  &:hover {
+    background-color: whitesmoke;
+  }
+}

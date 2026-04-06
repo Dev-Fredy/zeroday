@@ -1,0 +1,52 @@
+<header>
+  <nav>
+    <div class="jsMenuToggle menuToggle">
+      <img src="/Images/menu.png" alt="menu-icon" class="menuIcon" />
+    </div>
+    <h1>
+      <a href="/">
+        <img src="/Images/ZeroDayFinance.png" alt="" />
+      </a>
+    </h1>
+
+    <ul>
+      <% if (authenticated) {%>
+      <div class="menuHeader">
+        <a href="/dashboard" class="menuItem">Dashboard</a>
+
+        <a href="/simulations" class="menuItem">Simulate</a>
+
+        <a href="/scenarios" class="menuItem">Scenarios</a>
+
+        <a href="/account">
+          <img src="/Images/user.png" width="20px" alt="user" />
+        </a>
+      </div>
+      <% } else { %>
+      <div class="menuHeader">
+        <a href="/simulations" class="jsDemo demo"> Demo </a>
+        <a href="/auth/login" class="jsLoginButton getStarted">Get Started</a>
+      </div>
+
+      <% } %>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  let pathnames = window.location.pathname.split("/");
+
+  if (pathnames.includes("auth")) {
+    document.querySelector(".jsLoginButton").style.display = "none";
+    document.querySelector(".jsDemo").style.display = "none";
+  }
+
+  document.querySelector(".menuIcon").addEventListener("click", () => {
+    document.querySelector(".sidebarContainer").style.display = "block";
+    let pathnames = window.location.pathname.split("/");
+
+    if (!pathnames.includes("admin")) {
+      document.querySelector(".adminSidebar").style.display = "none";
+    }
+  });
+</script>

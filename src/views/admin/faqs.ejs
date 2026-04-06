@@ -1,0 +1,20 @@
+<section class="faqsSection">
+  <section class="faqHead">
+    <div>#</div>
+    <div>Title</div>
+    <div>Slug</div>
+    <div></div>
+    <div></div>
+  </section>
+  <section class="faqBody">
+    <% faqs.forEach((faq, index) => { %>
+    <div><%- index+1 %></div>
+    <div><%- faq.title %></div>
+    <div><%- faq.slug %></div>
+    <div>
+      <button>Edit</button>
+      <button>Delete</button>
+    </div>
+    <%})%>
+  </section>
+</section>

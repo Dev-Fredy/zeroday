@@ -1,0 +1,83 @@
+.loginSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.4rem;
+
+    @media (max-width: 480px) {
+      flex: 1;
+      padding: 1rem;
+    }
+
+    legend {
+      flex: 1;
+      margin-inline: auto;
+      font-weight: 700;
+      font-size: 2.2rem;
+    }
+
+    section {
+      display: flex;
+      flex: 1;
+      justify-content: space-around;
+
+      p {
+        a {
+          text-decoration: none;
+          color: black;
+          font-weight: bold;
+        }
+      }
+    }
+
+    div {
+      display: flex;
+      gap: 0.2rem;
+      align-items: center;
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      label {
+        flex: 0.5;
+        @media (max-width: 480px) {
+          font-size: larger;
+        }
+      }
+
+      input {
+        flex: 1;
+        padding: 0.4rem;
+        border: transparent;
+        outline: transparent;
+        border-radius: 0.4rem;
+        background: whitesmoke;
+
+        @media (max-width: 480px) {
+          font-size: larger;
+          width: 100%;
+        }
+
+        &:focus {
+          border: transparent;
+          outline: transparent;
+          background-color: whitesmoke;
+        }
+
+        &:focus-visible {
+          background-color: whitesmoke;
+        }
+      }
+    }
+  }
+}

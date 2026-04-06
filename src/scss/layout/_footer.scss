@@ -1,0 +1,22 @@
+footer {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  color: white;
+
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+  }
+
+  div {
+    display: flex;
+    gap: 1rem;
+
+    a {
+      text-decoration: none;
+      color: gray;
+    }
+  }
+}

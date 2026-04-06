@@ -1,0 +1,92 @@
+<section class="sidebarContainer">
+  <aside class="sidebar">
+    <div class="sidebarNav">
+      <a href="/"
+        ><img src="/Images/ZeroDayFinance.png" alt="menu-logo" class="menuLogo"
+      /></a>
+      <div class="closeMenu">
+        <div>&Cross;</div>
+      </div>
+    </div>
+
+    <section class="mainSidebarContent">
+      <% if (authenticated) { %>
+      <div class="sidebarContent">
+        <div class="sidebarMenu">
+          <div>
+            <a href="/dashboard">Dashboard</a>
+          </div>
+          <div>
+            <a href="/simulations">Simulate</a>
+          </div>
+          <div>
+            <a href="/scenarios">Scenarios</a>
+          </div>
+        </div>
+      </div>
+      <%} else {%>
+      <div class="sidebarContent">
+        <div class="sidebarMenu">
+          <div>
+            <a href="/simulations"> Demo </a>
+          </div>
+          <div>
+            <a href="/login">Get Started</a>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <div class="adminSidebar">
+        <div class="adminSidebarTitle">Admin</div>
+        <div class="adminSidebarMenu">
+          <div>
+            <a href="/admin"> Dash </a>
+          </div>
+          <div>
+            <a href="/admin/users">Users</a>
+          </div>
+          <div>
+            <a href="/admin/faqs">Faqs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="sidebarFooter">
+      <div>
+        <div>
+          <a href="/pages/privacy">Privacy</a>
+        </div>
+        <div>
+          <a href="/pages/contact">Contact</a>
+        </div>
+        <div>
+          <a href="/pages/about">About</a>
+        </div>
+        <div>
+          <a href="/pages/terms"> Terms </a>
+        </div>
+      </div>
+      <div>
+        <p>
+          <span>Copyright &copy; All Rights Reserved</span>
+        </p>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<script>
+  document.querySelector(".sidebarContainer").style.display = "none";
+
+  document.querySelector(".closeMenu").addEventListener("click", () => {
+    document.querySelector(".sidebarContainer").style.display = "none";
+  });
+
+  document.querySelector(".sidebarContainer").addEventListener("click", () => {
+    document.querySelector(".sidebarContainer").style.display = "none";
+  });
+
+  document.querySelector(".sidebar").addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+</script>

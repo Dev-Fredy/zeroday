@@ -1,0 +1,89 @@
+<section class="editorSection">
+  <section>
+    <textarea
+      name="title"
+      class="title"
+      placeholder="<%- type === 'page' ? 'Page title e.g About...' : 'Faq title ...'%>"
+      rows="1"
+      wrap="soft"
+      autocomplete="off"
+    ></textarea>
+  </section>
+
+  <section class="">
+    <div class="toolbar">
+      <button class="p">Normal</button>
+      <button class="h1">H1</button>
+      <button class="h2">H2</button>
+      <button class="bold">
+        <strong>B</strong>
+      </button>
+      <button class="italic">
+        <i>I</i>
+      </button>
+      <button class="underline">
+        <u>U</u>
+      </button>
+      <button class="unorderedList">&bull; li</button>
+      <button class="orderedList">1. li</button>
+      <button class="image">📷</button>
+      <button class="video">📽️</button>
+      <button class="linkButton">🔗</button>
+    </div>
+  </section>
+
+  <section class="editorContainer">
+    <div class="editor" autocorrect="off" contenteditable="true">
+      <p>Write Here...</p>
+    </div>
+    <div class="linkBox">
+      <input
+        id="linkInput"
+        placeholder="Paste link..."
+        autocomplete="off"
+        autocorrect="off"
+      />
+      <button class="linkBtn">Ok</button>
+    </div>
+  </section>
+
+  <% if (type === 'page') { %> <%} else { %>
+  <section>
+    <div>
+      <label for="tags">Tags</label>
+      <input type="text" id="tags" />
+    </div>
+  </section>
+  <% } %>
+
+  <section>
+    <div>
+      <label for="keywords">Keywords</label>
+      <input type="text" id="keywords" />
+    </div>
+  </section>
+
+  <% if (type === 'page') {%><%} else {%>
+  <section>
+    <div>
+      <label for="categories">Categories</label>
+      <input type="text" id="categories" />
+    </div>
+  </section>
+  <%} %>
+
+  <section>
+    <div>
+      <label for="description">Description</label>
+      <div contenteditable="true" id="description"></div>
+    </div>
+  </section>
+  <%if (type === 'page') {%><% } else {%>
+  <section>
+    <button class="featuredImage">Insert featured image</button>
+  </section>
+  <%}%>
+  <section>
+    <button id="publish">Publish</button>
+  </section>
+</section>

@@ -1,0 +1,55 @@
+<section class="faqsArea">
+  <section class="listFaqs">
+    <h1>Faqs</h1>
+    <section class="faqsList">
+      <% var lastIndex = 3; const newFaqs = faqs.slice(0, lastIndex);
+      newFaqs.forEach((faq, index) => { %>
+      <div>
+        <a href="/faqs/<%- faq.slug%>_<%- faq.id %>">
+          <img
+            loading="lazy"
+            src="<%- faq.featuredUrl %>"
+            alt="<%- faq.title %>"
+          />
+          <a href="/category/<%- faq.category %>" class="category"
+            ><%- faq.category %></a
+          >
+        </a>
+        <div>
+          <a href="/faqs/<%- faq.slug%>_<%- faq.id %>" class="faq_title"
+            ><%- faq.title %></a
+          >
+          <div class="faq_description">
+            <%- faq.description.slice(0,30) %>...
+          </div>
+
+          <a href="/faqs/<%- faq.slug%>_<%- faq.id %>" class="readMore"
+            >Read More</a
+          >
+        </div>
+      </div>
+
+      <% }) %>
+    </section>
+    <section>
+      <button
+        class="load"
+        onclick="
+         `<%- lastIndex += 3 %>`
+        console.log(`<%- lastIndex%>`)
+        
+        "
+      >
+        Load More
+      </button>
+    </section>
+  </section>
+  <section class="faqsSidebar">
+    <%- include('../partials/faqsSidebar.ejs') %>
+  </section>
+</section>
+
+<script>
+  let faqs = `<%- faqs %>`;
+  console.log(faqs);
+</script>

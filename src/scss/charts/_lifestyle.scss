@@ -1,0 +1,36 @@
+.simulations {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .burn {
+    flex: inherit;
+    display: flex;
+    flex-direction: column;
+    section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      div {
+        display: flex;
+        flex: 1;
+        gap: 1rem;
+        flex-direction: column;
+
+        div {
+          flex: 0.5;
+        }
+
+        a {
+          width: max-content;
+          margin-inline: auto;
+        }
+      }
+
+      .lifestyle {
+        flex: 1;
+      }
+    }
+  }
+}

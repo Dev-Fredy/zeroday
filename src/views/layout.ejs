@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <% if (!meta) {%> <%return%> <%} else {%>
+    <meta
+      name="description"
+      content="<%- meta.description ? meta.description : '' %>"
+    />
+    <meta property="og:title" content="<%- meta.title ? meta.title : '' %>" />
+    <meta
+      property="og:description"
+      content="<%- meta.description ? meta.description : '' %>"
+    />
+    <meta
+      property="og:image"
+      content="<%- meta.image ? meta.image : '/Images/ZeroDayFinance.jpg' %>"
+    />
+    <meta property="og:url" content="<%- meta.url ? meta.url : '' %>" />
+    <meta name="twitter:title" content="<%- meta.title ? meta.title : '' %>" />
+    <meta
+      name="twitter:description"
+      content="<%- meta.description ? meta.description : '' %>"
+    />
+    <meta name="twitter:image" content="<%- meta.image ? meta.image : '' %>" />
+
+    <%}%>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <% if (!title) {%>
+    <title>Day Finance</title>
+
+    <% } else {%>
+
+    <title><%= title %> &bull; Day Finance</title>
+    <% } %>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <%- include('./partials/header.ejs') %>
+    <main><%- body %> <%- include('./partials/sidebar.ejs') %></main>
+    <%- include('./partials/footer.ejs') %>
+  </body>
+  <script type="module" src="/js/scripts.js"></script>
+</html>

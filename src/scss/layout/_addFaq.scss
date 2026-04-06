@@ -1,0 +1,211 @@
+.imageSection {
+  padding: 0.4rem 0;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+
+  .faqImages {
+    width: 50%;
+    height: max-content;
+    display: block;
+    gap: 0.1rem;
+    border: transparent gray 0.1rem;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    margin: 0;
+    align-self: center;
+
+    @media (max-width: 768px) {
+      width: 80%;
+    }
+
+    @media (max-width: 480px) {
+      width: 100%;
+    }
+
+    .image {
+      position: relative;
+      width: 100%;
+
+      img {
+        flex: 1;
+        height: auto;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .imageSource {
+        position: absolute;
+        bottom: 0.4rem;
+        right: 0.4rem;
+        padding: 0.2rem;
+        border-radius: 0.4rem;
+        font-size: small;
+        font-weight: 500;
+        background-color: rgba(245, 245, 245, 0.238);
+        color: black;
+        font-style: italic;
+
+        @media (max-width: 400px) {
+          font-size: x-small;
+        }
+      }
+    }
+    figcaption {
+      padding: 0.2rem 0.4rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-style: italic;
+
+      @media (max-width: 400px) {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.editorSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  position: relative;
+
+  section {
+    width: 100%;
+    background-color: white;
+    padding: 0.4rem;
+    display: flex;
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      position: sticky;
+      top: 0;
+
+      button {
+        border: transparent 0.1rem solid;
+        border-radius: 0.4rem;
+        padding: 0.2rem 0.6rem;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .clicked {
+        border: solid 0.1rem gray;
+      }
+    }
+  }
+
+  .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.4rem;
+    border-radius: 0.4rem;
+    background-color: white;
+    border: none;
+    outline: none;
+    min-width: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    column-wrap: wrap;
+    text-wrap: inherit;
+    word-wrap: break-word;
+    min-height: max-content;
+    resize: none;
+
+    &:focus {
+      background-color: whitesmoke;
+    }
+  }
+
+  .editorContainer {
+    height: 50dvh;
+    display: flex;
+    outline: none;
+    border: none;
+
+    .editor {
+      max-width: 100%;
+      flex: 1;
+      overflow-wrap: break-word;
+      outline: none;
+      border: none;
+      overflow-y: auto;
+      max-height: 100%;
+      scrollbar-gutter: stable;
+
+      &::-webkit-scrollbar {
+        width: 0.4rem;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: whitesmoke;
+        border-radius: 1000px;
+        border: solid transparent 0.1rem;
+        background-clip: content-box;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.289);
+        }
+      }
+
+      &:focus {
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}
+
+.linkBox {
+  position: fixed;
+  display: none;
+  background-color: red;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  box-shadow: 0 0.1rem 0.5rem rgb(0, 0, 0, 0.3);
+  z-index: 999999;
+  .linkInput {
+    padding: 0.2rem;
+    border: none;
+    outline: none;
+  }
+
+  .linkBtn {
+    border: transparent solid 0.1rem;
+    border-radius: 0.4rem;
+    padding: 0.2rem 0.6rem;
+
+    &:hover {
+      background-color: whitesmoke;
+    }
+  }
+}
+
+.videoContainer {
+  display: flex;
+  justify-content: center;
+
+  iframe {
+    width: 50%;
+    height: auto;
+    border-radius: 0.4rem;
+
+    @media (max-width: 768px) {
+      width: 70%;
+    }
+
+    @media (max-width: 400px) {
+      width: 100%;
+    }
+  }
+}

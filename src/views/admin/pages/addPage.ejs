@@ -1,0 +1,318 @@
+<%- include('../partials/editor.ejs') %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let savedRange = null;
+
+    function saveSelection() {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        savedRange = selection.getRangeAt(0);
+      }
+    }
+
+    let type = `<%- type %>`;
+
+    let tagsList = [];
+    let categoriesList = [];
+    let keywordsList = [];
+
+    let tagsInput = document.querySelector("#tags");
+    let categoriesInput = document.querySelector("#categories");
+    let keywordsInput = document.querySelector("#keywords");
+
+    let featuredImage = document.querySelector(".featuredImage");
+    let featuredUrl = null;
+
+    document.addEventListener("click", (e) => {
+      if (e.target.matches(".featuredImage")) {
+        addFeatured();
+      }
+
+      if (e.target.matches("#publish")) {
+        publish();
+      }
+      if (e.target.matches(".image")) {
+        uploadImage();
+      }
+      if (e.target.matches(".bold")) {
+        format("bold");
+      }
+      if (e.target.matches(".italic")) {
+        format("italic");
+      }
+      if (e.target.matches(".underline")) {
+        format("underline");
+      }
+      if (e.target.matches(".p")) {
+        format("formatBlock", "p");
+      }
+      if (e.target.matches(".h1")) {
+        format("formatBlock", "h1");
+      }
+      if (e.target.matches(".h2")) {
+        format("formatBlock", "h2");
+      }
+      if (e.target.matches(".unorderedList")) {
+        format("insertUnOrderedList");
+      }
+      if (e.target.matches(".orderedList")) {
+        format("insertOrderedList");
+      }
+      if (e.target.matches(".linkButton")) {
+        showLinkBox();
+      }
+
+      if (e.target.matches(".linkBtn")) {
+        e.stopPropagation();
+        applyLink();
+      }
+
+      if (e.target.matches(".vided")) {
+        insertVideo();
+      }
+    });
+
+    function addFeatured() {
+      let input = document.createElement("input");
+      input.type = "file";
+      input.className = "featuredimg";
+      input.name = "featured";
+      input.accept = "image/*";
+
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch("/uploads", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        featuredUrl = data.url;
+
+        insertFeaturedBlock(data.url);
+      };
+      input.click();
+    }
+
+    async function publish() {
+      let title = document.querySelector(".title").value;
+
+      let content = document.querySelector(".editor").innerHTML;
+
+      let featuredImageUrl = featuredUrl;
+      let description = document.querySelector("#description").innerHTML;
+
+      keywordsList = document.querySelector("#keywords").value.split(",");
+      let sentData =
+        type !== "page"
+          ? {
+              title,
+              content,
+              description,
+              featuredImageUrl,
+              tagsList,
+              keywordsList,
+              categoriesList,
+            }
+          : { title, content, description, keywords: keywordsList };
+
+      let res = await fetch(
+        `${type === "page" ? "/admin/pages" : "/admin/faqs"}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sentData),
+        }
+      );
+
+      let response = await res.json();
+      console.log(response);
+    }
+
+    document.querySelector("#tags").addEventListener("input", () => {
+      tagsList = document.querySelector("#tags").value.split(",");
+    });
+
+    document.querySelector("#categories").addEventListener("input", () => {
+      categoriesList = document.querySelector("#categories").value.split(",");
+    });
+
+    document.querySelector("#keywords").addEventListener("input", () => {
+      keywordsList = document.querySelector("#keywords").value.split(",");
+    });
+
+    function insertVideo() {
+      const url = prompt("URL here:");
+
+      if (!url) return;
+
+      const html = `
+    <p><br></p>
+    <div class="videoContainer">
+      <iframe src="${url}" frameborder="0" allowfullscreen></iframe>
+      </div>
+    <p><br></p>
+    `;
+
+      insertHtml(html);
+    }
+
+    function uploadImage() {
+      const input = document.createElement("input");
+
+      input.type = "file";
+      input.accept = "image/*";
+
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const alt = prompt("Describe Image: " || "");
+        const source = prompt("Credit image: " || "");
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch("/uploads", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        insertImageBlock(data.url, alt, source);
+      };
+      input.click();
+    }
+
+    function insertHtml(html) {
+      document.execCommand("insertHTML", false, html);
+    }
+
+    function insertFeaturedHtml(html) {
+      featuredImage.innerHTML = html;
+    }
+
+    function insertFeaturedBlock(url) {
+      const html = `
+    
+    <div class="imageSection" contenteditable='false'><figure class="faqImages">
+      <div class="image">
+        <img  src="${url}" alt="${document.querySelector(".title")}" >
+        
+      </figure></div>
+      
+    `;
+      insertFeaturedHtml(html);
+    }
+
+    function insertImageBlock(url, alt, source) {
+      const html = `
+    <p><br></p>
+    <div class="imageSection"><figure class="faqImages">
+      <div class="image">
+        <img  src="${url}" alt="${alt}" >
+        <div class="imageSource">${source ? `Source: ${source}` : ""}</div>
+        </div>
+      ${alt ? `<figcaption>${alt}</figcaption>` : ""}
+      </figure></div>
+      <p><br></p>
+      <p><br></p>
+    `;
+      insertHtml(html);
+    }
+    document.querySelector(".title").addEventListener("input", () => {
+      document.querySelector(".title").style.height = "auto";
+      document.querySelector(".title").style.height =
+        document.querySelector(".title").scrollHeight + "px";
+    });
+
+    function format(command, value = null) {
+      document.execCommand(command, false, value);
+    }
+
+    function getEditor() {
+      return document.querySelector(".editor");
+    }
+
+    let editor = getEditor();
+
+    editor.addEventListener("mouseup", saveSelection);
+    editor.addEventListener("keyup", saveSelection);
+
+    function getLinkBox() {
+      return document.querySelector(".linkBox");
+    }
+
+    let linkInput = (function getLinkInput() {
+      return document.querySelector("#linkInput");
+    })();
+
+    function showLinkBox() {
+      let linkBox = getLinkBox();
+
+      console.log("Showing link box");
+      if (!savedRange) {
+        alert("Select text first");
+        return;
+      }
+
+      console.log(savedRange);
+
+      const rect = savedRange.getBoundingClientRect();
+
+      linkBox.style.display = "block";
+
+      linkBox.style.left = rect.left + "px";
+      linkBox.style.top = rect.top - 40 + "px";
+
+      linkInput.value = "";
+      linkInput.focus();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target.matches("#linkInput")) {
+        e.stopPropagation();
+        if (e.key === "Enter") applyLink();
+      }
+    });
+
+    function applyLink() {
+      let editor = getEditor();
+      let linkBox = getLinkBox();
+      const url = linkInput.value.trim();
+
+      if (!url || !savedRange) return;
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(savedRange);
+
+      document.execCommand("createLink", false, url);
+
+      const link = savedRange.startContainer.parentElement;
+
+      if (link.tagName === "A") {
+        if (!url.startsWith("/") && !url.includes(location.hostname)) {
+          link.target = "_blank";
+          link.rel = "noopener";
+        }
+      }
+
+      linkBox.style.display = "none";
+
+      editor.addEventListener("click", (e) => {
+        if (!linkBox.contains(e.target)) {
+          linkBox.style.display = "none";
+        }
+      });
+    }
+  });
+</script>

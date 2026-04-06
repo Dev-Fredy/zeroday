@@ -1,0 +1,43 @@
+<section class="loginSection jsLoginSection">
+  <form class="resetForm">
+    <legend>Forgot Password</legend>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" class="jsEmail" />
+    </div>
+
+    <section class="">
+      <button class="jsReset buttonLink">Send Reset Link</button>
+    </section>
+    <section class="">
+      <p>
+        Remembered password?
+        <a href="/auth/login"> Login </a>
+      </p>
+    </section>
+  </form>
+</section>
+
+<script>
+  document.querySelector(".resetForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+  });
+
+  document.querySelector(".jsReset").addEventListener("click", () => {
+    handleSubmit();
+  });
+
+  async function handleSubmit() {
+    let email = document.querySelector(".jsEmail").value;
+
+    let res = await fetch("/auth/reset", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    let data = await res.json();
+    console.log(data);
+  }
+</script>

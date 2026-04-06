@@ -1,0 +1,15 @@
+<main>
+  <section class="dashboard">
+    <div>
+      <div>Name</div>
+      <div><%= user.first_name%> <%= user.last_name%></div>
+    </div>
+    <div>
+      <div>Email</div>
+      <div><%= user.email %></div>
+    </div>
+    <div><%- include('../auth/logout.ejs')%></div>
+  </section>
+</main>
+
+<script></script>

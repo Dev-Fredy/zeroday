@@ -1,0 +1,76 @@
+.liveChartDemo {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: center;
+  height: 400px;
+
+  @media (max-width: 400px) {
+    height: 300px;
+  }
+
+  h4 {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .liveChart {
+    display: flex;
+    width: 100%;
+    max-width: 70%;
+    margin-top: 1rem;
+    border-radius: 0.4rem;
+    border: none;
+    background-color: white;
+    padding: 1rem;
+    height: auto;
+
+    @media (max-width: 768px) {
+      max-width: 90%;
+    }
+
+    @media (max-width: 400px) {
+      max-width: 100%;
+    }
+  }
+}
+.demoHint {
+  position: absolute;
+  bottom: 1rem;
+  width: 100%;
+  display: flex;
+  max-width: 70%;
+  margin-top: 1rem;
+  border-radius: 0.4rem;
+  border: none;
+  background-color: rgba(183, 183, 183, 0.364);
+  padding: 1rem;
+  height: 80%;
+  align-items: center;
+  justify-content: center;
+
+  .live {
+    color: white;
+    background-color: black;
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.6rem;
+
+    text-decoration: none;
+  }
+
+  &:hover {
+    background-color: rgba(128, 128, 128, 0.489);
+  }
+
+  @media (max-width: 768px) {
+    max-width: 90%;
+  }
+
+  @media (max-width: 400px) {
+    max-width: 100%;
+  }
+}
