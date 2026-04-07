@@ -35,7 +35,7 @@ class Auth {
 
     const secret = process.env.JWT_SECRET;
 
-    const token = await jwt.sign(payload, secret, { expiresIn: "7d" });
+    const token = await jwt.sign(payload, secret, { expiresIn: "6" });
 
     res.cookie("token", token, {
       sameSite: "strict",
@@ -56,7 +56,10 @@ class Auth {
   async forgotPasswordPage(req, res) {
     try {
       if (req.query.tk) {
-        return res.render("auth/reset", { title: "Set new password", meta: {} });
+        return res.render("auth/reset", {
+          title: "Set new password",
+          meta: {},
+        });
       } else {
         return res
           .status(200)
@@ -151,7 +154,7 @@ class Auth {
 
       let matchingPasswords = await bcrypt.compare(
         password,
-        foundUser.password
+        foundUser.password,
       );
 
       if (matchingPasswords) {

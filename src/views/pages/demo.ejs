@@ -1,0 +1,255 @@
+<section class="finance-lab">
+  <div class="workspace">
+    <!-- LEFT PANEL -->
+    <form id="simulationForm" class="panel controls">
+      <div class="mode-switch">
+        <label for="strategyPreset">Investment Style</label>
+        <select id="strategyPreset" name="strategy">
+          <option value="safe">Safe Saver</option>
+          <option value="balanced" selected>Balanced Growth</option>
+          <option value="aggressive">Aggressive Builder</option>
+        </select>
+        <small>
+          Pick a strategy style and the simulator will choose market behavior.
+        </small>
+      </div>
+
+      <h3>Simulation Inputs</h3>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="income">Monthly Income</label>
+          <input
+            type="number"
+            id="income"
+            name="income"
+            class="number-box"
+            value="3000"
+            min="0"
+            step="100"
+          />
+        </div>
+        <input
+          type="range"
+          id="incomeRange"
+          class="range-slider"
+          min="0"
+          max="50000"
+          step="100"
+          value="3000"
+        />
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="field">
+        <div class="field-top">
+          <label for="expenses">Monthly Expenses</label>
+          <input
+            type="number"
+            id="expenses"
+            name="expenses"
+            class="number-box"
+            value="1600"
+            min="100"
+            max="10000"
+            step="100"
+          />
+        </div>
+        <input
+          type="range"
+          id="expensesRange"
+          class="range-slider"
+          min="100"
+          max="10000"
+          step="100"
+          value="1600"
+        />
+      </div>
+
+      <!-- SAVINGS -->
+      <div class="field">
+        <div class="field-top">
+          <label for="savings">Current Savings</label>
+          <input
+            type="number"
+            id="savings"
+            name="savings"
+            class="number-box"
+            value="20000"
+            min="0"
+            max="500000"
+            step="1000"
+          />
+        </div>
+        <input
+          type="range"
+          id="savingsRange"
+          class="range-slider"
+          min="0"
+          max="500000"
+          step="1000"
+          value="20000"
+        />
+      </div>
+
+      <!-- YEARS -->
+      <div class="field">
+        <div class="field-top">
+          <label for="years">Years to Simulate</label>
+          <input
+            type="number"
+            id="years"
+            name="years"
+            class="number-box"
+            value="10"
+            min="1"
+            max="40"
+          />
+        </div>
+        <input
+          type="range"
+          id="yearsRange"
+          class="range-slider"
+          min="1"
+          max="40"
+          value="10"
+        />
+      </div>
+    </form>
+
+    <!-- RIGHT PANEL -->
+    <main class="results-panel">
+      <div class="plain-summary-card">
+        <h3>Your future in simple words</h3>
+        <p id="simpleSummary">
+          Adjust your financial inputs to explore future possibilities.
+        </p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="metric">
+          <span>Median Outcome</span>
+          <strong id="medianOutcome">$0</strong>
+        </div>
+        <div class="metric">
+          <span>Best Case</span>
+          <strong id="bestOutcome">$0</strong>
+        </div>
+        <div class="metric">
+          <span>Worst Case</span>
+          <strong id="worstOutcome">$0</strong>
+        </div>
+        <div class="metric">
+          <span>Success Probability</span>
+          <strong id="successRate">0%</strong>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div id="wealthChart"></div>
+      </div>
+
+      <div class="insight-card" id="advisorText">
+        Smart financial guidance will appear here after simulation.
+      </div>
+    </main>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script>
+  const chart = new ApexCharts(document.querySelector("#wealthChart"), {
+    chart: {
+      type: "line",
+      height: 420,
+      toolbar: { show: false },
+    },
+    stroke: {
+      curve: "smooth",
+      width: 3,
+    },
+    series: [
+      { name: "Median", data: [] },
+      { name: "Best Case", data: [] },
+      { name: "Worst Case", data: [] },
+    ],
+    xaxis: {
+      categories: [],
+    },
+  });
+
+  chart.render();
+  window.wealthChart = chart;
+
+  async function runFinanceSimulation(payload) {
+    const response = await fetch("/sim_demo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) throw new Error("Simulation failed");
+    return response.json();
+  }
+
+  const form = document.getElementById("simulationForm");
+
+  function syncDualInputs(numberId, rangeId) {
+    const number = document.getElementById(numberId);
+    const range = document.getElementById(rangeId);
+
+    number.addEventListener("input", () => {
+      range.value = number.value;
+      submitSimulation();
+    });
+
+    range.addEventListener("input", () => {
+      number.value = range.value;
+      submitSimulation();
+    });
+  }
+
+  syncDualInputs("income", "incomeRange");
+  syncDualInputs("expenses", "expensesRange");
+  syncDualInputs("savings", "savingsRange");
+  syncDualInputs("years", "yearsRange");
+
+  async function submitSimulation() {
+    const payload = {
+      income: +form.income.value,
+      expenses: +form.expenses.value,
+      savings: +form.savings.value,
+      years: +form.years.value,
+      strategy: form.strategy.value,
+    };
+
+    const result = await runFinanceSimulation(payload);
+    updateDashboard(result);
+  }
+
+  function updateDashboard(result) {
+    medianOutcome.textContent = `$${result.summary.median.toLocaleString()}`;
+    bestOutcome.textContent = `$${result.summary.best.toLocaleString()}`;
+    worstOutcome.textContent = `$${result.summary.worst.toLocaleString()}`;
+    successRate.textContent = `${result.summary.successRate}%`;
+
+    window.wealthChart.updateOptions({
+      xaxis: { categories: result.chart.labels },
+    });
+
+    window.wealthChart.updateSeries([
+      { name: "Median", data: result.chart.median },
+      { name: "Best Case", data: result.chart.best },
+      { name: "Worst Case", data: result.chart.worst },
+    ]);
+
+    simpleSummary.textContent = result.advice.simple;
+    advisorText.textContent = result.advice.professional;
+  }
+
+  form.addEventListener("change", submitSimulation);
+  submitSimulation();
+</script>

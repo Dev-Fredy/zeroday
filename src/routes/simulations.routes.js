@@ -8,14 +8,14 @@ const router = express.Router();
 router.get("/simulations", (req, res) => {
   res.render("pages/simulations", {
     title: "Simulations",
-    meta: {}
+    meta: {},
   });
 });
 
 router.get("/simulations/runway", (req, res) => {
   res.render("simulations/runway", {
     title: "Runway",
-    meta: {}
+    meta: {},
   });
 });
 

@@ -1,6 +1,7 @@
 const calculateBurnRate = require("../utils/burn");
 let ApexCharts = require("apexcharts");
 const generateRunway = require("../utils/runway");
+const { runMonteCarlo } = require("../utils/demoSimulation");
 
 class Simulate {
   risk(req, res) {

@@ -4,6 +4,7 @@ const express = require("express");
 const expressejs = require("express-ejs-layouts");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 const userRoute = require("./routes/user.routes");
 const pagesRoute = require("./routes/pages.routes");
@@ -17,6 +18,8 @@ const sitemapsRoutes = require("./routes/sitemaps.routes");
 const apiRoutes = require("./routes/api.routes");
 const pagesController = require("./controller/pages.controller");
 const generateMonteCarloData = require("./utils/generateMonte");
+const demoRoutes = require("./routes/demo.routes");
+const env = require("./config/env");
 
 class App {
   constructor() {
@@ -82,6 +85,7 @@ class App {
     this.app.use("/", robotsRoutes);
     this.app.use("/", sitemapsRoutes);
     this.app.use("/", apiRoutes);
+    this.app.use("/", demoRoutes);
   }
 
   getApp() {

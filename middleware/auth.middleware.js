@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 
 const User = require("../src/models/user.model");
+const env = require("../src/config/env");
+const authController = require("../src/controller/auth.controller");
 
 class Auth {
   async isAdmin(req, res, next) {

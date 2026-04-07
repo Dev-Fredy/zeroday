@@ -1,12 +1,12 @@
 <main>
-  <section class="dashboard">
+  <section class="account">
     <div>
-      <div>Name</div>
-      <div><%= user.first_name%> <%= user.last_name%></div>
+      <div class="user">Name</div>
+      <div class="name"><%= user.first_name%> <%= user.last_name%></div>
     </div>
     <div>
-      <div>Email</div>
-      <div><%= user.email %></div>
+      <div class="user">Email</div>
+      <div class="email"><%= user.email %></div>
     </div>
     <div><%- include('../auth/logout.ejs')%></div>
   </section>
