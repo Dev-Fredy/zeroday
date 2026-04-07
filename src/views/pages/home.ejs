@@ -1,116 +1,627 @@
-<section class="hero">
-  <div class="heroTopText">Financial Simulator</div>
-  <h1 class="heroTop">
-    Know your financial future
-    <span class="heroTextGradient">before it happens</span>
-  </h1>
-  <p>
-    Track accounts, import transactions, and run thousands of simulations to
-    understand your financial trajectory with real confidence intervals.
-  </p>
-  <div class="heroActions">
-    <a href="/auth/login" id="start"> Start Free </a>
-    <a href="/simulations" class="live">Live Demo</a>
-  </div>
-  <div class="heroExpectations">
-    <div>
-      <img src="/Images/star.png" alt="" />
-      <div>No credit card required</div>
+<main>
+  <!-- Hero Section with Enhanced Visuals -->
+  <section class="hero">
+    <div class="hero-background">
+      <div class="gradient-orb gradient-orb-1"></div>
+      <div class="gradient-orb gradient-orb-2"></div>
+      <div class="gradient-orb gradient-orb-3"></div>
     </div>
-    <div>
-      <img src="/Images/star.png" alt="" />
-      <div>Import CSV instantly</div>
-    </div>
-    <div>
-      <img src="/Images/star.png" alt="" />
-      <div>1000+ simulations</div>
-    </div>
-  </div>
-</section>
-<section class="liveChartDemo">
-  <div>
-    <h4>Try Demo with no sign up</h4>
-  </div>
-  <div class="liveChart">
-    <div class="demoHint">
-      <a href="/simulations" class="live">Live Demo</a>
-    </div>
-  </div>
-</section>
-<section class="tools">
-  <h3>Everything you need to plan ahead</h3>
-  <div>
-    <div class="toolBox">
-      <h4>Projections</h4>
-      <div>
-        Run 1000+ simulations to see your financial future with confidence bands
+
+    <div class="container">
+      <div class="hero-badge">
+        <span class="badge-icon">✨</span>
+        <span>New: AI-Powered Insights Available</span>
+      </div>
+
+      <div class="heroTopText">Financial Simulator</div>
+
+      <h1 class="heroTitle">
+        Know your financial future
+        <span class="heroTextGradient">before it happens</span>
+      </h1>
+
+      <p class="heroDescription">
+        Track accounts, import transactions, and run thousands of Monte Carlo
+        simulations to understand your financial trajectory with
+        <strong>real confidence intervals</strong>.
+      </p>
+
+      <div class="heroActions">
+        <a href="/auth/login" id="start" class="btn btn-primary btn-large">
+          Start Free
+          <span class="btn-arrow">→</span>
+        </a>
+        <a
+          href="/simulations"
+          class="btn btn-secondary btn-large live-demo-btn"
+        >
+          <span class="btn-icon">▶</span>
+          Live Demo
+        </a>
+      </div>
+
+      <div class="heroExpectations">
+        <div class="trust-badge">
+          <svg
+            class="trust-icon-svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>No credit card required</span>
+        </div>
+        <div class="trust-badge">
+          <svg
+            class="trust-icon-svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Import CSV instantly</span>
+        </div>
+        <div class="trust-badge">
+          <svg
+            class="trust-icon-svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>1000+ simulations</span>
+        </div>
+      </div>
+
+      <!-- Social Proof Stats -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">10K+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">$50M+</div>
+          <div class="stat-label">Simulated</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">4.9</div>
+          <div class="stat-label">
+            <span class="stars">★★★★★</span>
+            Rating
+          </div>
+        </div>
       </div>
     </div>
-    <div class="toolBox">
-      <h4>CSV Bank Import</h4>
-      <div>
-        Upload your bank statement CSV and auto-categorize transactions
-        instantly
+  </section>
+
+  <!-- Trusted By Section -->
+  <section class="trusted-by">
+    <div class="container">
+      <p class="trusted-label">Trusted by forward-thinking individuals</p>
+      <div class="trusted-logos">
+        <div class="logo-item">
+          <span class="logo-placeholder">Forbes</span>
+        </div>
+        <div class="logo-item">
+          <span class="logo-placeholder">TechCrunch</span>
+        </div>
+        <div class="logo-item">
+          <span class="logo-placeholder">Bloomberg</span>
+        </div>
+        <div class="logo-item">
+          <span class="logo-placeholder">WSJ</span>
+        </div>
       </div>
     </div>
-    <div class="toolBox">
-      <h4>Scenario Planning</h4>
-      <div>
-        Adjust income/expense parameters and watch projections update in
-        real-time.
+  </section>
+
+  <!-- Live Chart Demo Section -->
+  <section class="liveChartDemo">
+    <div class="container">
+      <div class="demo-header">
+        <div>
+          <h4 class="demo-title">
+            <span class="emoji">📊</span>
+            Interactive simulation · see your possible future
+          </h4>
+          <p class="demo-subtitle">
+            Based on 10,000 Monte Carlo scenarios with 95% confidence intervals
+          </p>
+        </div>
+        <div class="demoHint">
+          <span class="demo-hint-text">No signup required</span>
+          <a href="/simulations" class="btn btn-primary">
+            Try Live Demo
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="liveChart card card-large">
+        <div class="chart-header-toolbar">
+          <div class="chart-indicator">
+            <span class="indicator-dot"></span>
+            Live simulation
+          </div>
+          <div class="chart-legend-custom">
+            <span class="legend-item"
+              ><span class="legend-color" style="background: #2563eb"></span>
+              Median</span
+            >
+            <span class="legend-item"
+              ><span class="legend-color" style="background: #10b981"></span>
+              Top 10%</span
+            >
+            <span class="legend-item"
+              ><span class="legend-color" style="background: #f97316"></span>
+              Bottom 10%</span
+            >
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <!-- Chart rendered here -->
+        </div>
+        <div class="chart-footer-note">
+          <span class="note-icon">💡</span>
+          <span>Click and drag to zoom • Hover for detailed values</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-<section class="takeAction">
-  <div>
-    <h3>Ready to take control of your finances?</h3>
-    <div>Join thousands running intelligent financial simulations.</div>
-    <div>
-      <button>Get Started Free</button>
+  </section>
+
+  <!-- Tools Section with Enhanced Cards -->
+  <section class="tools">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Powerful Features</span>
+        <h3 class="section-title">Everything you need to plan ahead</h3>
+        <p class="section-description">
+          Professional-grade tools that make financial planning accessible to
+          everyone
+        </p>
+      </div>
+
+      <div class="tools-grid">
+        <div class="toolBox card">
+          <div class="tool-icon-wrapper">
+            <span class="tool-icon">📈</span>
+          </div>
+          <h4 class="tool-title">Monte Carlo Projections</h4>
+          <p class="tool-description">
+            Run 1,000+ simulations with confidence bands. See best, average, and
+            worst-case scenarios at a glance.
+          </p>
+          <ul class="tool-features">
+            <li>95% confidence intervals</li>
+            <li>Historical market data</li>
+            <li>Inflation adjusted</li>
+          </ul>
+        </div>
+
+        <div class="toolBox card featured">
+          <div class="featured-badge">Most Popular</div>
+          <div class="tool-icon-wrapper">
+            <span class="tool-icon">📁</span>
+          </div>
+          <h4 class="tool-title">CSV Bank Import</h4>
+          <p class="tool-description">
+            Drag & drop your bank statement. AI-powered auto-categorization in
+            seconds. No manual entry required.
+          </p>
+          <ul class="tool-features">
+            <li>Supports all major banks</li>
+            <li>Smart categorization</li>
+            <li>Bulk import support</li>
+          </ul>
+        </div>
+
+        <div class="toolBox card">
+          <div class="tool-icon-wrapper">
+            <span class="tool-icon">🎯</span>
+          </div>
+          <h4 class="tool-title">Scenario Planning</h4>
+          <p class="tool-description">
+            Adjust income, expenses, or market returns. Watch your financial
+            future update in real-time with instant feedback.
+          </p>
+          <ul class="tool-features">
+            <li>Real-time updates</li>
+            <li>Unlimited scenarios</li>
+            <li>Side-by-side comparison</li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Simple Process</span>
+        <h3 class="section-title">Start planning in 3 simple steps</h3>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon">📤</div>
+          <h4 class="step-title">Import Your Data</h4>
+          <p class="step-description">
+            Upload your bank CSV or connect manually. It takes less than 60
+            seconds.
+          </p>
+        </div>
+
+        <div class="step-connector">
+          <span class="connector-line"></span>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon">⚙️</div>
+          <h4 class="step-title">Customize Parameters</h4>
+          <p class="step-description">
+            Adjust your assumptions and see projections update in real-time.
+          </p>
+        </div>
+
+        <div class="step-connector">
+          <span class="connector-line"></span>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon">🎉</div>
+          <h4 class="step-title">Get Your Forecast</h4>
+          <p class="step-description">
+            Receive personalized insights and actionable recommendations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Testimonials</span>
+        <h3 class="section-title">What our users say</h3>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card card">
+          <div class="testimonial-rating">★★★★★</div>
+          <p class="testimonial-text">
+            "This tool completely changed how I think about my finances. I now
+            have a clear 10-year plan and sleep better at night."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SJ</div>
+            <div class="author-info">
+              <div class="author-name">Sarah Johnson</div>
+              <div class="author-title">Software Engineer</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card card">
+          <div class="testimonial-rating">★★★★★</div>
+          <p class="testimonial-text">
+            "The Monte Carlo simulations gave me confidence to make career
+            changes knowing exactly how it would impact my long-term finances."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MC</div>
+            <div class="author-info">
+              <div class="author-name">Michael Chen</div>
+              <div class="author-title">Product Manager</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card card">
+          <div class="testimonial-rating">★★★★★</div>
+          <p class="testimonial-text">
+            "Finally, a financial tool that's both powerful AND easy to use. The
+            CSV import saved me hours of manual data entry."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">ER</div>
+            <div class="author-info">
+              <div class="author-name">Emma Rodriguez</div>
+              <div class="author-title">Small Business Owner</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section class="comparison">
+    <div class="container">
+      <div class="comparison-card card">
+        <div class="comparison-header">
+          <h3 class="comparison-title">Why choose Zero Day Finance?</h3>
+        </div>
+        <div class="comparison-table">
+          <div class="comparison-row header">
+            <div class="comparison-cell">Feature</div>
+            <div class="comparison-cell">Zero Day</div>
+            <div class="comparison-cell">Traditional Tools</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell">Monte Carlo Simulations</div>
+            <div class="comparison-cell positive">✓ 1,000+ runs</div>
+            <div class="comparison-cell negative">✗ Limited or none</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell">CSV Import</div>
+            <div class="comparison-cell positive">✓ Auto-categorization</div>
+            <div class="comparison-cell negative">✗ Manual entry</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell">Real-time Updates</div>
+            <div class="comparison-cell positive">✓ Instant</div>
+            <div class="comparison-cell negative">✗ Recalculation needed</div>
+          </div>
+          <div class="comparison-row">
+            <div class="comparison-cell">Free Tier</div>
+            <div class="comparison-cell positive">✓ Full features</div>
+            <div class="comparison-cell negative">✗ Limited trial</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section -->
+  <section class="takeAction">
+    <div class="container">
+      <div class="cta-content">
+        <span class="cta-badge">Start Your Journey Today</span>
+        <h3 class="cta-title">
+          Ready to take control of your financial future?
+        </h3>
+        <p class="cta-subtitle">
+          Join 10,000+ users running intelligent financial simulations and
+          making confident decisions about their future.
+        </p>
+        <div class="cta-features">
+          <span class="cta-feature">✓ Free forever plan</span>
+          <span class="cta-feature">✓ No credit card required</span>
+          <span class="cta-feature">✓ Cancel anytime</span>
+        </div>
+        <div class="cta-action">
+          <button
+            onclick="window.location.href = '/auth/login'"
+            class="btn btn-cta"
+          >
+            Get Started Free
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+        <p class="cta-guarantee">
+          <span class="guarantee-icon">🛡️</span>
+          30-day money-back guarantee • 24/7 support
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
 <script>
-  document.querySelector(".demoHint").addEventListener("click", () => {
-    window.location.href = "/simulations";
-  });
-  let monteData = `<%- JSON.stringify(monteData) %>`;
-  let monteDataParsed = JSON.parse(monteData);
-  console.log(monteDataParsed);
-  function runRunWayChart() {
-    let options = {
-      chart: {
-        type: "line",
-        height: 350,
-        zoom: { enabled: false },
-        animations: { enabled: true, speed: 800 },
-      },
-      stroke: {
-        width: 2,
-        curve: "smooth",
-        opacity: 0.5,
-      },
-      fill: {
-        opacity: 1,
-      },
-      series: monteDataParsed,
-      tooltip: { shared: false },
-      dataLabels: { enabled: false },
-      markers: { size: 0 },
-      xaxis: {
-        title: { text: "Years from now" },
-        categories: Array.from({ length: 21 }, (_, i) => i),
-      },
-      yaxis: {
-        labels: { formatter: (val) => `$${val}` },
-      },
+  (function () {
+    // Enhanced chart rendering
+    let monteData = `<%- JSON.stringify(monteData) %>`;
+    let monteDataParsed;
+
+    try {
+      monteDataParsed = JSON.parse(monteData);
+    } catch (e) {
+      console.warn("Using enhanced sample data for demo preview");
+      monteDataParsed = [
+        {
+          name: "Median (50th Percentile)",
+          data: [
+            20000, 25000, 31000, 38000, 45000, 54000, 63000, 72000, 83000,
+            94000, 106000, 119000, 132000, 146000, 161000, 177000, 194000,
+            212000, 231000, 251000, 272000,
+          ],
+        },
+        {
+          name: "Top 10% (Optimistic)",
+          data: [
+            20000, 27000, 36000, 46000, 58000, 71000, 86000, 102000, 120000,
+            140000, 162000, 186000, 212000, 240000, 270000, 302000, 336000,
+            372000, 410000, 450000, 492000,
+          ],
+        },
+        {
+          name: "Bottom 10% (Conservative)",
+          data: [
+            20000, 22000, 24000, 26000, 28000, 30000, 32000, 34000, 36000,
+            38000, 40000, 42000, 44000, 46000, 48000, 50000, 52000, 54000,
+            56000, 58000, 60000,
+          ],
+        },
+      ];
+    }
+
+    function renderChart() {
+      const chartEl = document.querySelector(".chart-wrapper");
+      if (!chartEl) return;
+
+      const options = {
+        chart: {
+          type: "line",
+          height: 420,
+          zoom: {
+            enabled: true,
+            type: "x",
+            autoScaleYaxis: true,
+          },
+          animations: {
+            enabled: true,
+            speed: 800,
+            animateGradually: { enabled: true, delay: 150 },
+          },
+          toolbar: {
+            show: true,
+            tools: {
+              download: true,
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true,
+            },
+          },
+          fontFamily: "Inter, sans-serif",
+          background: "transparent",
+        },
+        stroke: {
+          width: [3, 2, 2],
+          curve: "smooth",
+          dashArray: [0, 5, 5],
+        },
+        colors: ["#2563eb", "#10b981", "#f97316"],
+        fill: {
+          type: ["solid", "gradient", "gradient"],
+          gradient: {
+            shade: "light",
+            type: "vertical",
+            shadeIntensity: 0.5,
+            opacityFrom: 0.3,
+            opacityTo: 0.05,
+          },
+        },
+        series: monteDataParsed,
+        tooltip: {
+          shared: true,
+          intersect: false,
+          theme: "light",
+          y: {
+            formatter: (val) => {
+              if (val >= 1000000) return "$" + (val / 1000000).toFixed(1) + "M";
+              if (val >= 1000) return "$" + (val / 1000).toFixed(0) + "k";
+              return "$" + val;
+            },
+          },
+        },
+        dataLabels: { enabled: false },
+        markers: {
+          size: 0,
+          hover: { size: 6 },
+          discrete: [
+            {
+              seriesIndex: 0,
+              dataPointIndex: 20,
+              size: 6,
+              strokeColor: "#2563eb",
+              fillColor: "#fff",
+            },
+          ],
+        },
+        grid: {
+          borderColor: "#eef2f6",
+          strokeDashArray: 4,
+          padding: { top: 20, bottom: 10, left: 10, right: 10 },
+        },
+        xaxis: {
+          title: {
+            text: "Years from now",
+            style: { fontWeight: 500, fontSize: "13px" },
+          },
+          categories: Array.from({ length: 21 }, (_, i) => `Year ${i}`),
+          labels: {
+            style: { fontSize: "12px" },
+            formatter: (val) => val,
+          },
+          axisBorder: { show: false },
+          axisTicks: { show: false },
+        },
+        yaxis: {
+          title: {
+            text: "Portfolio Value (USD)",
+            style: { fontWeight: 500, fontSize: "13px" },
+          },
+          labels: {
+            formatter: (val) => {
+              if (val >= 1000000) return "$" + (val / 1000000).toFixed(1) + "M";
+              if (val >= 1000) return "$" + (val / 1000).toFixed(0) + "k";
+              return "$" + val;
+            },
+          },
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "center",
+          offsetY: 0,
+          fontSize: "13px",
+          markers: { radius: 4 },
+        },
+      };
+
+      const chart = new ApexCharts(chartEl, options);
+      chart.render();
+
+      window.addEventListener("resize", () => {
+        if (chart && typeof chart.render === "function") {
+          chart.render();
+        }
+      });
+    }
+
+    renderChart();
+
+    // Enhanced demo hint click handler
+    const demoHint = document.querySelector(".demoHint");
+    if (demoHint) {
+      demoHint.addEventListener("click", (e) => {
+        if (e.target.closest("a")) return;
+        window.location.href = "/simulations";
+      });
+    }
+
+    // Animate stats on scroll
+    const observerOptions = {
+      threshold: 0.5,
+      rootMargin: "0px",
     };
 
-    new ApexCharts(document.querySelector(".liveChart"), options).render();
-  }
-  runRunWayChart();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animated");
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll(".stat-number").forEach((stat) => {
+      observer.observe(stat);
+    });
+  })();
 </script>

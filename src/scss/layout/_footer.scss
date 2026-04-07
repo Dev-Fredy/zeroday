@@ -1,22 +1,398 @@
-footer {
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: black;
-  color: white;
+// ============================================
+// FOOTER.SCSS - Professional Footer Styles
+// ============================================
 
-  @media (max-width: 480px) {
-    flex-direction: column-reverse;
+.main-footer {
+  background: var(--color-bg-secondary);
+  border-top: var(--border-width-thin) solid var(--color-border-light);
+  margin-top: auto;
+  padding: var(--spacing-12) 0 var(--spacing-6);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-8) 0 var(--spacing-4);
+  }
+}
+
+// Footer Top Section
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+  gap: var(--spacing-12);
+  padding-bottom: var(--spacing-10);
+  border-bottom: var(--border-width-thin) solid var(--color-border-light);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+    padding-bottom: var(--spacing-8);
+  }
+}
+
+// Brand Section
+.footer-brand {
+  .footer-logo {
+    display: inline-block;
+    margin-bottom: var(--spacing-4);
+
+    img {
+      height: 32px;
+      width: auto;
+    }
   }
 
-  div {
+  .footer-tagline {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-5);
+    max-width: 300px;
+  }
+}
+
+.footer-social {
+  display: flex;
+  gap: var(--spacing-3);
+
+  .social-link {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--border-radius-lg);
+    color: var(--color-text-secondary);
+    transition: all var(--transition-base);
+
+    &:hover {
+      background: var(--color-primary-blue);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+// Navigation Section
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-6);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-5);
+  }
+}
+
+.footer-nav-column {
+  .footer-nav-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: var(--spacing-2);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
 
     a {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
       text-decoration: none;
-      color: gray;
+      transition: all var(--transition-fast);
+      display: inline-block;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--color-primary-blue);
+        transition: width var(--transition-base);
+      }
+
+      &:hover {
+        color: var(--color-primary-blue);
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Newsletter Section
+.footer-newsletter {
+  padding: var(--spacing-8) 0;
+  border-bottom: var(--border-width-thin) solid var(--color-border-light);
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-6) 0;
+  }
+}
+
+.newsletter-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-8);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-5);
+  }
+}
+
+.newsletter-text {
+  .newsletter-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-2);
+    color: var(--color-text-primary);
+  }
+
+  .newsletter-description {
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}
+
+.newsletter-form {
+  flex: 1;
+  max-width: 500px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.newsletter-input-wrapper {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: var(--border-width-thin) solid var(--color-border-light);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-primary);
+  transition: all var(--transition-base);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary-blue);
+    box-shadow: var(--shadow-outline);
+    background: var(--color-bg-secondary);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.newsletter-btn {
+  padding: var(--spacing-3) var(--spacing-6);
+  white-space: nowrap;
+
+  .btn-arrow {
+    margin-left: var(--spacing-1);
+    transition: transform var(--transition-base);
+  }
+
+  &:hover .btn-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.newsletter-privacy {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin: var(--spacing-2) 0 0;
+}
+
+// Bottom Bar
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  padding-top: var(--spacing-6);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.footer-copyright {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+
+  p {
+    margin: 0;
+  }
+}
+
+.footer-legal {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-1);
+
+  a {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-primary-blue);
+    }
+  }
+
+  .separator {
+    color: var(--color-border-medium);
+    margin: 0 var(--spacing-1);
+  }
+
+  @media (max-width: 480px) {
+    justify-content: center;
+  }
+}
+
+.footer-status {
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-success);
+      animation: pulse 2s infinite;
+    }
+
+    &.online .status-dot {
+      background: var(--color-success);
+    }
+
+    &.offline .status-dot {
+      background: var(--color-error);
+    }
+  }
+}
+
+// Trust Badges
+.footer-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+  margin-top: var(--spacing-8);
+  padding-top: var(--spacing-6);
+  border-top: var(--border-width-thin) solid var(--color-border-light);
+
+  @media (max-width: 640px) {
+    gap: var(--spacing-5);
+  }
+}
+
+.trust-badge-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+
+  .trust-icon {
+    font-size: 1.25rem;
+    opacity: 0.8;
+  }
+
+  &:hover {
+    color: var(--color-text-primary);
+
+    .trust-icon {
+      opacity: 1;
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+  .main-footer {
+    background: var(--color-bg-dark);
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .footer-social .social-link {
+    background: rgba(255, 255, 255, 0.05);
+
+    &:hover {
+      background: var(--color-primary-blue);
+    }
+  }
+
+  .newsletter-input {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: white;
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.08);
     }
   }
 }

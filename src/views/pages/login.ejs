@@ -1,65 +1,420 @@
-<section class="loginSection jsLoginSection">
-  <form class="">
-    <legend>Login</legend>
-    <div>
-      <label for="email">Email</label>
-      <input type="email" id="email" class="jsEmail" />
-    </div>
-    <div class="">
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" class="jsPassword" />
-    </div>
-    <section class="">
-      <button class="jsLogin buttonLink">Login</button>
-    </section>
-    <section class="">
-      <p>Don't have an account? <a href="/signup">Sign up</a></p>
-    </section>
-  </form>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login • Zero Day Finance</title>
+    <meta
+      name="description"
+      content="Sign in to your Zero Day Finance account to access your financial simulations and insights."
+    />
 
-<script>
-  document.querySelector(".jsLogin").addEventListener("click", (e) => {
-    e.preventDefault();
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+      rel="stylesheet"
+    />
 
-    login();
-  });
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/boilerplate.css" />
+    <link rel="stylesheet" href="/css/flex.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+  </head>
+  <body class="auth-page">
+    <main class="auth-main">
+      <div class="auth-container">
+        <!-- Back to Home -->
+        <a href="/" class="auth-back-link">
+          <span class="back-icon">←</span>
+          Back to Home
+        </a>
 
-  document.querySelector(".jsEmail").addEventListener("click", (e) => {
-    if (e.key === "Enter") {
-      login();
-    }
-  });
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <!-- Brand Section -->
+          <div class="auth-brand">
+            <a href="/" class="auth-logo">
+              <img src="/Images/ZeroDayFinance.png" alt="Zero Day Finance" />
+            </a>
+            <h1 class="auth-title">Welcome back</h1>
+            <p class="auth-subtitle">
+              Sign in to access your financial dashboard
+            </p>
+          </div>
 
-  document.querySelector(".jsPassword").addEventListener("click", (e) => {
-    if (e.key === "Enter") {
-      login();
-    }
-  });
+          <!-- Demo Credentials (for testing) -->
+          <div class="demo-credentials">
+            <span class="demo-icon">🔑</span>
+            <span class="demo-text">Demo: demo@example.com / demo123</span>
+          </div>
 
-  async function login() {
-    const email = document.querySelector(".jsEmail").value;
-    const password = document.querySelector(".jsPassword").value;
+          <!-- Social Login Options -->
+          <div class="social-login">
+            <button
+              class="social-btn google"
+              onclick="socialLogin('google')"
+              type="button"
+            >
+              <svg
+                class="social-icon"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+              >
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              <span>Continue with Google</span>
+            </button>
 
-    const data = {
-      email,
-      password,
-    };
+            <button
+              class="social-btn github"
+              onclick="socialLogin('github')"
+              type="button"
+            >
+              <svg
+                class="social-icon"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+              >
+                <path
+                  fill="#24292E"
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                />
+              </svg>
+              <span>Continue with GitHub</span>
+            </button>
+          </div>
 
-    let res = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+          <!-- Divider -->
+          <div class="auth-divider">
+            <span class="divider-text">or continue with email</span>
+          </div>
 
-    let response = await res.json();
+          <!-- Login Form -->
+          <form class="auth-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label for="email" class="form-label">Email address</label>
+              <div class="input-wrapper">
+                <span class="input-icon">📧</span>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-input jsEmail"
+                  placeholder="you@example.com"
+                  value=""
+                  required
+                  autocomplete="email"
+                  autofocus
+                />
+              </div>
+            </div>
 
-    console.log(response);
+            <div class="form-group">
+              <div class="label-wrapper">
+                <label for="password" class="form-label">Password</label>
+                <a href="/forgot-password" class="forgot-link"
+                  >Forgot password?</a
+                >
+              </div>
+              <div class="input-wrapper">
+                <span class="input-icon">🔒</span>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-input jsPassword"
+                  placeholder="••••••••"
+                  value=""
+                  required
+                  autocomplete="current-password"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword()"
+                  aria-label="Toggle password visibility"
+                >
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+            </div>
 
-    if (response.success === true) {
-      window.location.href = document.referrer || "/";
-    }
-  }
-</script>
+            <!-- Remember Me -->
+            <div class="form-checkbox">
+              <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" checked />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Remember me for 30 days</span>
+              </label>
+            </div>
+
+            <!-- Error Message -->
+            <div class="form-error jsError" style="display: none"></div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="btn btn-primary btn-large btn-block jsLogin"
+            >
+              <span class="btn-text">Sign In</span>
+              <span class="btn-spinner" style="display: none"></span>
+            </button>
+          </form>
+
+          <!-- Sign Up Link -->
+          <div class="auth-footer">
+            <p class="auth-footer-text">
+              Don't have an account?
+              <a href="/auth/signup" class="auth-link">Create free account</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="auth-trust">
+          <div class="trust-item">
+            <span class="trust-icon">🔒</span>
+            <span>256-bit encryption</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">🛡️</span>
+            <span>Secure login</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">⚡</span>
+            <span>Fast & reliable</span>
+          </div>
+        </div>
+
+        <!-- Legal Links -->
+        <div class="auth-legal">
+          <a href="/privacy">Privacy Policy</a>
+          <span class="separator">•</span>
+          <a href="/terms">Terms of Service</a>
+          <span class="separator">•</span>
+          <a href="/contact">Contact Support</a>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let isLoggingIn = false;
+
+      // Handle form submission
+      async function handleLogin(event) {
+        event.preventDefault();
+
+        if (isLoggingIn) return;
+
+        const emailInput = document.querySelector(".jsEmail");
+        const passwordInput = document.querySelector(".jsPassword");
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        // Basic validation
+        if (!email || !password) {
+          showError("Please enter both email and password");
+          highlightField(!email ? emailInput : passwordInput);
+          return;
+        }
+
+        if (!isValidEmail(email)) {
+          showError("Please enter a valid email address");
+          highlightField(emailInput);
+          return;
+        }
+
+        await performLogin(email, password);
+      }
+
+      // Highlight invalid field
+      function highlightField(field) {
+        field.style.borderColor = "var(--color-error)";
+        field.style.backgroundColor = "rgba(239, 68, 68, 0.02)";
+
+        setTimeout(() => {
+          field.style.borderColor = "";
+          field.style.backgroundColor = "";
+        }, 2000);
+      }
+
+      // Perform login request
+      async function performLogin(email, password) {
+        const loginBtn = document.querySelector(".jsLogin");
+        const btnText = loginBtn.querySelector(".btn-text");
+        const btnSpinner = loginBtn.querySelector(".btn-spinner");
+        const errorEl = document.querySelector(".jsError");
+
+        // Show loading state
+        isLoggingIn = true;
+        loginBtn.disabled = true;
+        btnText.style.opacity = "0.5";
+        btnSpinner.style.display = "inline-block";
+        errorEl.style.display = "none";
+
+        try {
+          const response = await fetch("/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (data.success === true) {
+            // Success - show success state
+            btnText.textContent = "✓ Success!";
+            btnSpinner.style.display = "none";
+            btnText.style.opacity = "1";
+
+            // Redirect to dashboard or previous page
+            setTimeout(() => {
+              const redirectUrl =
+                sessionStorage.getItem("redirectAfterLogin") ||
+                document.referrer ||
+                "/dashboard";
+              sessionStorage.removeItem("redirectAfterLogin");
+              window.location.href = redirectUrl;
+            }, 500);
+          } else {
+            // Handle specific error cases
+            let errorMessage = data.message || "Invalid email or password";
+
+            if (response.status === 401) {
+              errorMessage = "Incorrect email or password. Please try again.";
+            } else if (response.status === 403) {
+              errorMessage =
+                "Your account has been locked. Please contact support.";
+            } else if (response.status === 429) {
+              errorMessage = "Too many attempts. Please try again later.";
+            }
+
+            showError(errorMessage);
+            resetButton();
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          showError(
+            "Network error. Please check your connection and try again.",
+          );
+          resetButton();
+        }
+      }
+
+      // Reset button state
+      function resetButton() {
+        const loginBtn = document.querySelector(".jsLogin");
+        const btnText = loginBtn.querySelector(".btn-text");
+        const btnSpinner = loginBtn.querySelector(".btn-spinner");
+
+        isLoggingIn = false;
+        loginBtn.disabled = false;
+        btnText.style.opacity = "1";
+        btnText.textContent = "Sign In";
+        btnSpinner.style.display = "none";
+      }
+
+      // Show error message
+      function showError(message) {
+        const errorEl = document.querySelector(".jsError");
+        if (errorEl) {
+          errorEl.textContent = message;
+          errorEl.style.display = "block";
+
+          // Shake animation
+          errorEl.style.animation = "none";
+          setTimeout(() => {
+            errorEl.style.animation = "shake 0.5s ease";
+          }, 10);
+        }
+      }
+
+      // Email validation
+      function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      // Toggle password visibility
+      function togglePassword() {
+        const passwordInput = document.querySelector(".jsPassword");
+        const toggleIcon = document.querySelector(".toggle-icon");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          toggleIcon.textContent = "👁️‍🗨️";
+        } else {
+          passwordInput.type = "password";
+          toggleIcon.textContent = "👁️";
+        }
+      }
+
+      // Social login handler
+      function socialLogin(provider) {
+        console.log(`Redirecting to ${provider} login...`);
+        // Redirect to OAuth endpoint
+        window.location.href = `/auth/${provider}`;
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        // Cmd/Ctrl + K to focus email
+        if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+          e.preventDefault();
+          document.querySelector(".jsEmail").focus();
+        }
+
+        // Enter to submit when on password field
+        if (
+          e.key === "Enter" &&
+          document.activeElement === document.querySelector(".jsPassword")
+        ) {
+          handleLogin(e);
+        }
+      });
+
+      // Clear error on input
+      document.querySelector(".jsEmail").addEventListener("input", () => {
+        const errorEl = document.querySelector(".jsError");
+        if (errorEl) errorEl.style.display = "none";
+      });
+
+      document.querySelector(".jsPassword").addEventListener("input", () => {
+        const errorEl = document.querySelector(".jsError");
+        if (errorEl) errorEl.style.display = "none";
+      });
+
+      // Save redirect URL if coming from protected page
+      if (document.referrer && !document.referrer.includes("/auth")) {
+        sessionStorage.setItem("redirectAfterLogin", document.referrer);
+      }
+
+      // Demo credentials quick fill (double-click on demo text)
+      document
+        .querySelector(".demo-credentials")
+        ?.addEventListener("dblclick", function () {
+          document.querySelector(".jsEmail").value = "demo@example.com";
+          document.querySelector(".jsPassword").value = "demo123";
+        });
+    </script>
+  </body>
+</html>

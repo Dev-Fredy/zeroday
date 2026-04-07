@@ -1,156 +1,600 @@
-<main>
-  <section class="chartSelector">
-    <div class="lineChart selected">
-      <label for="line">Line</label>
-      <input type="radio" checked name="chart" id="line" />
+<main class="runway-main">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="page-header">
+      <div class="header-content">
+        <div>
+          <h1 class="page-title">
+            <span class="title-icon">📉</span>
+            Runway Analysis
+          </h1>
+          <p class="page-description">
+            Interactive projection of your financial runway. Click any point for
+            detailed insights.
+          </p>
+        </div>
+        <a href="/simulations" class="btn btn-secondary">
+          <span>←</span> Back to Simulator
+        </a>
+      </div>
     </div>
-    <div class="barChart">
-      <label for="bar">Bar</label>
-      <input type="radio" name="chart" id="bar" class="buttonLink" />
+
+    <!-- Chart Controls -->
+    <div class="chart-controls card card-glass">
+      <div class="controls-header">
+        <h3 class="controls-title">Visualization Type</h3>
+        <span class="controls-hint">Choose how you want to view your data</span>
+      </div>
+
+      <div class="chart-type-selector">
+        <label class="chart-type-option">
+          <input type="radio" name="chartType" value="line" checked />
+          <span class="option-card">
+            <span class="option-icon">📈</span>
+            <span class="option-label">Line Chart</span>
+            <span class="option-desc">Best for trends</span>
+          </span>
+        </label>
+
+        <label class="chart-type-option">
+          <input type="radio" name="chartType" value="area" />
+          <span class="option-card">
+            <span class="option-icon">🌊</span>
+            <span class="option-label">Area Chart</span>
+            <span class="option-desc">Emphasizes volume</span>
+          </span>
+        </label>
+
+        <label class="chart-type-option">
+          <input type="radio" name="chartType" value="bar" />
+          <span class="option-card">
+            <span class="option-icon">📊</span>
+            <span class="option-label">Bar Chart</span>
+            <span class="option-desc">Compare periods</span>
+          </span>
+        </label>
+      </div>
     </div>
-    <div class="areaChart">
-      <label for="area">Area</label>
-      <input type="radio" name="chart" id="area" />
+
+    <!-- Main Chart -->
+    <div class="chart-wrapper card card-glass">
+      <div class="chart-header">
+        <div class="chart-stats">
+          <div class="stat-badge">
+            <span class="stat-label">Current Savings</span>
+            <span class="stat-value js-current-savings">-</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-label">Projected Runway</span>
+            <span class="stat-value js-projected-runway">-</span>
+          </div>
+          <div class="stat-badge warning">
+            <span class="stat-label">Zero Day</span>
+            <span class="stat-value js-zero-day">-</span>
+          </div>
+        </div>
+        <div class="chart-actions">
+          <button
+            class="btn-icon"
+            onclick="downloadChart()"
+            title="Download Chart"
+          >
+            <span>⬇️</span>
+          </button>
+          <button class="btn-icon" onclick="expandChart()" title="Fullscreen">
+            <span>⛶</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="runwaychart" class="chart-container"></div>
+
+      <div class="chart-legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background: #2563eb"></span>
+          <span>Your Savings Trajectory</span>
+        </div>
+        <div class="legend-item">
+          <span
+            class="legend-dot"
+            style="background: #ef4444; border: 2px dashed #ef4444"
+          ></span>
+          <span>Critical Threshold</span>
+        </div>
+      </div>
     </div>
-  </section>
-  <section id="runwaychart"></section>
-  <section class="chartAnalysisSection">
-    <h3>Chart analysis</h3>
-    <section id="analysisFeed"></section>
-  </section>
+
+    <!-- Analysis Panel -->
+    <div class="analysis-panel">
+      <div class="panel-header">
+        <h3 class="panel-title">
+          <span class="title-icon">🤖</span>
+          AI-Powered Analysis
+        </h3>
+        <div class="panel-badge">
+          <span class="pulse-dot"></span>
+          Real-time insights
+        </div>
+      </div>
+
+      <div id="analysisFeed" class="analysis-feed">
+        <!-- Analysis items will be added here -->
+      </div>
+
+      <div class="analysis-actions">
+        <button class="btn btn-secondary btn-sm" onclick="exportAnalysis()">
+          <span>📄</span> Export Analysis
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="clearAnalysis()">
+          <span>🗑️</span> Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Insights Summary -->
+    <div class="insights-grid">
+      <div class="insight-card card">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-content">
+          <h4 class="insight-title">Recommendation</h4>
+          <p class="insight-text js-recommendation">Loading analysis...</p>
+        </div>
+      </div>
+
+      <div class="insight-card card">
+        <div class="insight-icon">💡</div>
+        <div class="insight-content">
+          <h4 class="insight-title">Action Items</h4>
+          <ul class="action-list js-action-items">
+            <li>Analyzing your data...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
 <script>
-  let runway = JSON.parse(sessionStorage.getItem("runwayData"));
-  function addAnalysis(message) {
-    const feed = document.querySelector("#analysisFeed");
+  // ============================================
+  // RUNWAY.JS - Runway Analysis Logic
+  // ============================================
 
-    let item = document.createElement("div");
+  (function () {
+    "use strict";
 
-    item.className = "analysis-item";
+    // State
+    let chartInstance = null;
+    let runwayData = [];
+    let currentChartType = "line";
 
-    const text = document.createElement("p");
-    const img = document.createElement("img");
-    img.src = "/favicon.png";
-    img.alt = "thinker";
-    img.width = "20";
+    // DOM Elements
+    const elements = {
+      chartContainer: document.getElementById("runwaychart"),
+      analysisFeed: document.getElementById("analysisFeed"),
+      currentSavings: document.querySelector(".js-current-savings"),
+      projectedRunway: document.querySelector(".js-projected-runway"),
+      zeroDay: document.querySelector(".js-zero-day"),
+      recommendation: document.querySelector(".js-recommendation"),
+      actionItems: document.querySelector(".js-action-items"),
+    };
 
-    item.appendChild(img);
-    item.appendChild(text);
+    // Initialize
+    function init() {
+      loadRunwayData();
+      setupEventListeners();
+      renderChart();
+      generateInitialAnalysis();
+    }
 
-    feed.appendChild(item);
+    // Load data from session storage
+    function loadRunwayData() {
+      try {
+        const stored = sessionStorage.getItem("runwayData");
+        runwayData = stored ? JSON.parse(stored) : generateSampleData();
 
-    item.scrollIntoView({ behavior: "smooth" });
-
-    typeText(text, message);
-  }
-
-  function typeText(element, message) {
-    let i = 0;
-
-    function type() {
-      if (i < message.length) {
-        element.textContent += message.charAt(i);
-        i++;
-        setTimeout(type, 20);
+        if (!stored) {
+          console.warn("No runway data found, using sample data");
+        }
+      } catch (error) {
+        console.error("Failed to load runway data:", error);
+        runwayData = generateSampleData();
       }
     }
 
-    type();
-  }
-  getChartRunWay("line");
-  window.onload = () => {
-    const lastPoint = runway[runway.length - 1];
-
-    const date = new Date();
-    date.setDate(date.getDate() + lastPoint.x);
-
-    const message = `At your current spending trend, you will run out of money on ${date.toLocaleString()}`;
-
-    addAnalysis(message);
-  };
-
-  document.querySelector("#area").addEventListener("input", (event) => {
-    if (event.target.checked === true) {
-      getChartRunWay("area");
-      document.querySelector(".areaChart").classList.add("selected");
-      document.querySelector(".lineChart").classList.remove("selected");
-      document.querySelector(".barChart").classList.remove("selected");
+    // Generate sample data (fallback)
+    function generateSampleData() {
+      const data = [];
+      for (let i = 0; i <= 365; i += 30) {
+        data.push({
+          x: i,
+          y: Math.max(0, 10000 - i * 27 + Math.random() * 1000),
+        });
+      }
+      return data;
     }
-  });
-  document.querySelector("#bar").addEventListener("input", (event) => {
-    if (event.target.checked === true) {
-      getChartRunWay("bar");
-      document.querySelector(".barChart").classList.add("selected");
-      document.querySelector(".areaChart").classList.remove("selected");
-      document.querySelector(".lineChart").classList.remove("selected");
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Chart type radio buttons
+      document.querySelectorAll('input[name="chartType"]').forEach((radio) => {
+        radio.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            currentChartType = e.target.value;
+            renderChart();
+          }
+        });
+      });
     }
-  });
 
-  document.querySelector("#line").addEventListener("input", (event) => {
-    if (event.target.checked === true) {
-      getChartRunWay("line");
-      document.querySelector(".areaChart").classList.remove("selected");
-      document.querySelector(".lineChart").classList.add("selected");
-      document.querySelector(".barChart").classList.remove("selected");
+    // Render chart
+    function renderChart() {
+      if (!elements.chartContainer) return;
+
+      const options = createChartOptions(currentChartType);
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new ApexCharts(elements.chartContainer, options);
+      chartInstance.render();
+
+      // Update stats
+      updateChartStats();
     }
-  });
 
-  function getChartRunWay(charttype) {
-    document.querySelector("#runwaychart").innerHTML = "";
-    var options = {
-      title: {
-        text: "Runway chart",
-        style: {
-          fontSize: "18px",
-        },
-      },
-      chart: {
-        height: "350px",
-        type: charttype,
-
-        events: {
-          click: function (event, chartContext, config) {
-            console.log(event, chartContext, config);
-            const index = config.dataPointIndex;
-
-            if (index === -1) return;
-            const point = chartContext.w.config.series[0].data[index];
-            console.log(point);
-
-            const day = point.x;
-            const money = point.y;
-
-            const date = new Date();
-            date.setDate(date.getDate() + day);
-
-            const message = `On ${date.toDateString()}, you will have approximately Ksh ${money} remaining.`;
-
-            addAnalysis(message);
+    // Create chart options
+    function createChartOptions(type) {
+      const baseOptions = {
+        chart: {
+          height: 400,
+          type: type,
+          toolbar: { show: true },
+          zoom: { enabled: true },
+          animations: { enabled: true, speed: 800 },
+          events: {
+            click: handleChartClick,
+            dataPointSelection: handleDataPointSelection,
           },
         },
-      },
-
-      series: [
-        {
-          name: "Savings",
-          data: runway,
+        series: [
+          {
+            name: "Savings",
+            data: runwayData,
+          },
+        ],
+        markers: {
+          size: type === "line" ? 4 : 0,
+          hover: { size: 6 },
         },
-      ],
-      markers: { size: 5 },
-      xaxis: {
-        title: { text: "Days from now" },
-      },
-      yaxis: {
-        title: { text: "Money remaining" },
-      },
-      stroke: {
-        curve: "smooth",
-      },
+        xaxis: {
+          title: {
+            text: "Days from today",
+            style: { fontWeight: 500 },
+          },
+          labels: {
+            formatter: (value) => `Day ${value}`,
+          },
+        },
+        yaxis: {
+          title: {
+            text: "Money Remaining (Ksh)",
+            style: { fontWeight: 500 },
+          },
+          labels: {
+            formatter: (value) => {
+              if (value >= 1000) return `${(value / 1000).toFixed(1)}k`;
+              return value.toString();
+            },
+          },
+        },
+        stroke: {
+          curve: "smooth",
+          width: type === "bar" ? 0 : 2,
+        },
+        fill: {
+          type: type === "area" ? "gradient" : "solid",
+          gradient:
+            type === "area"
+              ? {
+                  shadeIntensity: 1,
+                  opacityFrom: 0.3,
+                  opacityTo: 0.05,
+                  stops: [0, 100],
+                }
+              : undefined,
+        },
+        colors: ["#2563eb"],
+        tooltip: {
+          enabled: true,
+          y: {
+            formatter: (value) => `Ksh ${value.toLocaleString()}`,
+          },
+          x: {
+            formatter: (value) => `Day ${value}`,
+          },
+        },
+        annotations: {
+          yaxis: [
+            {
+              y: 0,
+              borderColor: "#ef4444",
+              borderWidth: 2,
+              strokeDashArray: 5,
+              label: {
+                text: "Zero Threshold",
+                style: {
+                  color: "#fff",
+                  background: "#ef4444",
+                },
+              },
+            },
+          ],
+        },
+      };
+
+      // Type-specific options
+      if (type === "area") {
+        baseOptions.fill.type = "gradient";
+      } else if (type === "bar") {
+        baseOptions.plotOptions = {
+          bar: {
+            borderRadius: 8,
+            columnWidth: "60%",
+          },
+        };
+      }
+
+      return baseOptions;
+    }
+
+    // Handle chart click
+    function handleChartClick(event, chartContext, config) {
+      const dataPointIndex = config.dataPointIndex;
+
+      if (dataPointIndex !== undefined && dataPointIndex >= 0) {
+        const point = runwayData[dataPointIndex];
+        generateAnalysisForPoint(point);
+      }
+    }
+
+    // Handle data point selection
+    function handleDataPointSelection(event, chartContext, config) {
+      const dataPointIndex = config.dataPointIndex;
+
+      if (dataPointIndex !== undefined && dataPointIndex >= 0) {
+        const point = runwayData[dataPointIndex];
+        highlightPoint(point);
+      }
+    }
+
+    // Generate analysis for specific point
+    function generateAnalysisForPoint(point) {
+      const date = new Date();
+      date.setDate(date.getDate() + point.x);
+
+      const messages = [
+        `On ${date.toDateString()}, your projected savings will be approximately Ksh ${point.y.toLocaleString()}.`,
+        `This is ${point.y > 5000 ? "a healthy buffer" : "approaching critical levels"}.`,
+        point.y > 0
+          ? `At this rate, you have ${Math.floor(point.y / 27)} days of expenses covered.`
+          : "You have depleted your savings at this point.",
+      ];
+
+      messages.forEach((msg) => addAnalysis(msg));
+    }
+
+    // Add analysis message
+    function addAnalysis(message) {
+      const feed = elements.analysisFeed;
+      if (!feed) return;
+
+      const item = createAnalysisItem(message);
+      feed.appendChild(item);
+      item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      typeWriterEffect(item.querySelector("p"), message);
+    }
+
+    // Create analysis item element
+    function createAnalysisItem(message) {
+      const item = document.createElement("div");
+      item.className = "analysis-item";
+
+      const iconDiv = document.createElement("div");
+      iconDiv.className = "analysis-icon";
+
+      const img = document.createElement("img");
+      img.src = "/favicon.png";
+      img.alt = "AI Analysis";
+      img.width = 20;
+      iconDiv.appendChild(img);
+
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "analysis-content";
+
+      const text = document.createElement("p");
+      contentDiv.appendChild(text);
+
+      const timestamp = document.createElement("div");
+      timestamp.className = "analysis-timestamp";
+      timestamp.textContent = new Date().toLocaleTimeString();
+      contentDiv.appendChild(timestamp);
+
+      item.appendChild(iconDiv);
+      item.appendChild(contentDiv);
+
+      return item;
+    }
+
+    // Typewriter effect
+    function typeWriterEffect(element, message, speed = 20) {
+      element.textContent = "";
+      let i = 0;
+
+      function type() {
+        if (i < message.length) {
+          element.textContent += message.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+
+      type();
+    }
+
+    // Update chart statistics
+    function updateChartStats() {
+      if (!runwayData.length) return;
+
+      const firstPoint = runwayData[0];
+      const lastPoint = runwayData[runwayData.length - 1];
+      const zeroPoint = runwayData.find((p) => p.y <= 0);
+
+      if (elements.currentSavings) {
+        elements.currentSavings.textContent = `Ksh ${firstPoint.y.toLocaleString()}`;
+      }
+
+      if (elements.projectedRunway) {
+        const runwayDays = zeroPoint ? zeroPoint.x : lastPoint.x;
+        const months = (runwayDays / 30).toFixed(1);
+        elements.projectedRunway.textContent = `${months} months`;
+      }
+
+      if (elements.zeroDay && zeroPoint) {
+        const zeroDate = new Date();
+        zeroDate.setDate(zeroDate.getDate() + zeroPoint.x);
+        elements.zeroDay.textContent = zeroDate.toLocaleDateString();
+      } else if (elements.zeroDay) {
+        elements.zeroDay.textContent = "Not within projection";
+      }
+    }
+
+    // Generate initial analysis
+    function generateInitialAnalysis() {
+      if (!runwayData.length) return;
+
+      const lastPoint = runwayData[runwayData.length - 1];
+      const zeroPoint = runwayData.find((p) => p.y <= 0);
+
+      if (zeroPoint) {
+        const zeroDate = new Date();
+        zeroDate.setDate(zeroDate.getDate() + zeroPoint.x);
+        addAnalysis(
+          `At your current spending trend, you will run out of money on ${zeroDate.toDateString()}.`,
+        );
+      } else {
+        addAnalysis(
+          `Your savings are projected to last beyond the forecast period. Good financial management!`,
+        );
+      }
+
+      // Generate recommendations
+      generateRecommendations();
+    }
+
+    // Generate recommendations
+    function generateRecommendations() {
+      if (!runwayData.length) return;
+
+      const lastPoint = runwayData[runwayData.length - 1];
+      const months = lastPoint.x / 30;
+
+      let recommendation = "";
+      const actions = [];
+
+      if (months < 3) {
+        recommendation =
+          "Critical: Your runway is less than 3 months. Immediate action required.";
+        actions.push("Reduce non-essential expenses immediately");
+        actions.push("Look for additional income sources");
+        actions.push("Consider debt consolidation");
+      } else if (months < 6) {
+        recommendation =
+          "Warning: Your runway is under 6 months. Consider building a larger buffer.";
+        actions.push("Review monthly subscriptions and recurring costs");
+        actions.push("Build emergency fund to 6+ months");
+        actions.push("Explore side income opportunities");
+      } else if (months < 12) {
+        recommendation = "Good: You have a healthy runway of 6-12 months.";
+        actions.push("Continue current savings rate");
+        actions.push("Consider investing surplus funds");
+        actions.push("Review insurance coverage");
+      } else {
+        recommendation =
+          "Excellent: Your runway exceeds 12 months. Strong financial position!";
+        actions.push("Maximize investment contributions");
+        actions.push("Consider real estate or other assets");
+        actions.push("Review long-term financial goals");
+      }
+
+      if (elements.recommendation) {
+        elements.recommendation.textContent = recommendation;
+      }
+
+      if (elements.actionItems) {
+        elements.actionItems.innerHTML = actions
+          .map((action) => `<li>${action}</li>`)
+          .join("");
+      }
+    }
+
+    // Highlight point on chart
+    function highlightPoint(point) {
+      // Implementation for visual highlighting
+      console.log("Highlight point:", point);
+    }
+
+    // Global functions
+    window.downloadChart = function () {
+      if (chartInstance) {
+        chartInstance.dataURI().then((uri) => {
+          const link = document.createElement("a");
+          link.href = uri.imgURI;
+          link.download = "runway-analysis.png";
+          link.click();
+        });
+      }
     };
 
-    new ApexCharts(document.querySelector("#runwaychart"), options).render();
-  }
+    window.expandChart = function () {
+      if (elements.chartContainer) {
+        if (elements.chartContainer.requestFullscreen) {
+          elements.chartContainer.requestFullscreen();
+        }
+      }
+    };
+
+    window.exportAnalysis = function () {
+      const items = document.querySelectorAll(".analysis-item");
+      let text = "=== Runway Analysis Export ===\n\n";
+
+      items.forEach((item, index) => {
+        const content = item.querySelector("p")?.textContent || "";
+        const time =
+          item.querySelector(".analysis-timestamp")?.textContent || "";
+        text += `${index + 1}. [${time}] ${content}\n\n`;
+      });
+
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `runway-analysis-${Date.now()}.txt`;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    window.clearAnalysis = function () {
+      if (elements.analysisFeed) {
+        elements.analysisFeed.innerHTML = "";
+        generateInitialAnalysis();
+      }
+    };
+
+    // Initialize on load
+    init();
+  })();
 </script>

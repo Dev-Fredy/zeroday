@@ -1,55 +1,399 @@
-<section class="faqsArea">
-  <section class="listFaqs">
-    <h1>Faqs</h1>
-    <section class="faqsList">
-      <% var lastIndex = 3; const newFaqs = faqs.slice(0, lastIndex);
-      newFaqs.forEach((faq, index) => { %>
-      <div>
-        <a href="/faqs/<%- faq.slug%>_<%- faq.id %>">
-          <img
-            loading="lazy"
-            src="<%- faq.featuredUrl %>"
-            alt="<%- faq.title %>"
-          />
-          <a href="/category/<%- faq.category %>" class="category"
-            ><%- faq.category %></a
-          >
-        </a>
-        <div>
-          <a href="/faqs/<%- faq.slug%>_<%- faq.id %>" class="faq_title"
-            ><%- faq.title %></a
-          >
-          <div class="faq_description">
-            <%- faq.description.slice(0,30) %>...
+<section class="faqs-section">
+  <div class="container">
+    <div class="faqs-layout">
+      <!-- Main FAQ Content -->
+      <div class="faqs-main">
+        <div class="faqs-header">
+          <span class="section-badge">Knowledge Base</span>
+          <h1 class="faqs-title">Frequently Asked Questions</h1>
+          <p class="faqs-subtitle">
+            Everything you need to know about financial simulation and planning
+          </p>
+          
+          <!-- Search Bar -->
+          <div class="faqs-search">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="faqSearch" 
+              class="search-input" 
+              placeholder="Search FAQs..."
+              oninput="filterFaqs(this.value)"
+            />
           </div>
+        </div>
 
-          <a href="/faqs/<%- faq.slug%>_<%- faq.id %>" class="readMore"
-            >Read More</a
-          >
+        <!-- Category Filter Tabs -->
+        <div class="faqs-categories">
+          <button class="category-tab active" onclick="filterByCategory('all')">
+            All FAQs
+          </button>
+          <button class="category-tab" onclick="filterByCategory('Getting Started')">
+            Getting Started
+          </button>
+          <button class="category-tab" onclick="filterByCategory('Simulations')">
+            Simulations
+          </button>
+          <button class="category-tab" onclick="filterByCategory('Account')">
+            Account
+          </button>
+          <button class="category-tab" onclick="filterByCategory('Billing')">
+            Billing
+          </button>
+        </div>
+
+        <!-- FAQs Grid -->
+        <div class="faqs-grid" id="faqsGrid">
+          <% const initialFaqs = faqs.slice(0, 6); %>
+          <% initialFaqs.forEach((faq) => { %>
+          <article class="faq-card card" data-category="<%- faq.category %>">
+            <a href="/faqs/<%- faq.slug %>_<%- faq.id %>" class="faq-card-link">
+              <div class="faq-image-wrapper">
+                <img 
+                  loading="lazy"
+                  src="<%- faq.featuredUrl || '/Images/default-faq.jpg' %>" 
+                  alt="<%- faq.title %>"
+                  class="faq-image"
+                  onerror="this.src='/Images/default-faq.jpg'"
+                />
+                <span class="faq-category-badge"><%- faq.category %></span>
+              </div>
+              
+              <div class="faq-content">
+                <h3 class="faq-card-title">
+                  <%- faq.title %>
+                </h3>
+                <p class="faq-card-excerpt">
+                  <%- faq.description.slice(0, 80) %>...
+                </p>
+                
+                <div class="faq-meta">
+                  <span class="read-time">
+                    <span class="meta-icon">📖</span>
+                    <% const readTime = Math.ceil(faq.description.length / 1000); %>
+                    <%- readTime %> min read
+                  </span>
+                  <span class="read-more-link">
+                    Read More
+                    <span class="arrow">→</span>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </article>
+          <% }) %>
+        </div>
+
+        <!-- Loading Skeleton (Hidden by default) -->
+        <div class="faqs-loading" id="faqsLoading" style="display: none;">
+          <div class="skeleton-grid">
+            <% for (let i = 0; i < 3; i++) { %>
+            <div class="skeleton-card">
+              <div class="skeleton skeleton-image"></div>
+              <div class="skeleton-content">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text-short"></div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="faqs-actions">
+          <button class="btn btn-secondary btn-large load-more-btn" id="loadMoreBtn" onclick="loadMoreFaqs()">
+            <span class="btn-text">Load More FAQs</span>
+            <span class="btn-icon">↓</span>
+          </button>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" id="noResults" style="display: none;">
+          <div class="no-results-content">
+            <span class="no-results-icon">🔍</span>
+            <h3>No FAQs found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+            <button class="btn btn-ghost" onclick="resetFilters()">
+              Reset Filters
+            </button>
+          </div>
         </div>
       </div>
 
-      <% }) %>
-    </section>
-    <section>
-      <button
-        class="load"
-        onclick="
-         `<%- lastIndex += 3 %>`
-        console.log(`<%- lastIndex%>`)
+      <!-- Sidebar -->
+      <aside class="faqs-sidebar">
         
-        "
-      >
-        Load More
-      </button>
-    </section>
-  </section>
-  <section class="faqsSidebar">
-    <%- include('../partials/faqsSidebar.ejs') %>
-  </section>
+        
+        <!-- Quick Help Card -->
+        <div class="sidebar-card card">
+          <div class="sidebar-card-header">
+            <span class="card-icon">💬</span>
+            <h4>Still have questions?</h4>
+          </div>
+          <p class="sidebar-card-text">
+            Can't find what you're looking for? Our support team is here to help.
+          </p>
+          <a href="/contact" class="btn btn-primary btn-block">
+            Contact Support
+          </a>
+        </div>
+        
+        <!-- Popular FAQs -->
+        <div class="sidebar-card card">
+          <h4 class="sidebar-title">🔥 Popular FAQs</h4>
+          <ul class="popular-faqs-list">
+            <% const popularFaqs = faqs.slice(0, 5); %>
+            <% popularFaqs.forEach((faq) => { %>
+            <li>
+              <a href="/faqs/<%- faq.slug %>_<%- faq.id %>">
+                <span class="popular-icon">📌</span>
+                <%- faq.title.slice(0, 40) %>...
+              </a>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
 </section>
 
 <script>
-  let faqs = `<%- faqs %>`;
-  console.log(faqs);
+  // Store all FAQs data
+  const allFaqs = <%- JSON.stringify(faqs) %>;
+  let currentIndex = 6;
+  let currentCategory = 'all';
+  let currentSearchTerm = '';
+  const faqsPerLoad = 3;
+  
+  // Initialize
+  console.log('FAQs loaded:', allFaqs.length);
+  
+  // Filter FAQs by search term
+  function filterFaqs(searchTerm) {
+    currentSearchTerm = searchTerm.toLowerCase();
+    applyFilters();
+  }
+  
+  // Filter FAQs by category
+  function filterByCategory(category) {
+    currentCategory = category;
+    
+    // Update active tab
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    applyFilters();
+  }
+  
+  // Apply all filters
+  function applyFilters() {
+    const filteredFaqs = allFaqs.filter(faq => {
+      const matchesCategory = currentCategory === 'all' || faq.category === currentCategory;
+      const matchesSearch = !currentSearchTerm || 
+        faq.title.toLowerCase().includes(currentSearchTerm) ||
+        faq.description.toLowerCase().includes(currentSearchTerm);
+      
+      return matchesCategory && matchesSearch;
+    });
+    
+    currentIndex = Math.min(6, filteredFaqs.length);
+    renderFaqs(filteredFaqs.slice(0, currentIndex));
+    
+    // Show/hide load more button
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = currentIndex >= filteredFaqs.length ? 'none' : 'flex';
+    }
+    
+    // Show/hide no results message
+    const noResults = document.getElementById('noResults');
+    if (noResults) {
+      noResults.style.display = filteredFaqs.length === 0 ? 'flex' : 'none';
+    }
+  }
+  
+  // Load more FAQs
+  function loadMoreFaqs() {
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadingEl = document.getElementById('faqsLoading');
+    
+    // Show loading state
+    if (loadMoreBtn) {
+      loadMoreBtn.innerHTML = `
+        <span class="spinner-small"></span>
+        <span>Loading...</span>
+      `;
+      loadMoreBtn.disabled = true;
+    }
+    
+    // Simulate loading delay for better UX
+    setTimeout(() => {
+      const filteredFaqs = allFaqs.filter(faq => {
+        const matchesCategory = currentCategory === 'all' || faq.category === currentCategory;
+        const matchesSearch = !currentSearchTerm || 
+          faq.title.toLowerCase().includes(currentSearchTerm) ||
+          faq.description.toLowerCase().includes(currentSearchTerm);
+        
+        return matchesCategory && matchesSearch;
+      });
+      
+      const nextIndex = Math.min(currentIndex + faqsPerLoad, filteredFaqs.length);
+      const newFaqs = filteredFaqs.slice(currentIndex, nextIndex);
+      
+      if (newFaqs.length > 0) {
+        appendFaqs(newFaqs);
+        currentIndex = nextIndex;
+      }
+      
+      // Reset button state
+      if (loadMoreBtn) {
+        loadMoreBtn.innerHTML = `
+          <span class="btn-text">Load More FAQs</span>
+          <span class="btn-icon">↓</span>
+        `;
+        loadMoreBtn.disabled = false;
+        
+        // Hide button if no more FAQs
+        if (currentIndex >= filteredFaqs.length) {
+          loadMoreBtn.style.display = 'none';
+        }
+      }
+    }, 500);
+  }
+  
+  // Render FAQs
+  function renderFaqs(faqs) {
+    const grid = document.getElementById('faqsGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = faqs.map(faq => createFaqCard(faq)).join('');
+  }
+  
+  // Append new FAQs
+  function appendFaqs(faqs) {
+    const grid = document.getElementById('faqsGrid');
+    if (!grid) return;
+    
+    grid.insertAdjacentHTML('beforeend', faqs.map(faq => createFaqCard(faq)).join(''));
+  }
+  
+  // Create FAQ card HTML
+  function createFaqCard(faq) {
+    const readTime = Math.ceil(faq.description.length / 1000) || 2;
+    const imageUrl = faq.featuredUrl || '/Images/default-faq.jpg';
+    
+    return `
+      <article class="faq-card card" data-category="${faq.category}">
+        <a href="/faqs/${faq.slug}_${faq.id}" class="faq-card-link">
+          <div class="faq-image-wrapper">
+            <img 
+              loading="lazy"
+              src="${imageUrl}" 
+              alt="${faq.title}"
+              class="faq-image"
+              onerror="this.src='/Images/default-faq.jpg'"
+            />
+            <span class="faq-category-badge">${faq.category}</span>
+          </div>
+          
+          <div class="faq-content">
+            <h3 class="faq-card-title">${faq.title}</h3>
+            <p class="faq-card-excerpt">${faq.description.slice(0, 80)}...</p>
+            
+            <div class="faq-meta">
+              <span class="read-time">
+                <span class="meta-icon">📖</span>
+                ${readTime} min read
+              </span>
+              <span class="read-more-link">
+                Read More
+                <span class="arrow">→</span>
+              </span>
+            </div>
+          </div>
+        </a>
+      </article>
+    `;
+  }
+  
+  // Reset all filters
+  function resetFilters() {
+    currentCategory = 'all';
+    currentSearchTerm = '';
+    
+    // Reset search input
+    const searchInput = document.getElementById('faqSearch');
+    if (searchInput) searchInput.value = '';
+    
+    // Reset category tabs
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.classList.remove('active');
+      if (tab.textContent.trim() === 'All FAQs') {
+        tab.classList.add('active');
+      }
+    });
+    
+    applyFilters();
+  }
+  
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    // Hide load more if less than 7 FAQs total
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn && allFaqs.length <= 6) {
+      loadMoreBtn.style.display = 'none';
+    }
+  });
 </script>
+
+<style>
+  /* Additional styles specific to FAQ section */
+  .faq-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    height: 200px;
+  }
+  
+  .faq-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+  
+  .faq-card:hover .faq-image {
+    transform: scale(1.05);
+  }
+  
+  .faq-category-badge {
+    position: absolute;
+    top: var(--spacing-3);
+    left: var(--spacing-3);
+    padding: var(--spacing-1) var(--spacing-3);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-blue);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-border-light);
+    border-top-color: var(--color-primary-blue);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>

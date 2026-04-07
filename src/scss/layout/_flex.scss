@@ -1,3 +1,10 @@
+// ============================================
+// FLEX.SCSS - Layout Structure Styles
+// Works harmoniously with boilerplate.scss
+// ============================================
+
+// Root HTML structure
+// --------------------------------------------
 html {
   position: absolute;
   top: 0;
@@ -5,9 +12,9 @@ html {
   right: 0;
   bottom: 0;
   display: flex;
-
   scrollbar-gutter: stable;
 
+  // Custom scrollbar styling (doesn't conflict with boilerplate)
   &::-webkit-scrollbar {
     width: 0.4rem;
   }
@@ -28,6 +35,8 @@ html {
   }
 }
 
+// Body layout
+// --------------------------------------------
 body {
   width: 100%;
   flex: 1;
@@ -38,23 +47,250 @@ body {
   gap: 0.4rem;
   position: relative;
 
+  // Override boilerplate body styles when needed
+  min-height: auto; // Override min-height: 100vh from boilerplate
+
   @media (max-width: 400px) {
     gap: 0.2rem;
   }
 }
 
+// Main content area
+// --------------------------------------------
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
+// Skeleton loading placeholder
+// --------------------------------------------
 .skeleton {
   width: inherit;
   height: inherit;
   border-radius: inherit;
-  background-color: rgb(128, 128, 128, 0.2);
+  background-color: rgba(128, 128, 128, 0.2);
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+
+  // Skeleton text variants
+  &-text {
+    height: 1em;
+    margin-bottom: 0.5rem;
+    border-radius: var(--border-radius-md);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &-title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: 1rem;
+  }
+
+  &-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-full);
+  }
+
+  &-button {
+    height: 2.5rem;
+    width: 120px;
+    border-radius: var(--border-radius-full);
+  }
+
+  &-card {
+    width: 100%;
+    height: 200px;
+    border-radius: var(--border-radius-xl);
+  }
 }
 
+// Skeleton pulse animation
+@keyframes skeletonPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Analysis item (placeholder for your specific needs)
+// --------------------------------------------
 .analysis-item {
+  // Add your specific styles here
+  // Using CSS variables from boilerplate for consistency
+  padding: var(--spacing-4);
+  background: var(--color-bg-secondary);
+  border-radius: var(--border-radius-lg);
+  border: var(--border-width-thin) solid var(--color-border-light);
+  transition: all var(--transition-base) var(--transition-timing-default);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-medium);
+  }
+
+  // Analysis item header
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-3);
+    padding-bottom: var(--spacing-3);
+    border-bottom: var(--border-width-thin) solid var(--color-border-light);
+  }
+
+  // Analysis item title
+  &-title {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+  }
+
+  // Analysis item content
+  &-content {
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  // Analysis item footer
+  &-footer {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-3);
+    border-top: var(--border-width-thin) solid var(--color-border-light);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+
+  // Analysis item badge
+  &-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--border-radius-full);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+
+    &.positive {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+    }
+
+    &.negative {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-error);
+    }
+
+    &.neutral {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-warning);
+    }
+  }
+}
+
+// Layout utilities specific to this structure
+// --------------------------------------------
+
+// Full-height layout helper
+.layout-full {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+// Sticky footer helper
+.sticky-footer {
+  margin-top: auto;
+}
+
+// Content wrapper with consistent spacing
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-4) 0;
+
+  @media (min-width: 768px) {
+    padding: var(--spacing-6) 0;
+  }
+}
+
+// Page section spacing
+.page-section {
+  margin-bottom: var(--spacing-6);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 768px) {
+    margin-bottom: var(--spacing-8);
+  }
+}
+
+// Responsive gap utilities that complement the layout
+.gap-responsive {
+  gap: var(--spacing-4);
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-6);
+  }
+
+  @media (min-width: 1024px) {
+    gap: var(--spacing-8);
+  }
+}
+
+// Container with max-width that respects body constraints
+.container-fluid {
+  width: 100%;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+// Grid overlay for debugging (remove in production)
+.debug-grid {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 0, 0, 0.05) 0px,
+      rgba(255, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+    pointer-events: none;
+  }
+}
+
+// Print layout adjustments
+@media print {
+  html {
+    position: static;
+    display: block;
+  }
+
+  body {
+    max-width: none;
+    gap: 0;
+  }
+
+  .skeleton {
+    display: none;
+  }
 }

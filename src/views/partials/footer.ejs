@@ -1,10 +1,204 @@
-<footer>
-  <div class="">
-    <p>Copyright &copy; | All Rights Reserved</p>
-  </div>
-  <div class="">
-    <a href="/privacy"> Privacy Policy </a>
-    <a href="/contact"> Contact </a>
-    <a href="/about"> About </a>
+<footer class="main-footer">
+  <div class="container">
+    <!-- Top Section with Brand & Quick Links -->
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <img src="/Images/ZeroDayFinance.png" alt="Zero Day Finance" />
+        </a>
+        <p class="footer-tagline">
+          Know your financial future before it happens.
+        </p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter" class="social-link">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"
+              />
+            </svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="social-link">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+          <a href="#" aria-label="GitHub" class="social-link">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-nav-column">
+          <h4 class="footer-nav-title">Product</h4>
+          <ul class="footer-nav-list">
+            <li><a href="/simulations">Simulator</a></li>
+            <li><a href="/demo">Live Demo</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/features">Features</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-column">
+          <h4 class="footer-nav-title">Resources</h4>
+          <ul class="footer-nav-list">
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/guides">Guides</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/support">Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-column">
+          <h4 class="footer-nav-title">Company</h4>
+          <ul class="footer-nav-list">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/press">Press</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Newsletter Section -->
+    <div class="footer-newsletter">
+      <div class="newsletter-content">
+        <div class="newsletter-text">
+          <h4 class="newsletter-title">Stay ahead of your finances</h4>
+          <p class="newsletter-description">
+            Get weekly insights, tips, and updates delivered to your inbox.
+          </p>
+        </div>
+        <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+          <div class="newsletter-input-wrapper">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              class="newsletter-input"
+              required
+              aria-label="Email address"
+            />
+            <button type="submit" class="btn btn-primary newsletter-btn">
+              Subscribe
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+          <p class="newsletter-privacy">
+            We respect your privacy. Unsubscribe at any time.
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <p>
+          &copy; <span id="currentYear"></span> Zero Day Finance. All rights
+          reserved.
+        </p>
+      </div>
+
+      <div class="footer-legal">
+        <a href="/privacy">Privacy Policy</a>
+        <span class="separator">•</span>
+        <a href="/terms">Terms of Service</a>
+        <span class="separator">•</span>
+        <a href="/cookies">Cookie Policy</a>
+        <span class="separator">•</span>
+        <a href="/sitemap">Sitemap</a>
+      </div>
+
+      <div class="footer-status">
+        <span class="status-indicator online">
+          <span class="status-dot"></span>
+          All systems operational
+        </span>
+      </div>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="footer-trust">
+      <div class="trust-badge-item">
+        <span class="trust-icon">🔒</span>
+        <span>Bank-level Security</span>
+      </div>
+      <div class="trust-badge-item">
+        <span class="trust-icon">📊</span>
+        <span>Real-time Data</span>
+      </div>
+      <div class="trust-badge-item">
+        <span class="trust-icon">💯</span>
+        <span>99.9% Uptime</span>
+      </div>
+      <div class="trust-badge-item">
+        <span class="trust-icon">🎯</span>
+        <span>10,000+ Users</span>
+      </div>
+    </div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    // Set current year
+    const yearSpan = document.getElementById("currentYear");
+    if (yearSpan) {
+      yearSpan.textContent = new Date().getFullYear();
+    }
+
+    // Newsletter subscription handler
+    window.subscribeNewsletter = function (event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+
+      // Show success message
+      const btn = event.target.querySelector("button");
+      const originalText = btn.innerHTML;
+
+      btn.innerHTML = "✓ Subscribed!";
+      btn.disabled = true;
+
+      // Here you would typically send to your API
+      console.log("Newsletter subscription:", email);
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        event.target.reset();
+      }, 2000);
+
+      return false;
+    };
+  })();
+</script>

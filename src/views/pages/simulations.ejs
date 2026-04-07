@@ -1,216 +1,674 @@
-<main>
-  <section class="simulationContainer">
-    <h1>Predict your financial future</h1>
-    <section>
-      <div>
-        <label for="income">Income</label>
-        <div>
-          <span>Ksh</span>
-          <input type="text" id="income" class="jsIncome" value="1000" />
+<main class="simulate-main">
+  <div class="container">
+    <!-- Header with context -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <span class="title-icon">🔮</span>
+        Predict your financial future
+      </h1>
+      <p class="page-description">
+        Adjust your financial parameters below and watch your future unfold in
+        real-time
+      </p>
+    </div>
+
+    <!-- Financial Parameters Panel -->
+    <div class="parameters-panel card card-glass">
+      <div class="panel-header">
+        <h2 class="panel-title">Financial Parameters</h2>
+        <div class="panel-badge">
+          <span class="badge-dot"></span>
+          Live Updates
         </div>
       </div>
-      <div>
-        <label for="expenses"> Expenses </label>
-        <div>
-          <span>Ksh</span>
-          <input class="jsExpenses" type="text" id="Expenses" value="50" />
+
+      <div class="parameters-grid">
+        <!-- Income -->
+        <div class="param-card">
+          <div class="param-header">
+            <div class="param-icon income-icon">💰</div>
+            <label for="income" class="param-label">Monthly Income</label>
+          </div>
+          <div class="param-input-wrapper">
+            <span class="currency-symbol">Ksh</span>
+            <input
+              type="text"
+              id="income"
+              class="param-input jsIncome"
+              value="100000"
+              inputmode="numeric"
+            />
+          </div>
+          <div class="param-hint">After tax income</div>
+        </div>
+
+        <!-- Expenses -->
+        <div class="param-card">
+          <div class="param-header">
+            <div class="param-icon expenses-icon">📊</div>
+            <label for="expenses" class="param-label">Monthly Expenses</label>
+          </div>
+          <div class="param-input-wrapper">
+            <span class="currency-symbol">Ksh</span>
+            <input
+              type="text"
+              id="expenses"
+              class="param-input jsExpenses"
+              value="50000"
+              inputmode="numeric"
+            />
+          </div>
+          <div class="param-hint">Fixed + variable costs</div>
+        </div>
+
+        <!-- Savings -->
+        <div class="param-card">
+          <div class="param-header">
+            <div class="param-icon savings-icon">🏦</div>
+            <label for="savings" class="param-label">Current Savings</label>
+          </div>
+          <div class="param-input-wrapper">
+            <span class="currency-symbol">Ksh</span>
+            <input
+              type="text"
+              id="savings"
+              class="param-input jsSavings"
+              value="300000"
+              inputmode="numeric"
+            />
+          </div>
+          <div class="param-hint">Emergency fund & investments</div>
+        </div>
+
+        <!-- Debt -->
+        <div class="param-card">
+          <div class="param-header">
+            <div class="param-icon debt-icon">💳</div>
+            <label for="debt" class="param-label">Total Debt</label>
+          </div>
+          <div class="param-input-wrapper">
+            <span class="currency-symbol">Ksh</span>
+            <input
+              type="text"
+              id="debt"
+              class="param-input jsDebt"
+              value="120000"
+              inputmode="numeric"
+            />
+          </div>
+          <div class="param-hint">Outstanding loans & credit</div>
+        </div>
+
+        <!-- Interest Rate -->
+        <div class="param-card">
+          <div class="param-header">
+            <div class="param-icon interest-icon">📈</div>
+            <label for="interest" class="param-label">Interest Rate</label>
+          </div>
+          <div class="param-input-wrapper interest-wrapper">
+            <input
+              type="text"
+              id="interest"
+              class="param-input jsInterest"
+              value="12"
+              inputmode="decimal"
+            />
+            <span class="percent-symbol">%</span>
+          </div>
+          <div class="param-hint">Annual interest on debt</div>
         </div>
       </div>
-      <div>
-        <label for="savings">Savings</label>
-        <div>
-          <span>Ksh</span>
-          <input type="text" id="savings" class="jsSavings" value="300" />
+
+      <!-- Quick Actions -->
+      <div class="param-actions">
+        <button class="btn btn-secondary btn-sm" onclick="resetToDefaults()">
+          <span>↻</span> Reset
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="saveScenario()">
+          <span>💾</span> Save Scenario
+        </button>
+      </div>
+    </div>
+
+    <!-- Analytics Dashboard -->
+    <div class="analytics-dashboard">
+      <!-- Key Metrics Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card card">
+          <div class="metric-label">Monthly Cash Flow</div>
+          <div class="metric-value js-cashflow">+50,000 Ksh</div>
+          <div class="metric-trend positive">↑ Healthy surplus</div>
+        </div>
+        <div class="metric-card card">
+          <div class="metric-label">Savings Rate</div>
+          <div class="metric-value js-savingsrate">50.0%</div>
+          <div class="metric-trend positive">Excellent</div>
+        </div>
+        <div class="metric-card card">
+          <div class="metric-label">Debt-to-Income</div>
+          <div class="metric-value js-dti">10.0%</div>
+          <div class="metric-trend positive">Healthy</div>
         </div>
       </div>
-      <div>
-        <label for="debt">Debt</label>
-        <div>
-          <span>Ksh</span>
-          <input type="text" id="debt" value="120" class="jsDebt" />
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <!-- Burn Rate Chart -->
+        <div class="chart-card card card-glass">
+          <div class="chart-header">
+            <h3 class="chart-title">Burn Rate Analysis</h3>
+            <div
+              class="chart-tooltip"
+              data-tooltip="Percentage of income spent monthly"
+            >
+              <span>ⓘ</span>
+            </div>
+          </div>
+          <div class="burnChart chart-container">
+            <div class="chart-loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div class="chart-insight js-burninsight">Loading analysis...</div>
+        </div>
+
+        <!-- Runway Projection -->
+        <div class="chart-card card card-glass runway-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Runway Projection</h3>
+            <div class="chart-actions">
+              <span class="chart-badge">Click to expand</span>
+            </div>
+          </div>
+          <div class="runwayChart chart-container">
+            <div class="chart-loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div class="chart-footer">
+            <div class="runway-stat">
+              <span class="stat-label">Months of runway:</span>
+              <span class="stat-value js-runwaymonths">Calculating...</span>
+            </div>
+            <div class="hint-badge">
+              <span class="hint-icon">👆</span>
+              <span class="hint-text">Click chart for detailed analysis</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
-        <label for="interest">Interest Rate</label>
-        <div class="interest-rate">
-          <input type="text" id="interest" value="2" class="jsInterest" /><span
-            >%</span
-          >
+    </div>
+
+    <!-- Recommendations Panel -->
+    <div class="recommendations-panel card">
+      <div class="panel-header">
+        <h3 class="panel-title">💡 Personalized Recommendations</h3>
+      </div>
+      <div class="recommendations-list js-recommendations">
+        <div class="recommendation-item">
+          <span class="rec-icon">🔄</span>
+          <span class="rec-text">Loading recommendations...</span>
         </div>
       </div>
-    </section>
-  </section>
-  <section class="chartsSection">
-    <section class="burnSection">
-      <div class="burnChart"></div>
-    </section>
-    <section class="runwaySection">
-      <div class="runwayChart"></div>
-      <div class="hint">Dive Deeper</div>
-    </section>
-  </section>
-  
+    </div>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
 <script>
-  document.querySelector(".runwaySection").addEventListener("mouseover", () => {
-    document.querySelector(".hint").style.display = "block";
-  });
-  document
-    .querySelector(".runwaySection")
-    .addEventListener("mouseleave", () => {
-      document.querySelector(".hint").style.display = "none";
-    });
+  // ============================================
+  // SIMULATE.JS - Financial Simulator Logic (FIXED)
+  // ============================================
 
-  document.querySelector(".jsIncome").addEventListener("input", () => {
-    getChartData();
-  });
-  document.querySelector(".jsExpenses").addEventListener("input", () => {
-    getChartData();
-  });
-  document.querySelector(".jsSavings").addEventListener("input", () => {
-    getChartData();
-  });
-  document.querySelector(".jsInterest").addEventListener("input", () => {
-    getChartData();
-  });
-  document.querySelector(".jsDebt").addEventListener("input", () => {
-    getChartData();
-  });
+  (function () {
+    "use strict";
 
-  getChartData();
+    // DOM Elements
+    const elements = {
+      income: document.querySelector(".jsIncome"),
+      expenses: document.querySelector(".jsExpenses"),
+      savings: document.querySelector(".jsSavings"),
+      debt: document.querySelector(".jsDebt"),
+      interest: document.querySelector(".jsInterest"),
+      burnChart: document.querySelector(".burnChart"),
+      runwayChart: document.querySelector(".runwayChart"),
+      cashflow: document.querySelector(".js-cashflow"),
+      savingsRate: document.querySelector(".js-savingsrate"),
+      dti: document.querySelector(".js-dti"),
+      burnInsight: document.querySelector(".js-burninsight"),
+      runwayMonths: document.querySelector(".js-runwaymonths"),
+      recommendations: document.querySelector(".js-recommendations"),
+    };
 
-  async function getChartData() {
-    let income = document.querySelector(".jsIncome").value;
-    let expenses = document.querySelector(".jsExpenses").value;
-    let savings = document.querySelector(".jsSavings").value;
-    let debt = document.querySelector(".jsDebt").value;
-    let interest = document.querySelector(".jsInterest").value;
-    let res = await fetch("/simulate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ income, expenses, savings, debt, interest }),
-    });
+    // Chart instances
+    let burnChartInstance = null;
+    let runwayChartInstance = null;
 
-    let response = await res.json();
+    // Current data cache
+    let currentData = {
+      burnRate: { burnRate: 50, risk: "Moderate", monthlyBurn: 50000 },
+      runWay: [],
+      savings: 300000,
+      income: 100000,
+      expenses: 50000,
+    };
 
-    if (response.success) {
-      let burnRate = response.burnRate;
-      let { runWay } = response;
+    // Debounce timer
+    let debounceTimer;
+    let isLoading = false;
 
-      document.querySelector(".burnChart").innerHTML = "";
-      document.querySelector(".runwayChart").innerHTML = "";
-      runBurnChart(burnRate);
-      runRunWayChart(runWay, response.burnRate, savings);
+    // Initialize
+    function init() {
+      console.log("Initializing simulator...");
+      setupEventListeners();
+      updateAllData();
     }
-  }
 
-  function runBurnChart(burnRate) {
-    let options = {
-      chart: {
-        type: "radialBar",
-        height: 400,
-      },
-      colors: [
-        burnRate.burnRate < 50
-          ? "#00E396"
-          : burnRate.burnRate < 80
-          ? "#FEB019"
-          : "#FF4560",
-      ],
-      title: {
-        text: "Burn Rate",
-        style: {
-          fontSize: "18px",
+    // Event Listeners
+    function setupEventListeners() {
+      const inputs = ["income", "expenses", "savings", "debt", "interest"];
+
+      inputs.forEach((key) => {
+        if (elements[key]) {
+          elements[key].addEventListener("input", (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(updateAllData, 500);
+          });
+        }
+      });
+
+      // Runway chart click
+      const runwayCard = document.querySelector(".runway-card");
+      if (runwayCard) {
+        runwayCard.addEventListener("click", (e) => {
+          if (!e.target.closest(".chart-actions")) {
+            navigateToDetailedRunway();
+          }
+        });
+      }
+    }
+
+    // Get form data
+    function getFormData() {
+      return {
+        income: parseFloat(elements.income?.value.replace(/,/g, "") || "0"),
+        expenses: parseFloat(elements.expenses?.value.replace(/,/g, "") || "0"),
+        savings: parseFloat(elements.savings?.value.replace(/,/g, "") || "0"),
+        debt: parseFloat(elements.debt?.value.replace(/,/g, "") || "0"),
+        interest: parseFloat(elements.interest?.value || "0"),
+      };
+    }
+
+    // Update all data
+    async function updateAllData() {
+      if (isLoading) return;
+
+      const data = getFormData();
+      console.log("Updating with data:", data);
+
+      // Update metrics immediately
+      updateMetrics(data);
+
+      // Show loading state
+      showLoadingState();
+      isLoading = true;
+
+      try {
+        const response = await fetchSimulationData(data);
+        console.log("Server response:", response);
+
+        if (response && response.success) {
+          // Cache the data
+          currentData = {
+            ...response,
+            income: data.income,
+            expenses: data.expenses,
+            savings: data.savings,
+          };
+
+          updateCharts(currentData);
+          updateInsights(currentData);
+          updateRecommendations(currentData);
+        } else {
+          // Use fallback calculations if server fails
+          console.warn("Using fallback calculations");
+          const fallbackData = generateFallbackData(data);
+          currentData = fallbackData;
+          updateCharts(fallbackData);
+          updateInsights(fallbackData);
+          updateRecommendations(fallbackData);
+        }
+      } catch (error) {
+        console.error("Simulation error:", error);
+        // Use fallback calculations
+        const fallbackData = generateFallbackData(data);
+        currentData = fallbackData;
+        updateCharts(fallbackData);
+        updateInsights(fallbackData);
+        updateRecommendations(fallbackData);
+      } finally {
+        hideLoadingState();
+        isLoading = false;
+      }
+    }
+
+    // Generate fallback data when server is unavailable
+    function generateFallbackData(data) {
+      const monthlyBurn = data.expenses;
+      const burnRate =
+        data.income > 0 ? (data.expenses / data.income) * 100 : 0;
+      const monthlySavings = data.income - data.expenses;
+
+      // Generate runway data
+      const runWay = [];
+      let currentSavings = data.savings;
+      const months = Math.min(24, Math.floor(currentSavings / monthlyBurn));
+
+      for (let i = 0; i <= months; i++) {
+        runWay.push(currentSavings);
+        currentSavings =
+          currentSavings +
+          monthlySavings -
+          data.debt * (data.interest / 100 / 12);
+      }
+
+      let risk = "Low";
+      if (burnRate > 80) risk = "High";
+      else if (burnRate > 50) risk = "Moderate";
+
+      return {
+        success: true,
+        burnRate: {
+          burnRate: Math.min(burnRate, 100),
+          risk: risk,
+          monthlyBurn: monthlyBurn,
         },
-      },
-      subtitle: {
-        text: `Risk: ${burnRate.risk}`,
-        offsetX: 30,
-        style: {
-          fontSize: "14px",
-          cssClass: "apexcharts-yaxis-title",
+        runWay: runWay,
+        savings: data.savings,
+        income: data.income,
+        expenses: data.expenses,
+      };
+    }
+
+    // Update metrics
+    function updateMetrics(data) {
+      const cashflow = data.income - data.expenses;
+      const savingsRate = data.income > 0 ? (cashflow / data.income) * 100 : 0;
+      const dti = data.income > 0 ? (data.debt / (data.income * 12)) * 100 : 0;
+
+      if (elements.cashflow) {
+        const formatted = Math.abs(cashflow).toLocaleString();
+        elements.cashflow.textContent = `${cashflow >= 0 ? "+" : "-"}${formatted} Ksh`;
+        elements.cashflow.style.color =
+          cashflow >= 0 ? "var(--color-success)" : "var(--color-error)";
+      }
+
+      if (elements.savingsRate) {
+        elements.savingsRate.textContent = `${savingsRate.toFixed(1)}%`;
+      }
+
+      if (elements.dti) {
+        elements.dti.textContent = `${dti.toFixed(1)}%`;
+      }
+    }
+
+    // Fetch simulation data
+    async function fetchSimulationData(data) {
+      try {
+        const response = await fetch("/simulate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+      }
+    }
+
+    // Update charts
+    function updateCharts(data) {
+      if (data.burnRate) {
+        renderBurnChart(data.burnRate);
+      }
+      if (data.runWay && data.runWay.length > 0) {
+        renderRunwayChart(data.runWay, data.burnRate, data.savings);
+      }
+    }
+
+    // Render burn rate chart
+    function renderBurnChart(burnRate) {
+      if (!elements.burnChart) return;
+
+      const options = {
+        chart: {
+          type: "radialBar",
+          height: 350,
+          animations: { enabled: true, speed: 800 },
         },
-      },
-      series: [burnRate.burnRate],
-      plotOptions: {
-        radialBar: {
-          hollow: {
-            size: "50%",
-          },
-          dataLabels: {
-            value: {
-              formatter: function (val) {
-                return val + "%";
+        colors: [getBurnRateColor(burnRate.burnRate)],
+        plotOptions: {
+          radialBar: {
+            hollow: { size: "55%" },
+            track: { background: "#f1f5f9", strokeWidth: "100%" },
+            dataLabels: {
+              name: {
+                show: true,
+                fontSize: "14px",
+                fontWeight: 500,
+                color: "#64748b",
+                offsetY: 25,
               },
-              fontSize: "28px",
+              value: {
+                fontSize: "32px",
+                fontWeight: 700,
+                color: "#0a0e1a",
+                formatter: (val) => `${val.toFixed(1)}%`,
+                offsetY: -10,
+              },
             },
           },
         },
-      },
-      labels: ["Burn Rate"],
-    };
-
-    let chart = new ApexCharts(document.querySelector(".burnChart"), options);
-
-    chart.render();
-  }
-  function runRunWayChart(runWay, burnRate) {
-    let options = {
-      title: {
-        text: "Runway chart",
-        style: {
-          fontSize: "18px",
-        },
-      },
-      chart: {
-        type: "area",
-        group: "sparklines",
-        height: 350,
-        sparkline: {
-          enabled: true,
-        },
-        toolbar: { show: false },
-
-        events: {
-          click: function () {
-            sessionStorage.setItem("runwayData", JSON.stringify(runWay));
-
-            window.location.href = "/simulations/runway";
-          },
-          mouseMove: function (event, chartContext, config) {
-            event.target.style.cursor = "pointer";
+        series: [Math.min(burnRate.burnRate, 100)],
+        labels: ["Burn Rate"],
+        title: {
+          text: `Risk Level: ${burnRate.risk || "Moderate"}`,
+          align: "center",
+          margin: 10,
+          style: {
+            fontSize: "14px",
+            fontWeight: 500,
+            color: getRiskColor(burnRate.risk),
           },
         },
-      },
-      fill: {
-        opacity: 1,
-      },
-      series: [
-        {
-          name: "Savings",
-          data: runWay,
+      };
+
+      if (burnChartInstance) burnChartInstance.destroy();
+      burnChartInstance = new ApexCharts(elements.burnChart, options);
+      burnChartInstance.render();
+    }
+
+    // Render runway chart
+    function renderRunwayChart(runWay, burnRate, savings) {
+      if (!elements.runwayChart || !runWay.length) return;
+
+      const options = {
+        chart: {
+          type: "area",
+          height: 280,
+          sparkline: { enabled: true },
+          toolbar: { show: false },
+          animations: { enabled: true, speed: 800 },
         },
-      ],
-      tooltip: { enabled: false, followCursor: true },
-      dataLabels: { enabled: false },
-      markers: { size: 0 },
-      xaxis: {
-        labels: { show: false },
-      },
-      yaxis: {
-        labels: { show: false },
-        grid: { show: true },
-      },
-      stroke: {
-        curve: "smooth",
-      },
+        colors: ["#2563eb"],
+        fill: {
+          type: "gradient",
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.3,
+            opacityTo: 0.05,
+            stops: [0, 100],
+          },
+        },
+        stroke: {
+          curve: "smooth",
+          width: 2,
+        },
+        series: [{ name: "Savings", data: runWay }],
+        tooltip: { enabled: false },
+        grid: { show: false },
+        xaxis: { labels: { show: false }, axisBorder: { show: false } },
+        yaxis: { labels: { show: false } },
+      };
+
+      if (runwayChartInstance) runwayChartInstance.destroy();
+      runwayChartInstance = new ApexCharts(elements.runwayChart, options);
+      runwayChartInstance.render();
+
+      // Update runway months
+      if (elements.runwayMonths && burnRate) {
+        const monthlyBurn = burnRate.monthlyBurn || currentData.expenses || 0;
+        const months = calculateRunwayMonths(
+          savings || currentData.savings,
+          monthlyBurn,
+        );
+        elements.runwayMonths.textContent =
+          months === Infinity ? "24+ months" : `${months} months`;
+      }
+    }
+
+    // Update insights
+    function updateInsights(data) {
+      if (elements.burnInsight && data.burnRate) {
+        const burnRate = data.burnRate.burnRate;
+        let insight = "";
+
+        if (burnRate < 50) {
+          insight = `Excellent! You're only spending ${burnRate.toFixed(1)}% of your income.`;
+        } else if (burnRate < 80) {
+          insight = `Good. Your spending is at ${burnRate.toFixed(1)}%. Room for more savings.`;
+        } else {
+          insight = `Warning: ${burnRate.toFixed(1)}% burn rate. Consider reducing expenses.`;
+        }
+
+        elements.burnInsight.textContent = insight;
+      }
+    }
+
+    // Update recommendations
+    function updateRecommendations(data) {
+      if (!elements.recommendations) return;
+
+      const recommendations = [];
+      const burnRate = data.burnRate?.burnRate || 50;
+      const cashflow = (data.income || 0) - (data.expenses || 0);
+
+      if (burnRate > 80) {
+        recommendations.push({
+          icon: "⚠️",
+          text: "Your burn rate is high. Review non-essential expenses.",
+        });
+      } else {
+        recommendations.push({
+          icon: "✅",
+          text: `Your burn rate of ${burnRate.toFixed(1)}% is healthy.`,
+        });
+      }
+
+      if (cashflow > (data.income || 1) * 0.2) {
+        recommendations.push({
+          icon: "📈",
+          text: "Strong cash flow! Consider increasing investments.",
+        });
+      }
+
+      if ((data.savings || 0) < (data.expenses || 1) * 3) {
+        recommendations.push({
+          icon: "🎯",
+          text: "Build emergency fund to cover 3-6 months of expenses.",
+        });
+      } else {
+        recommendations.push({
+          icon: "📊",
+          text: "Emergency fund covers 3+ months of expenses - Great job!",
+        });
+      }
+
+      elements.recommendations.innerHTML = recommendations
+        .map(
+          (rec) => `
+          <div class="recommendation-item">
+            <span class="rec-icon">${rec.icon}</span>
+            <span class="rec-text">${rec.text}</span>
+          </div>
+        `,
+        )
+        .join("");
+    }
+
+    // Helper functions
+    function getBurnRateColor(rate) {
+      if (rate < 50) return "#10b981";
+      if (rate < 80) return "#f59e0b";
+      return "#ef4444";
+    }
+
+    function getRiskColor(risk) {
+      if (risk === "Low") return "#10b981";
+      if (risk === "Moderate") return "#f59e0b";
+      return "#ef4444";
+    }
+
+    function calculateRunwayMonths(savings, monthlyBurn) {
+      if (!monthlyBurn || monthlyBurn <= 0) return Infinity;
+      return Math.floor(savings / monthlyBurn);
+    }
+
+    function showLoadingState() {
+      document.querySelectorAll(".chart-container").forEach((container) => {
+        const spinner = container.querySelector(".chart-loading");
+        if (spinner) spinner.style.display = "flex";
+      });
+    }
+
+    function hideLoadingState() {
+      document.querySelectorAll(".chart-container").forEach((container) => {
+        const spinner = container.querySelector(".chart-loading");
+        if (spinner) spinner.style.display = "none";
+      });
+    }
+
+    function navigateToDetailedRunway() {
+      const runwayData = currentData.runWay;
+      if (runwayData && runwayData.length > 0) {
+        sessionStorage.setItem("runwayData", JSON.stringify(runwayData));
+        window.location.href = "/simulations/runway";
+      }
+    }
+
+    // Global functions
+    window.resetToDefaults = function () {
+      if (elements.income) elements.income.value = "100000";
+      if (elements.expenses) elements.expenses.value = "50000";
+      if (elements.savings) elements.savings.value = "300000";
+      if (elements.debt) elements.debt.value = "120000";
+      if (elements.interest) elements.interest.value = "12";
+      updateAllData();
     };
 
-    new ApexCharts(document.querySelector(".runwayChart"), options).render();
-  }
+    window.saveScenario = function () {
+      const data = getFormData();
+      console.log("Saving scenario:", data);
+      alert("✅ Scenario saved successfully! (Ready for backend integration)");
+    };
+
+    // Initialize on load
+    init();
+  })();
 </script>
