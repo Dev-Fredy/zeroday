@@ -1,0 +1,497 @@
+
+
+  <main class="scenarios-main">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="header-content">
+          <div>
+            <h1 class="page-title">
+              <span class="title-icon">🎯</span>
+              Scenario Planning
+            </h1>
+            <p class="page-description">
+              Create, compare, and analyze different financial scenarios to make confident decisions about your future
+            </p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="openCreateScenarioModal()">
+              <span class="btn-icon">➕</span>
+              New Scenario
+            </button>
+            <button class="btn btn-secondary" onclick="openComparisonMode()">
+              <span class="btn-icon">📊</span>
+              Compare Mode
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="stats-grid">
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">📋</span>
+            <span class="stat-label">Total Scenarios</span>
+          </div>
+          <div class="stat-value"><%= scenarios?.length || 8 %></div>
+          <div class="stat-trend positive">↑ 2 this month</div>
+        </div>
+        
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-label">Active Scenarios</span>
+          </div>
+          <div class="stat-value">5</div>
+          <div class="stat-trend neutral">3 completed</div>
+        </div>
+        
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-label">Best Outcome</span>
+          </div>
+          <div class="stat-value">$1.2M</div>
+          <div class="stat-trend positive">Retirement Plan</div>
+        </div>
+        
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-label">Avg Confidence</span>
+          </div>
+          <div class="stat-value">87%</div>
+          <div class="stat-trend positive">High accuracy</div>
+        </div>
+      </div>
+
+      <!-- Scenario Categories -->
+      <div class="categories-filter">
+        <button class="category-btn active" data-category="all">
+          <span class="category-icon">📁</span>
+          All Scenarios
+        </button>
+        <button class="category-btn" data-category="retirement">
+          <span class="category-icon">🏖️</span>
+          Retirement
+        </button>
+        <button class="category-btn" data-category="investment">
+          <span class="category-icon">📈</span>
+          Investment
+        </button>
+        <button class="category-btn" data-category="debt">
+          <span class="category-icon">💳</span>
+          Debt Payoff
+        </button>
+        <button class="category-btn" data-category="savings">
+          <span class="category-icon">🏦</span>
+          Savings Goal
+        </button>
+      </div>
+
+      <!-- Scenarios Grid -->
+      <div class="scenarios-grid" id="scenariosGrid">
+        <% const scenarioList = scenarios || [
+          { id: 1, name: 'Early Retirement', category: 'retirement', progress: 75, confidence: 92, netWorth: 1250000, monthly: 3200, status: 'active', lastUpdated: '2 days ago', description: 'Retire by 55 with comfortable lifestyle' },
+          { id: 2, name: 'Home Purchase', category: 'savings', progress: 45, confidence: 78, netWorth: 450000, monthly: 5000, status: 'active', lastUpdated: '5 days ago', description: 'Save for 20% down payment' },
+          { id: 3, name: 'Aggressive Growth', category: 'investment', progress: 60, confidence: 68, netWorth: 850000, monthly: 2500, status: 'active', lastUpdated: 'Yesterday', description: 'High-risk investment strategy' },
+          { id: 4, name: 'Debt Free 2026', category: 'debt', progress: 85, confidence: 94, netWorth: 150000, monthly: 1800, status: 'active', lastUpdated: '3 days ago', description: 'Pay off all consumer debt' },
+          { id: 5, name: 'College Fund', category: 'savings', progress: 30, confidence: 82, netWorth: 75000, monthly: 800, status: 'draft', lastUpdated: '1 week ago', description: 'Save for children\'s education' },
+          { id: 6, name: 'Conservative Retirement', category: 'retirement', progress: 50, confidence: 96, netWorth: 980000, monthly: 2800, status: 'completed', lastUpdated: '2 weeks ago', description: 'Low-risk retirement planning' }
+        ]; %>
+        
+        <% scenarioList.forEach(scenario => { %>
+        <div class="scenario-card card" data-category="<%= scenario.category %>" data-id="<%= scenario.id %>">
+          <!-- Card Header -->
+          <div class="card-header">
+            <div class="scenario-badge <%= scenario.status %>">
+              <span class="status-dot"></span>
+              <%= scenario.status %>
+            </div>
+            <div class="card-actions">
+              <button class="action-btn" onclick="editScenario(<%= scenario.id %>)" aria-label="Edit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                </svg>
+              </button>
+              <button class="action-btn" onclick="duplicateScenario(<%= scenario.id %>)" aria-label="Duplicate">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="action-btn" onclick="toggleFavorite(<%= scenario.id %>)" aria-label="Favorite">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Card Body -->
+          <div class="card-body">
+            <div class="scenario-category">
+              <span class="category-icon"><%= scenario.category === 'retirement' ? '🏖️' : scenario.category === 'investment' ? '📈' : scenario.category === 'debt' ? '💳' : '🏦' %></span>
+              <span class="category-name"><%= scenario.category.charAt(0).toUpperCase() + scenario.category.slice(1) %></span>
+            </div>
+            
+            <h3 class="scenario-name">
+              <a href="/scenarios/<%= scenario.id %>"><%= scenario.name %></a>
+            </h3>
+            
+            <p class="scenario-description"><%= scenario.description %></p>
+            
+            <!-- Mini Chart -->
+            <div class="mini-chart" id="chart-<%= scenario.id %>" style="height: 60px;"></div>
+            
+            <!-- Key Metrics -->
+            <div class="scenario-metrics">
+              <div class="metric">
+                <span class="metric-label">Projected Net Worth</span>
+                <span class="metric-value">$<%= scenario.netWorth.toLocaleString() %></span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Monthly Contribution</span>
+                <span class="metric-value">$<%= scenario.monthly.toLocaleString() %></span>
+              </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="scenario-progress">
+              <div class="progress-header">
+                <span class="progress-label">Progress</span>
+                <span class="progress-percent"><%= scenario.progress %>%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: <%= scenario.progress %>%"></div>
+              </div>
+            </div>
+            
+            <!-- Confidence Score -->
+            <div class="confidence-score">
+              <div class="confidence-header">
+                <span class="confidence-label">Confidence Score</span>
+                <span class="confidence-value <%= scenario.confidence >= 80 ? 'high' : scenario.confidence >= 60 ? 'medium' : 'low' %>">
+                  <%= scenario.confidence %>%
+                </span>
+              </div>
+              <div class="confidence-bar">
+                <div class="confidence-fill <%= scenario.confidence >= 80 ? 'high' : scenario.confidence >= 60 ? 'medium' : 'low' %>" 
+                     style="width: <%= scenario.confidence %>%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card Footer -->
+          <div class="card-footer">
+            <div class="last-updated">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Updated <%= scenario.lastUpdated %>
+            </div>
+            <a href="/scenarios/<%= scenario.id %>" class="view-link">
+              View Details
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+
+      <!-- Empty State (Hidden by default) -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-content card">
+          <div class="empty-icon">🎯</div>
+          <h3 class="empty-title">No scenarios found</h3>
+          <p class="empty-description">
+            Create your first financial scenario to start planning your future
+          </p>
+          <button class="btn btn-primary" onclick="openCreateScenarioModal()">
+            Create Your First Scenario
+          </button>
+        </div>
+      </div>
+
+      <!-- Load More -->
+      <div class="load-more-container">
+        <button class="btn btn-secondary btn-large" id="loadMoreBtn" onclick="loadMoreScenarios()">
+          <span class="btn-text">Load More Scenarios</span>
+          <span class="btn-spinner" style="display: none;"></span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Scenario Modal -->
+  <div class="modal-overlay" id="createScenarioModal" style="display: none;">
+    <div class="modal-container">
+      <div class="modal card">
+        <div class="modal-header">
+          <h2 class="modal-title">
+            <span class="modal-icon">✨</span>
+            Create New Scenario
+          </h2>
+          <button class="modal-close" onclick="closeCreateScenarioModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <form class="scenario-form" id="createScenarioForm">
+            <div class="form-group">
+              <label for="scenarioName" class="form-label">Scenario Name</label>
+              <input type="text" id="scenarioName" class="form-input" placeholder="e.g., Early Retirement Plan" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="scenarioCategory" class="form-label">Category</label>
+              <select id="scenarioCategory" class="form-select">
+                <option value="retirement">🏖️ Retirement</option>
+                <option value="investment">📈 Investment</option>
+                <option value="debt">💳 Debt Payoff</option>
+                <option value="savings">🏦 Savings Goal</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="scenarioDescription" class="form-label">Description (Optional)</label>
+              <textarea id="scenarioDescription" class="form-textarea" rows="3" placeholder="Brief description of your scenario..."></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="initialAmount" class="form-label">Initial Amount</label>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="initialAmount" class="form-input" value="10000" />
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="monthlyContribution" class="form-label">Monthly Contribution</label>
+                <div class="input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="monthlyContribution" class="form-input" value="500" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="timeHorizon" class="form-label">Time Horizon (Years)</label>
+                <input type="number" id="timeHorizon" class="form-input" value="20" min="1" max="50" />
+              </div>
+              
+              <div class="form-group">
+                <label for="expectedReturn" class="form-label">Expected Return (%)</label>
+                <input type="number" id="expectedReturn" class="form-input" value="7" min="1" max="20" step="0.1" />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Risk Tolerance</label>
+              <div class="risk-options">
+                <label class="risk-option">
+                  <input type="radio" name="riskTolerance" value="conservative" />
+                  <span class="risk-card">
+                    <span class="risk-icon">🛡️</span>
+                    <span class="risk-name">Conservative</span>
+                    <span class="risk-return">5-6%</span>
+                  </span>
+                </label>
+                <label class="risk-option">
+                  <input type="radio" name="riskTolerance" value="moderate" checked />
+                  <span class="risk-card">
+                    <span class="risk-icon">⚖️</span>
+                    <span class="risk-name">Moderate</span>
+                    <span class="risk-return">7-9%</span>
+                  </span>
+                </label>
+                <label class="risk-option">
+                  <input type="radio" name="riskTolerance" value="aggressive" />
+                  <span class="risk-card">
+                    <span class="risk-icon">🚀</span>
+                    <span class="risk-name">Aggressive</span>
+                    <span class="risk-return">10-12%</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeCreateScenarioModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="createScenario()">
+            <span class="btn-text">Create Scenario</span>
+            <span class="btn-spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // Initialize mini charts
+    function initMiniCharts() {
+      document.querySelectorAll('[id^="chart-"]').forEach(container => {
+        const id = container.id.replace('chart-', '');
+        
+        const options = {
+          chart: {
+            type: 'area',
+            height: 60,
+            sparkline: { enabled: true },
+            animations: { enabled: false }
+          },
+          series: [{
+            name: 'Growth',
+            data: generateChartData(id)
+          }],
+          colors: ['#2563eb'],
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              opacityFrom: 0.3,
+              opacityTo: 0.05
+            }
+          },
+          stroke: { curve: 'smooth', width: 1.5 },
+          tooltip: { enabled: false }
+        };
+        
+        new ApexCharts(container, options).render();
+      });
+    }
+    
+    function generateChartData(id) {
+      // Generate sample growth data based on scenario ID
+      const base = 10000 * id;
+      const data = [];
+      for (let i = 0; i < 20; i++) {
+        data.push(base * Math.pow(1.07, i) + (Math.random() * 5000));
+      }
+      return data;
+    }
+    
+    // Category filtering
+    let currentCategory = 'all';
+    
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        currentCategory = btn.dataset.category;
+        filterScenarios(currentCategory);
+      });
+    });
+    
+    function filterScenarios(category) {
+      const cards = document.querySelectorAll('.scenario-card');
+      let visibleCount = 0;
+      
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show empty state if no scenarios
+      document.getElementById('emptyState').style.display = visibleCount === 0 ? 'flex' : 'none';
+      document.getElementById('scenariosGrid').style.display = visibleCount === 0 ? 'none' : 'grid';
+    }
+    
+    // Modal functions
+    function openCreateScenarioModal() {
+      document.getElementById('createScenarioModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeCreateScenarioModal() {
+      document.getElementById('createScenarioModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    
+    // Scenario actions
+    function editScenario(id) {
+      window.location.href = `/scenarios/${id}/edit`;
+    }
+    
+    function duplicateScenario(id) {
+      console.log('Duplicating scenario:', id);
+      // API call to duplicate
+    }
+    
+    function toggleFavorite(id) {
+      const btn = event.currentTarget;
+      btn.classList.toggle('favorited');
+    }
+    
+    function openComparisonMode() {
+      window.location.href = '/scenarios/compare';
+    }
+    
+    function createScenario() {
+      const form = document.getElementById('createScenarioForm');
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      
+      console.log('Creating scenario:', data);
+      
+      // API call to create scenario
+      setTimeout(() => {
+        closeCreateScenarioModal();
+        window.location.reload();
+      }, 1000);
+    }
+    
+    function loadMoreScenarios() {
+      const btn = document.getElementById('loadMoreBtn');
+      const text = btn.querySelector('.btn-text');
+      const spinner = btn.querySelector('.btn-spinner');
+      
+      btn.disabled = true;
+      text.style.opacity = '0.5';
+      spinner.style.display = 'inline-block';
+      
+      setTimeout(() => {
+        btn.disabled = false;
+        text.style.opacity = '1';
+        spinner.style.display = 'none';
+      }, 1500);
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      initMiniCharts();
+      
+      // Close modal on overlay click
+      document.getElementById('createScenarioModal').addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+          closeCreateScenarioModal();
+        }
+      });
+      
+      // Escape key to close modal
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.getElementById('createScenarioModal').style.display === 'flex') {
+          closeCreateScenarioModal();
+        }
+      });
+    });
+  </script>

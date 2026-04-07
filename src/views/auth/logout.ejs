@@ -1,13 +1,81 @@
-<button class="jsLogout">Logout</button>
+<a href="#" class="logout-link jsLogoutLink">
+  <span class="link-icon">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+    >
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  </span>
+  Sign Out
+</a>
 
 <script>
-  const logoutButton = document.querySelector(".jsLogout");
-  logoutButton.addEventListener("click", () => {
-    logout();
-  });
-  function logout() {
-    fetch("/auth/logout", { method: "POST" }).then(() => {
-      window.location.reload();
+  document
+    .querySelector(".jsLogoutLink")
+    ?.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      const link = e.currentTarget;
+      const originalText = link.innerHTML;
+
+      // Show loading state
+      link.innerHTML = `
+      <span class="link-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="spinning">
+          <circle cx="12" cy="12" r="10" stroke-opacity="0.25" stroke-width="2"/>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      Signing out...
+    `;
+      link.style.pointerEvents = "none";
+      link.style.opacity = "0.7";
+
+      try {
+        await fetch("/auth/logout", { method: "POST" });
+        window.location.href = "/";
+      } catch (error) {
+        link.innerHTML = originalText;
+        link.style.pointerEvents = "";
+        link.style.opacity = "1";
+        console.error("Logout failed:", error);
+      }
     });
-  }
 </script>
+
+<style>
+  .logout-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .logout-link:hover {
+    color: var(--color-error);
+  }
+
+  .link-icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

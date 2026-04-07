@@ -11,10 +11,10 @@ class User {
     let decoded = await jwt.verify(token, secret);
     let [dbuser] = await user.readUser(decoded.email);
 
-    res.render("pages/dashboard", {
+    res.render("pages/account", {
       title: "Dashboard",
       user: dbuser,
-      meta: {}
+      meta: {},
     });
   }
   async deleteuser(req, res) {

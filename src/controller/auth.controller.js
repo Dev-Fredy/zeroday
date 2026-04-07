@@ -35,7 +35,7 @@ class Auth {
 
     const secret = process.env.JWT_SECRET;
 
-    const token = await jwt.sign(payload, secret, { expiresIn: "6" });
+    const token = await jwt.sign(payload, secret, { expiresIn: "7d" });
 
     res.cookie("token", token, {
       sameSite: "strict",

@@ -1,15 +1,425 @@
-<main>
-  <section class="account">
-    <div>
-      <div class="user">Name</div>
-      <div class="name"><%= user.first_name%> <%= user.last_name%></div>
-    </div>
-    <div>
-      <div class="user">Email</div>
-      <div class="email"><%= user.email %></div>
-    </div>
-    <div><%- include('../auth/logout.ejs')%></div>
-  </section>
-</main>
 
-<script></script>
+  <main class="dashboard-main">
+    <div class="container">
+      <!-- Welcome Header -->
+      <div class="welcome-header">
+        <div class="welcome-content">
+          <div>
+            <h1 class="welcome-title">
+              <span class="greeting">Welcome back,</span>
+              <span class="user-name"> 👋</span>
+            </h1>
+            <p class="welcome-subtitle">
+              Here's your financial overview for <%= new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) %>
+            </p>
+          </div>
+          <div class="welcome-actions">
+            <button class="btn btn-primary" onclick="window.location.href='/simulations'">
+              <span>🔮</span>
+              New Simulation
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='/import'">
+              <span>📁</span>
+              Import Data
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">💰</span>
+            <span class="stat-trend positive">↑ 12.5%</span>
+          </div>
+          <div class="stat-value">$<%=  '24,580' %></div>
+          <div class="stat-label">Total Savings</div>
+          <div class="stat-footer">
+            <span>Across <%=  3 %> accounts</span>
+          </div>
+        </div>
+        
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">📊</span>
+            <span class="stat-trend positive">↑ 8.3%</span>
+          </div>
+          <div class="stat-value">$<%=  '5,200' %></div>
+          <div class="stat-label">Monthly Income</div>
+          <div class="stat-footer">
+            <span>After tax income</span>
+          </div>
+        </div>
+        
+        <div class="stat-card card">
+          <div class="stat-header">
+            <span class="stat-icon">📉</span>
+            <span class="stat-trend negative">↓ 3.2%</span>
+          </div>
+          <div class="stat-value">$<%= '3,100' %></div>
+          <div class="stat-label">Monthly Expenses</div>
+          <div class="stat-footer">
+            <span>Burn rate: 59.6%</span>
+          </div>
+        </div>
+        
+        <div class="stat-card card highlight">
+          <div class="stat-header">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-trend positive">On track</span>
+          </div>
+          <div class="stat-value"><%=  40.4 %>%</div>
+          <div class="stat-label">Savings Rate</div>
+          <div class="stat-footer">
+            <span>Target: 35%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- Left Column -->
+        <div class="dashboard-left">
+          <!-- Net Worth Chart -->
+          <div class="chart-card card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Net Worth Projection</h3>
+                <p class="card-subtitle">Next 12 months forecast</p>
+              </div>
+              <div class="card-actions">
+                <select class="chart-period-select" id="netWorthPeriod">
+                  <option value="6">6 Months</option>
+                  <option value="12" selected>12 Months</option>
+                  <option value="24">24 Months</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div id="netWorthChart" style="height: 320px;"></div>
+            </div>
+          </div>
+
+          <!-- Recent Transactions -->
+          <div class="transactions-card card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Recent Transactions</h3>
+                <p class="card-subtitle">Last 7 days activity</p>
+              </div>
+              <a href="/transactions" class="view-all-link">View All →</a>
+            </div>
+            <div class="transactions-list">
+              <% const transactions = [
+                { type: 'expense', name: 'Grocery Store', amount: -85.50, date: 'Today', category: 'Food' },
+                { type: 'income', name: 'Salary Deposit', amount: 2600, date: 'Yesterday', category: 'Income' },
+                { type: 'expense', name: 'Netflix Subscription', amount: -15.99, date: 'Mar 15', category: 'Entertainment' },
+                { type: 'expense', name: 'Uber Ride', amount: -24.30, date: 'Mar 14', category: 'Transport' },
+                { type: 'income', name: 'Freelance Payment', amount: 450, date: 'Mar 12', category: 'Income' }
+              ]; %>
+              <% transactions.forEach(tx => { %>
+              <div class="transaction-item">
+                <div class="transaction-icon <%= tx.type %>">
+                  <%= tx.type === 'income' ? '↓' : '↑' %>
+                </div>
+                <div class="transaction-details">
+                  <div class="transaction-name"><%= tx.name %></div>
+                  <div class="transaction-meta">
+                    <span class="transaction-category"><%= tx.category %></span>
+                    <span class="transaction-date"><%= tx.date %></span>
+                  </div>
+                </div>
+                <div class="transaction-amount <%= tx.type %>">
+                  <%= tx.type === 'income' ? '+' : '' %>$<%= Math.abs(tx.amount).toLocaleString() %>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="dashboard-right">
+          <!-- Spending Breakdown -->
+          <div class="chart-card card">
+            <div class="card-header">
+              <h3 class="card-title">Spending Breakdown</h3>
+              <span class="card-badge">This Month</span>
+            </div>
+            <div class="chart-container">
+              <div id="spendingChart" style="height: 280px;"></div>
+            </div>
+            <div class="spending-categories">
+              <div class="category-item">
+                <span class="category-color" style="background: #2563eb;"></span>
+                <span class="category-name">Housing</span>
+                <span class="category-value">$1,200</span>
+                <span class="category-percent">38.7%</span>
+              </div>
+              <div class="category-item">
+                <span class="category-color" style="background: #10b981;"></span>
+                <span class="category-name">Food</span>
+                <span class="category-value">$650</span>
+                <span class="category-percent">21.0%</span>
+              </div>
+              <div class="category-item">
+                <span class="category-color" style="background: #f59e0b;"></span>
+                <span class="category-name">Transport</span>
+                <span class="category-value">$420</span>
+                <span class="category-percent">13.5%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Simulations -->
+          <div class="simulations-card card">
+            <div class="card-header">
+              <h3 class="card-title">Active Simulations</h3>
+              <a href="/simulations" class="view-all-link">View All →</a>
+            </div>
+            <div class="simulations-list">
+              <% const simulations =  [
+                { name: 'Retirement Plan', progress: 75, status: 'active', lastRun: '2 days ago' },
+                { name: 'Home Purchase', progress: 45, status: 'draft', lastRun: '5 days ago' },
+                { name: 'College Fund', progress: 90, status: 'active', lastRun: 'Yesterday' }
+              ]; %>
+              <% simulations.forEach(sim => { %>
+              <div class="simulation-item">
+                <div class="simulation-info">
+                  <div class="simulation-name">
+                    <%= sim.name %>
+                    <span class="simulation-status <%= sim.status %>"><%= sim.status %></span>
+                  </div>
+                  <div class="simulation-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width: <%= sim.progress %>%"></div>
+                    </div>
+                    <span class="progress-text"><%= sim.progress %>%</span>
+                  </div>
+                  <div class="simulation-meta">
+                    Last run: <%= sim.lastRun %>
+                  </div>
+                </div>
+                <a href="/simulations/<%= sim.id || 'view' %>" class="simulation-link">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </a>
+              </div>
+              <% }) %>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-secondary btn-block" onclick="window.location.href='/simulations/new'">
+                <span>➕</span>
+                Create New Simulation
+              </button>
+            </div>
+          </div>
+
+          <!-- Insights & Recommendations -->
+          <div class="insights-card card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span>💡</span>
+                Personalized Insights
+              </h3>
+            </div>
+            <div class="insights-list">
+              <div class="insight-item positive">
+                <div class="insight-icon">✅</div>
+                <div class="insight-content">
+                  <p>Your savings rate of 40.4% is excellent! You're saving more than 85% of users.</p>
+                </div>
+              </div>
+              <div class="insight-item warning">
+                <div class="insight-icon">⚠️</div>
+                <div class="insight-content">
+                  <p>Your emergency fund covers 4 months. Consider building to 6 months for better security.</p>
+                </div>
+              </div>
+              <div class="insight-item info">
+                <div class="insight-icon">📈</div>
+                <div class="insight-content">
+                  <p>Based on your savings rate, you could retire 7 years earlier than planned!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="dashboard-bottom">
+        <!-- Financial Goals -->
+        <div class="goals-card card">
+          <div class="card-header">
+            <h3 class="card-title">Financial Goals</h3>
+            <a href="/goals" class="view-all-link">Manage Goals →</a>
+          </div>
+          <div class="goals-list">
+            <% const goals =  [
+              { name: 'Emergency Fund', target: 15000, current: 10000, deadline: 'Dec 2024' },
+              { name: 'Down Payment', target: 50000, current: 25000, deadline: 'Jun 2025' },
+              { name: 'Vacation Fund', target: 5000, current: 3500, deadline: 'Aug 2024' }
+            ]; %>
+            <% goals.forEach(goal => { %>
+            <div class="goal-item">
+              <div class="goal-info">
+                <div class="goal-name"><%= goal.name %></div>
+                <div class="goal-target">
+                  $<%= goal.current.toLocaleString() %> / $<%= goal.target.toLocaleString() %>
+                </div>
+                <div class="goal-deadline">Due: <%= goal.deadline %></div>
+              </div>
+              <div class="goal-progress">
+                <div class="progress-bar large">
+                  <div class="progress-fill" style="width: <%= (goal.current / goal.target * 100) %>%"></div>
+                </div>
+                <span class="goal-percent"><%= Math.round(goal.current / goal.target * 100) %>%</span>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Upcoming Bills -->
+        <div class="bills-card card">
+          <div class="card-header">
+            <h3 class="card-title">Upcoming Bills</h3>
+            <a href="/bills" class="view-all-link">View All →</a>
+          </div>
+          <div class="bills-list">
+            <% const bills =  [
+              { name: 'Rent', amount: 1200, dueDate: 'Apr 1', status: 'upcoming' },
+              { name: 'Car Insurance', amount: 180, dueDate: 'Mar 25', status: 'upcoming' },
+              { name: 'Internet', amount: 65, dueDate: 'Mar 28', status: 'upcoming' }
+            ]; %>
+            <% bills.forEach(bill => { %>
+            <div class="bill-item">
+              <div class="bill-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <div class="bill-details">
+                <div class="bill-name"><%= bill.name %></div>
+                <div class="bill-date">Due: <%= bill.dueDate %></div>
+              </div>
+              <div class="bill-amount">$<%= bill.amount %></div>
+              <button class="bill-pay-btn">Pay</button>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <script>
+    // Initialize Charts
+    function initCharts() {
+      // Net Worth Chart
+      const netWorthOptions = {
+        chart: {
+          type: 'area',
+          height: 320,
+          toolbar: { show: false },
+          animations: { enabled: true, speed: 800 }
+        },
+        series: [{
+          name: 'Net Worth',
+          data: [45000, 47000, 49000, 52000, 54000, 57000, 59000, 62000, 65000, 68000, 71000, 74000]
+        }],
+        colors: ['#2563eb'],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.3,
+            opacityTo: 0.05,
+            stops: [0, 100]
+          }
+        },
+        stroke: { curve: 'smooth', width: 2 },
+        xaxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          labels: { style: { fontSize: '12px' } }
+        },
+        yaxis: {
+          labels: {
+            formatter: (val) => '$' + (val / 1000).toFixed(0) + 'k'
+          }
+        },
+        tooltip: {
+          y: { formatter: (val) => '$' + val.toLocaleString() }
+        },
+        grid: { borderColor: '#eef2f6', strokeDashArray: 4 }
+      };
+      
+      new ApexCharts(document.querySelector('#netWorthChart'), netWorthOptions).render();
+      
+      // Spending Chart
+      const spendingOptions = {
+        chart: {
+          type: 'donut',
+          height: 280,
+          animations: { enabled: true }
+        },
+        series: [1200, 650, 420, 350, 280, 200],
+        labels: ['Housing', 'Food', 'Transport', 'Shopping', 'Utilities', 'Other'],
+        colors: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#6b7280'],
+        plotOptions: {
+          pie: {
+            donut: {
+              size: '65%',
+              labels: {
+                show: true,
+                total: {
+                  show: true,
+                  label: 'Total Spending',
+                  formatter: (w) => '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString()
+                }
+              }
+            }
+          }
+        },
+        legend: { show: false },
+        dataLabels: { enabled: false },
+        tooltip: {
+          y: { formatter: (val) => '$' + val.toLocaleString() }
+        }
+      };
+      
+      new ApexCharts(document.querySelector('#spendingChart'), spendingOptions).render();
+    }
+    
+    // Period selector change
+    document.getElementById('netWorthPeriod')?.addEventListener('change', (e) => {
+      const months = parseInt(e.target.value);
+      // Update chart data based on period
+      console.log('Period changed to:', months, 'months');
+    });
+    
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initCharts);
+    
+    // Quick actions
+    function quickAction(action) {
+      switch(action) {
+        case 'simulate':
+          window.location.href = '/simulations/new';
+          break;
+        case 'import':
+          window.location.href = '/import';
+          break;
+        case 'report':
+          window.location.href = '/reports/generate';
+          break;
+      }
+    }
+  </script>

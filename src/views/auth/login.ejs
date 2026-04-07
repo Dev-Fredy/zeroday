@@ -1,69 +1,516 @@
-<section class="loginSection jsLoginSection">
-  <form class="">
-    <legend>Login</legend>
-    <div>
-      <label for="email">Email</label>
-      <input type="email" id="email" class="jsEmail" />
+<main class="auth-main">
+  <div class="auth-container">
+    <!-- Back to Home -->
+    <a href="/" class="auth-back-link">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+      Back to Home
+    </a>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+      <!-- Brand Section -->
+      <div class="auth-brand">
+        <a href="/" class="auth-logo">
+          <img src="/Images/ZeroDayFinance.png" alt="Zero Day Finance" />
+        </a>
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Sign in to access your financial dashboard</p>
+      </div>
+
+      <!-- Demo Credentials -->
+      <div class="demo-credentials" onclick="fillDemoCredentials()">
+        <span class="demo-icon">🔑</span>
+        <span class="demo-text">Demo: demo@example.com / ••••••••</span>
+        <span class="demo-hint">(click to fill)</span>
+      </div>
+
+      <!-- Social Login -->
+      <div class="social-login">
+        <button
+          type="button"
+          class="social-btn google"
+          onclick="socialLogin('google')"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            />
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <button
+          type="button"
+          class="social-btn github"
+          onclick="socialLogin('github')"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path
+              fill="#24292E"
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+            />
+          </svg>
+          <span>Continue with GitHub</span>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span class="divider-text">or continue with email</span>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form jsLoginForm" novalidate>
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input jsEmail"
+              placeholder="you@example.com"
+              autocomplete="email"
+              autofocus
+              required
+            />
+          </div>
+          <div class="form-error jsEmailError"></div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="label-wrapper">
+            <label for="password" class="form-label">Password</label>
+            <a href="/auth/reset" class="forgot-link">Forgot password?</a>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input jsPassword"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            />
+            <button
+              type="button"
+              class="password-toggle jsPasswordToggle"
+              aria-label="Toggle password visibility"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <div class="form-error jsPasswordError"></div>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="form-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" class="checkbox-input jsRemember" checked />
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Remember me for 30 days</span>
+          </label>
+        </div>
+
+        <!-- General Error Message -->
+        <div
+          class="form-error form-error-general jsFormError"
+          style="display: none"
+        ></div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-large btn-block jsLogin"
+        >
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner" style="display: none"></span>
+        </button>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="auth-footer">
+        <p class="auth-footer-text">
+          Don't have an account?
+          <a href="/auth/signup" class="auth-link">Create free account</a>
+        </p>
+      </div>
     </div>
-    <div class="">
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" class="jsPassword" />
+
+    <!-- Trust Badges -->
+
+    <!-- Legal Links -->
+    <div class="auth-legal">
+      <a href="/privacy">Privacy Policy</a>
+      <span class="separator">•</span>
+      <a href="/terms">Terms of Service</a>
+      <span class="separator">•</span>
+      <a href="/contact">Contact Support</a>
     </div>
-    <section class="">
-      <button class="jsLogin buttonLink">Login</button>
-    </section>
-    <section class="">
-      <p>
-        Don't have an account? <a href="/auth/signup">Sign up</a> Forgot
-        password?
-        <a href="/auth/reset"> Reset </a>
-      </p>
-    </section>
-  </form>
-</section>
+  </div>
+</main>
 
 <script>
-  document.querySelector(".jsLogin").addEventListener("click", (e) => {
-    e.preventDefault();
+  (function () {
+    "use strict";
 
-    login();
-  });
+    // DOM Elements
+    const form = document.querySelector(".jsLoginForm");
+    const emailInput = document.querySelector(".jsEmail");
+    const passwordInput = document.querySelector(".jsPassword");
+    const loginBtn = document.querySelector(".jsLogin");
+    const emailError = document.querySelector(".jsEmailError");
+    const passwordError = document.querySelector(".jsPasswordError");
+    const formError = document.querySelector(".jsFormError");
+    const passwordToggle = document.querySelector(".jsPasswordToggle");
+    const rememberCheckbox = document.querySelector(".jsRemember");
 
-  document.querySelector(".jsEmail").addEventListener("click", (e) => {
-    if (e.key === "Enter") {
-      login();
+    let isSubmitting = false;
+
+    // Email validation
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
     }
-  });
 
-  document.querySelector(".jsPassword").addEventListener("click", (e) => {
-    if (e.key === "Enter") {
-      login();
+    // Password validation
+    function isValidPassword(password) {
+      return password.length >= 6;
     }
-  });
 
-  async function login() {
-    const email = document.querySelector(".jsEmail").value;
-    const password = document.querySelector(".jsPassword").value;
+    // Clear field error
+    function clearFieldError(input, errorEl) {
+      input.classList.remove("error");
+      if (errorEl) {
+        errorEl.textContent = "";
+        errorEl.style.display = "none";
+      }
+    }
 
-    const data = {
-      email,
-      password,
+    // Show field error
+    function showFieldError(input, errorEl, message) {
+      input.classList.add("error");
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.style.display = "block";
+      }
+    }
+
+    // Show general error
+    function showGeneralError(message) {
+      if (formError) {
+        formError.textContent = message;
+        formError.style.display = "block";
+        formError.style.animation = "none";
+        setTimeout(() => {
+          formError.style.animation = "shake 0.5s ease";
+        }, 10);
+      }
+    }
+
+    // Hide general error
+    function hideGeneralError() {
+      if (formError) {
+        formError.style.display = "none";
+      }
+    }
+
+    // Validate form
+    function validateForm(email, password) {
+      let isValid = true;
+
+      // Validate email
+      if (!email) {
+        showFieldError(emailInput, emailError, "Email is required");
+        isValid = false;
+      } else if (!isValidEmail(email)) {
+        showFieldError(
+          emailInput,
+          emailError,
+          "Please enter a valid email address",
+        );
+        isValid = false;
+      } else {
+        clearFieldError(emailInput, emailError);
+      }
+
+      // Validate password
+      if (!password) {
+        showFieldError(passwordInput, passwordError, "Password is required");
+        isValid = false;
+      } else if (!isValidPassword(password)) {
+        showFieldError(
+          passwordInput,
+          passwordError,
+          "Password must be at least 6 characters",
+        );
+        isValid = false;
+      } else {
+        clearFieldError(passwordInput, passwordError);
+      }
+
+      return isValid;
+    }
+
+    // Set loading state
+    function setLoading(isLoading) {
+      const btnText = loginBtn.querySelector(".btn-text");
+      const btnSpinner = loginBtn.querySelector(".btn-spinner");
+
+      isSubmitting = isLoading;
+      loginBtn.disabled = isLoading;
+
+      if (isLoading) {
+        btnText.style.opacity = "0.5";
+        btnSpinner.style.display = "inline-block";
+      } else {
+        btnText.style.opacity = "1";
+        btnSpinner.style.display = "none";
+      }
+    }
+
+    // Show success state
+    function showSuccess() {
+      const btnText = loginBtn.querySelector(".btn-text");
+      const btnSpinner = loginBtn.querySelector(".btn-spinner");
+
+      btnText.textContent = "✓ Success!";
+      btnSpinner.style.display = "none";
+      btnText.style.opacity = "1";
+      loginBtn.style.background = "var(--color-success)";
+    }
+
+    // Perform login
+    async function performLogin(email, password, remember) {
+      try {
+        const response = await fetch("/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            remember: remember,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success === true) {
+          // Success
+          showSuccess();
+
+          // Get redirect URL
+          const redirectUrl =
+            sessionStorage.getItem("redirectAfterLogin") ||
+            localStorage.getItem("redirectAfterLogin") ||
+            "/dashboard";
+
+          // Clear stored redirect
+          sessionStorage.removeItem("redirectAfterLogin");
+          localStorage.removeItem("redirectAfterLogin");
+
+          // Redirect after short delay
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 600);
+        } else {
+          // Handle specific error cases
+          let errorMessage = data.message || "Invalid email or password";
+
+          if (response.status === 401) {
+            errorMessage = "Incorrect email or password. Please try again.";
+          } else if (response.status === 403) {
+            errorMessage =
+              "Your account has been locked. Please contact support.";
+          } else if (response.status === 429) {
+            errorMessage = "Too many attempts. Please try again later.";
+          }
+
+          showGeneralError(errorMessage);
+          setLoading(false);
+
+          // Shake button on error
+          loginBtn.style.animation = "none";
+          setTimeout(() => {
+            loginBtn.style.animation = "shake 0.5s ease";
+          }, 10);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showGeneralError("Network error. Please check your connection.");
+        setLoading(false);
+      }
+    }
+
+    // Handle form submission
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      if (isSubmitting) return;
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const remember = rememberCheckbox?.checked || false;
+
+      // Hide general error
+      hideGeneralError();
+
+      // Validate
+      if (!validateForm(email, password)) {
+        return;
+      }
+
+      // Set loading state
+      setLoading(true);
+
+      // Perform login
+      await performLogin(email, password, remember);
+    }
+
+    // Toggle password visibility
+    function togglePasswordVisibility() {
+      const type = passwordInput.type === "password" ? "text" : "password";
+      passwordInput.type = type;
+
+      // Update icon
+      const svg = passwordToggle.querySelector("svg");
+      if (type === "text") {
+        svg.innerHTML = `
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+          `;
+        passwordToggle.setAttribute("aria-label", "Hide password");
+      } else {
+        svg.innerHTML = `
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          `;
+        passwordToggle.setAttribute("aria-label", "Show password");
+      }
+    }
+
+    // Clear errors on input
+    function setupInputListeners() {
+      emailInput.addEventListener("input", () => {
+        clearFieldError(emailInput, emailError);
+        hideGeneralError();
+      });
+
+      passwordInput.addEventListener("input", () => {
+        clearFieldError(passwordInput, passwordError);
+        hideGeneralError();
+      });
+
+      // Enter key on password field submits form
+      passwordInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          handleSubmit(e);
+        }
+      });
+    }
+
+    // Demo credentials fill
+    window.fillDemoCredentials = function () {
+      emailInput.value = "demo@example.com";
+      passwordInput.value = "demo123";
+      clearFieldError(emailInput, emailError);
+      clearFieldError(passwordInput, passwordError);
+      hideGeneralError();
+
+      // Focus on password
+      passwordInput.focus();
     };
 
-    let res = await fetch("/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    // Social login
+    window.socialLogin = function (provider) {
+      window.location.href = `/auth/${provider}`;
+    };
 
-    let response = await res.json();
-
-    console.log(response);
-
-    if (response.success === true) {
-      window.location.href = "/";
+    // Store redirect URL if coming from another page
+    if (document.referrer && !document.referrer.includes("/auth")) {
+      sessionStorage.setItem("redirectAfterLogin", document.referrer);
     }
-  }
+
+    // Initialize
+    function init() {
+      if (form) {
+        form.addEventListener("submit", handleSubmit);
+      }
+
+      if (passwordToggle) {
+        passwordToggle.addEventListener("click", togglePasswordVisibility);
+      }
+
+      setupInputListeners();
+
+      // Focus email on load
+      if (emailInput) {
+        emailInput.focus();
+      }
+    }
+
+    init();
+  })();
 </script>

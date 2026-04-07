@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings • Zero Day Finance</title>
+  <meta name="description" content="Manage your Zero Day Finance account settings, profile, and security preferences.">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/boilerplate.css">
+  <link rel="stylesheet" href="/css/flex.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/account.css">
+</head>
+<body>
+  <main class="account-main">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">
+          <span class="title-icon">⚙️</span>
+          Account Settings
+        </h1>
+        <p class="page-description">
+          Manage your profile, security settings, and preferences
+        </p>
+      </div>
+
+      <div class="account-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="account-sidebar">
+          <nav class="account-nav">
+            <a href="#profile" class="nav-item active" data-tab="profile">
+              <span class="nav-icon">👤</span>
+              <span class="nav-label">Profile</span>
+              <span class="nav-badge">●</span>
+            </a>
+            <a href="#security" class="nav-item" data-tab="security">
+              <span class="nav-icon">🔒</span>
+              <span class="nav-label">Security</span>
+            </a>
+            <a href="#preferences" class="nav-item" data-tab="preferences">
+              <span class="nav-icon">🎨</span>
+              <span class="nav-label">Preferences</span>
+            </a>
+            <a href="#billing" class="nav-item" data-tab="billing">
+              <span class="nav-icon">💳</span>
+              <span class="nav-label">Billing</span>
+            </a>
+            <a href="#notifications" class="nav-item" data-tab="notifications">
+              <span class="nav-icon">🔔</span>
+              <span class="nav-label">Notifications</span>
+            </a>
+            <a href="#api" class="nav-item" data-tab="api">
+              <span class="nav-icon">🔧</span>
+              <span class="nav-label">API Keys</span>
+            </a>
+          </nav>
+          
+          <!-- Account Status Card -->
+          <div class="sidebar-card card">
+            <div class="card-header">
+              <h4>Account Status</h4>
+            </div>
+            <div class="status-info">
+              <div class="status-item">
+                <span class="status-label">Plan</span>
+                <span class="status-value">
+                  <span class="plan-badge free">Free</span>
+                </span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Member since</span>
+                <span class="status-value">
+                  <%= user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Recent' %>
+                </span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Simulations</span>
+                <span class="status-value"><%= user.simulation_count || 0 %> runs</span>
+              </div>
+            </div>
+            <a href="/pricing" class="upgrade-link">
+              Upgrade to Pro →
+            </a>
+          </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="account-content">
+          <!-- Profile Tab -->
+          <div class="tab-content active" id="profile-tab">
+            <div class="content-card card">
+              <div class="card-header">
+                <h2>Profile Information</h2>
+                <p class="card-description">Update your personal information and profile photo</p>
+              </div>
+              
+              <!-- Avatar Section -->
+              <div class="avatar-section">
+                <div class="avatar-wrapper">
+                  <% if (user.avatar_url) { %>
+                    <img src="<%= user.avatar_url %>" alt="Profile" class="avatar-image" />
+                  <% } else { %>
+                    <div class="avatar-placeholder">
+                      <%= user.first_name? user.first_name[0] : 'U' %><%= user.last_name? user.last_name[0] : '' %>
+                    </div>
+                  <% } %>
+                  <button class="avatar-upload-btn" onclick="triggerAvatarUpload()">
+                    <span>📷</span>
+                  </button>
+                </div>
+                <div class="avatar-info">
+                  <h4>Profile Photo</h4>
+                  <p>JPG, GIF or PNG. Max size 2MB.</p>
+                </div>
+              </div>
+              
+              <!-- Profile Form -->
+              <form class="profile-form" onsubmit="updateProfile(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <div class="input-wrapper">
+                      <span class="input-icon">👤</span>
+                      <input 
+                        type="text" 
+                        id="firstName" 
+                        class="form-input" 
+                        value="<%= user.first_name %>"
+                        placeholder="First name"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <div class="input-wrapper">
+                      <span class="input-icon">👤</span>
+                      <input 
+                        type="text" 
+                        id="lastName" 
+                        class="form-input" 
+                        value="<%= user.last_name %>"
+                        placeholder="Last name"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="email" class="form-label">Email Address</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      class="form-input" 
+                      value="<%= user.email %>"
+                      readonly
+                    />
+                    <% if (!user.email_verified) { %>
+                      <button type="button" class="verify-btn" onclick="verifyEmail()">
+                        Verify
+                      </button>
+                    <% } else { %>
+                      <span class="verified-badge">✓ Verified</span>
+                    <% } %>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="phone" class="form-label">Phone Number (Optional)</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">📱</span>
+                    <input 
+                      type="tel" 
+                      id="phone" 
+                      class="form-input" 
+                      value="<%= user.phone || '' %>"
+                      placeholder="+1 (555) 000-0000"
+                    />
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="timezone" class="form-label">Timezone</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">🌍</span>
+                    <select id="timezone" class="form-select">
+                      <option value="America/New_York">Eastern Time (ET)</option>
+                      <option value="America/Chicago">Central Time (CT)</option>
+                      <option value="America/Denver">Mountain Time (MT)</option>
+                      <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                      <option value="Europe/London">London (GMT)</option>
+                      <option value="Asia/Tokyo">Tokyo (JST)</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                    Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            <!-- Danger Zone -->
+            <div class="content-card card danger-zone">
+              <div class="card-header">
+                <h3 class="danger-title">Danger Zone</h3>
+              </div>
+              <div class="danger-actions">
+                <div class="danger-item">
+                  <div class="danger-info">
+                    <h4>Delete Account</h4>
+                    <p>Permanently delete your account and all associated data</p>
+                  </div>
+                  <button class="btn btn-danger" onclick="confirmDeleteAccount()">
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Security Tab -->
+          <div class="tab-content" id="security-tab">
+            <div class="content-card card">
+              <div class="card-header">
+                <h2>Security Settings</h2>
+                <p class="card-description">Manage your password and security preferences</p>
+              </div>
+              
+              <form class="security-form" onsubmit="updatePassword(event)">
+                <h3 class="section-subtitle">Change Password</h3>
+                
+                <div class="form-group">
+                  <label for="currentPassword" class="form-label">Current Password</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input 
+                      type="password" 
+                      id="currentPassword" 
+                      class="form-input" 
+                      placeholder="Enter current password"
+                    />
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="newPassword" class="form-label">New Password</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">🔑</span>
+                    <input 
+                      type="password" 
+                      id="newPassword" 
+                      class="form-input" 
+                      placeholder="Enter new password"
+                    />
+                    <div class="password-strength" id="passwordStrength"></div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="confirmPassword" class="form-label">Confirm Password</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">✓</span>
+                    <input 
+                      type="password" 
+                      id="confirmPassword" 
+                      class="form-input" 
+                      placeholder="Confirm new password"
+                    />
+                  </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                  Update Password
+                </button>
+              </form>
+              
+              <hr class="divider" />
+              
+              <!-- Two-Factor Authentication -->
+              <div class="two-factor-section">
+                <h3 class="section-subtitle">Two-Factor Authentication</h3>
+                <div class="two-factor-status">
+                  <div class="status-info">
+                    <span class="status-icon"><%= user.two_factor_enabled ? '✅' : '⚠️' %></span>
+                    <div>
+                      <h4><%= user.two_factor_enabled ? 'Enabled' : 'Not Enabled' %></h4>
+                      <p>
+                        <%= user.two_factor_enabled 
+                          ? 'Your account is protected with two-factor authentication.' 
+                          : 'Add an extra layer of security to your account.' 
+                        %>
+                      </p>
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary" onclick="setup2FA()">
+                    <%= user.two_factor_enabled ? 'Manage 2FA' : 'Enable 2FA' %>
+                  </button>
+                </div>
+              </div>
+              
+              <hr class="divider" />
+              
+              <!-- Active Sessions -->
+              <div class="sessions-section">
+                <h3 class="section-subtitle">Active Sessions</h3>
+                <div class="sessions-list">
+                  <div class="session-item current">
+                    <div class="session-info">
+                      <span class="session-icon">💻</span>
+                      <div>
+                        <h4>Current Session</h4>
+                        <p>Chrome on Windows • Nairobi, Kenya</p>
+                      </div>
+                    </div>
+                    <span class="session-badge current">Current</span>
+                  </div>
+                  
+                  <div class="session-item">
+                    <div class="session-info">
+                      <span class="session-icon">📱</span>
+                      <div>
+                        <h4>Mobile Safari</h4>
+                        <p>iPhone • Last active 2 days ago</p>
+                      </div>
+                    </div>
+                    <button class="btn-ghost" onclick="revokeSession('mobile')">
+                      Revoke
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Preferences Tab -->
+          <div class="tab-content" id="preferences-tab">
+            <div class="content-card card">
+              <div class="card-header">
+                <h2>Preferences</h2>
+                <p class="card-description">Customize your experience</p>
+              </div>
+              
+              <div class="preferences-list">
+                <div class="preference-item">
+                  <div class="preference-info">
+                    <h4>Currency Display</h4>
+                    <p>Choose your preferred currency format</p>
+                  </div>
+                  <select class="form-select" id="currency">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="KES">KES (KSh)</option>
+                  </select>
+                </div>
+                
+                <div class="preference-item">
+                  <div class="preference-info">
+                    <h4>Date Format</h4>
+                    <p>Choose how dates are displayed</p>
+                  </div>
+                  <select class="form-select" id="dateFormat">
+                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                  </select>
+                </div>
+                
+                <div class="preference-item">
+                  <div class="preference-info">
+                    <h4>Theme</h4>
+                    <p>Choose your preferred theme</p>
+                  </div>
+                  <div class="theme-options">
+                    <label class="theme-option">
+                      <input type="radio" name="theme" value="light" checked />
+                      <span class="theme-preview light">☀️ Light</span>
+                    </label>
+                    <label class="theme-option">
+                      <input type="radio" name="theme" value="dark" />
+                      <span class="theme-preview dark">🌙 Dark</span>
+                    </label>
+                    <label class="theme-option">
+                      <input type="radio" name="theme" value="system" />
+                      <span class="theme-preview system">💻 System</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button class="btn btn-primary" onclick="savePreferences()">
+                  Save Preferences
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Other tabs (Billing, Notifications, API) would go here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- Logout Modal -->
+  <div class="modal" id="logoutModal" style="display: none;">
+    <div class="modal-content card">
+      <h3>Ready to sign out?</h3>
+      <p>You'll be securely logged out of your account.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeLogoutModal()">
+          Cancel
+        </button>
+        <%- include('../auth/logout.ejs') %>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Update active nav
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        
+        // Show corresponding tab
+        const tabId = item.dataset.tab;
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+        
+        // Update URL hash
+        window.location.hash = tabId;
+      });
+    });
+    
+    // Check URL hash on load
+    if (window.location.hash) {
+      const tab = document.querySelector(`[data-tab="${window.location.hash.slice(1)}"]`);
+      if (tab) tab.click();
+    }
+    
+    // Avatar upload
+    function triggerAvatarUpload() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          uploadAvatar(file);
+        }
+      };
+      input.click();
+    }
+    
+    async function uploadAvatar(file) {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      
+      try {
+        const response = await fetch('/account/avatar', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (response.ok) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Upload failed:', error);
+      }
+    }
+    
+    // Profile update
+    async function updateProfile(event) {
+      event.preventDefault();
+      
+      const data = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        phone: document.getElementById('phone').value,
+        timezone: document.getElementById('timezone').value
+      };
+      
+      try {
+        const response = await fetch('/account/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+          showToast('Profile updated successfully!', 'success');
+        }
+      } catch (error) {
+        showToast('Failed to update profile', 'error');
+      }
+    }
+    
+    // Password update
+    async function updatePassword(event) {
+      event.preventDefault();
+      
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (newPassword !== confirmPassword) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/account/password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+        
+        if (response.ok) {
+          showToast('Password updated successfully!', 'success');
+          event.target.reset();
+        } else {
+          const data = await response.json();
+          showToast(data.message || 'Failed to update password', 'error');
+        }
+      } catch (error) {
+        showToast('Failed to update password', 'error');
+      }
+    }
+    
+    // Password strength indicator
+    document.getElementById('newPassword')?.addEventListener('input', (e) => {
+      const password = e.target.value;
+      const strength = calculatePasswordStrength(password);
+      const indicator = document.getElementById('passwordStrength');
+      
+      if (indicator) {
+        indicator.className = 'password-strength ' + strength.class;
+        indicator.textContent = strength.text;
+      }
+    });
+    
+    function calculatePasswordStrength(password) {
+      if (password.length < 6) {
+        return { class: 'weak', text: 'Weak' };
+      }
+      if (password.length < 10) {
+        return { class: 'medium', text: 'Medium' };
+      }
+      if (/[A-Z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password)) {
+        return { class: 'strong', text: 'Strong' };
+      }
+      return { class: 'medium', text: 'Medium' };
+    }
+    
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+    
+    // Verify email
+    async function verifyEmail() {
+      try {
+        const response = await fetch('/account/verify-email', { method: 'POST' });
+        if (response.ok) {
+          showToast('Verification email sent!', 'success');
+        }
+      } catch (error) {
+        showToast('Failed to send verification email', 'error');
+      }
+    }
+    
+    // Setup 2FA
+    function setup2FA() {
+      window.location.href = '/account/2fa/setup';
+    }
+    
+    // Revoke session
+    async function revokeSession(sessionId) {
+      try {
+        await fetch(`/account/sessions/${sessionId}`, { method: 'DELETE' });
+        window.location.reload();
+      } catch (error) {
+        showToast('Failed to revoke session', 'error');
+      }
+    }
+    
+    // Save preferences
+    async function savePreferences() {
+      const preferences = {
+        currency: document.getElementById('currency')?.value,
+        dateFormat: document.getElementById('dateFormat')?.value,
+        theme: document.querySelector('input[name="theme"]:checked')?.value
+      };
+      
+      try {
+        await fetch('/account/preferences', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(preferences)
+        });
+        showToast('Preferences saved!', 'success');
+      } catch (error) {
+        showToast('Failed to save preferences', 'error');
+      }
+    }
+    
+    // Delete account confirmation
+    function confirmDeleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        const password = prompt('Please enter your password to confirm:');
+        if (password) {
+          deleteAccount(password);
+        }
+      }
+    }
+    
+    async function deleteAccount(password) {
+      try {
+        const response = await fetch('/account/delete', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          showToast('Failed to delete account', 'error');
+        }
+      } catch (error) {
+        showToast('Failed to delete account', 'error');
+      }
+    }
+    
+    // Reset form
+    function resetForm() {
+      document.querySelector('.profile-form').reset();
+    }
+  </script>
+</body>
+</html>
