@@ -1,251 +1,1965 @@
-<section class="finance-lab">
-  <div class="workspace">
-    <!-- LEFT PANEL -->
-    <form id="simulationForm" class="panel controls">
-      <div class="mode-switch">
-        <label for="strategyPreset">Investment Style</label>
-        <select id="strategyPreset" name="strategy">
-          <option value="safe">Safe Saver</option>
-          <option value="balanced" selected>Balanced Growth</option>
-          <option value="aggressive">Aggressive Builder</option>
-        </select>
-        <small>
-          Pick a strategy style and the simulator will choose market behavior.
-        </small>
-      </div>
+<section class="wealth-canvas" x-data="wealthSimulator" x-init="initialize()">
+  <div class="canvas-bg"></div>
 
-      <h3>Simulation Inputs</h3>
+  <div class="canvas-container">
+    <div class="config-panel">
+      <div class="strategy-card">
+        <div class="card-header">
+          <div class="header-left">
+            <span class="header-icon">🎯</span>
+            <h3>Investment Strategy</h3>
+          </div>
+          <div
+            class="strategy-badge"
+            :class="strategy"
+            x-text="strategyLabel"
+          ></div>
+        </div>
 
-      <div class="field">
-        <div class="field-top">
-          <label for="income">Monthly Income</label>
-          <input
-            type="number"
-            id="income"
-            name="income"
-            class="number-box"
-            value="3000"
-            min="0"
-            step="100"
-          />
-        </div>
-        <input
-          type="range"
-          id="incomeRange"
-          class="range-slider"
-          min="0"
-          max="50000"
-          step="100"
-          value="3000"
-        />
-      </div>
+        <div class="strategy-selector">
+          <div
+            class="strategy-option"
+            :class="{ active: strategy === 'safe' }"
+            @click="setStrategy('safe')"
+          >
+            <div class="option-icon">🛡️</div>
+            <div class="option-content">
+              <h4>Safe Saver</h4>
+              <p>Capital preservation</p>
+            </div>
+            <div class="option-indicator"></div>
+          </div>
 
-      <div class="field">
-        <div class="field-top">
-          <label for="expenses">Monthly Expenses</label>
-          <input
-            type="number"
-            id="expenses"
-            name="expenses"
-            class="number-box"
-            value="1600"
-            min="100"
-            max="10000"
-            step="100"
-          />
-        </div>
-        <input
-          type="range"
-          id="expensesRange"
-          class="range-slider"
-          min="100"
-          max="10000"
-          step="100"
-          value="1600"
-        />
-      </div>
+          <div
+            class="strategy-option"
+            :class="{ active: strategy === 'balanced' }"
+            @click="setStrategy('balanced')"
+          >
+            <div class="option-icon">⚖️</div>
+            <div class="option-content">
+              <h4>Balanced</h4>
+              <p>Moderate growth</p>
+            </div>
+            <div class="option-indicator"></div>
+          </div>
 
-      <div class="field">
-        <div class="field-top">
-          <label for="savings">Current Savings</label>
-          <input
-            type="number"
-            id="savings"
-            name="savings"
-            class="number-box"
-            value="20000"
-            min="0"
-            max="500000"
-            step="1000"
-          />
+          <div
+            class="strategy-option"
+            :class="{ active: strategy === 'aggressive' }"
+            @click="setStrategy('aggressive')"
+          >
+            <div class="option-icon">🚀</div>
+            <div class="option-content">
+              <h4>Aggressive</h4>
+              <p>Maximum returns</p>
+            </div>
+            <div class="option-indicator"></div>
+          </div>
         </div>
-        <input
-          type="range"
-          id="savingsRange"
-          class="range-slider"
-          min="0"
-          max="500000"
-          step="1000"
-          value="20000"
-        />
-      </div>
 
-      <div class="field">
-        <div class="field-top">
-          <label for="years">Years to Simulate</label>
-          <input
-            type="number"
-            id="years"
-            name="years"
-            class="number-box"
-            value="10"
-            min="1"
-            max="40"
-          />
-        </div>
-        <input
-          type="range"
-          id="yearsRange"
-          class="range-slider"
-          min="1"
-          max="40"
-          value="10"
-        />
-      </div>
-    </form>
-
-    <main class="results-panel">
-      <div class="plain-summary-card">
-        <h3>Your future in simple words</h3>
-        <p id="simpleSummary">
-          Adjust your financial inputs to explore future possibilities.
-        </p>
-      </div>
-
-      <div class="kpi-grid">
-        <div class="metric">
-          <span>Median Outcome</span>
-          <strong id="medianOutcome">$0</strong>
-        </div>
-        <div class="metric">
-          <span>Best Case</span>
-          <strong id="bestOutcome">$0</strong>
-        </div>
-        <div class="metric">
-          <span>Worst Case</span>
-          <strong id="worstOutcome">$0</strong>
-        </div>
-        <div class="metric">
-          <span>Success Probability</span>
-          <strong id="successRate">0%</strong>
+        <div class="risk-profile">
+          <div class="risk-header">
+            <span>Risk Profile</span>
+            <span class="risk-value" x-text="riskLabel"></span>
+          </div>
+          <div class="risk-bar-container">
+            <div class="risk-bar-bg"></div>
+            <div class="risk-bar-fill" :style="`width: ${riskLevel}%`"></div>
+            <div class="risk-markers">
+              <span>Low</span>
+              <span>Moderate</span>
+              <span>High</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="chart-card">
-        <div id="wealthChart"></div>
+      <!-- Input Parameters -->
+      <div class="params-section">
+        <div class="section-title">
+          <span>Simulation Parameters</span>
+          <button class="reset-btn" @click="resetToDefaults">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M3 10a7 7 0 019-6.5M17 10a7 7 0 01-9 6.5" />
+              <path d="M8 3L6 1 4 3M12 17l2 2 2-2" />
+            </svg>
+            Reset
+          </button>
+        </div>
+
+        <div class="params-grid">
+          <template x-for="field in fields" :key="field.id">
+            <div class="param-card">
+              <div class="param-header">
+                <label :for="field.id" class="param-label">
+                  <span class="label-icon" x-html="field.icon"></span>
+                  <span x-text="field.label"></span>
+                </label>
+                <div class="param-value">
+                  <span
+                    class="value-main"
+                    x-text="formatValue(field.value, field.isCurrency)"
+                  ></span>
+                  <span
+                    class="value-unit"
+                    x-show="!field.isCurrency"
+                    x-text="field.unit"
+                  ></span>
+                </div>
+              </div>
+
+              <div class="param-controls">
+                <input
+                  :id="field.id"
+                  type="number"
+                  class="param-input"
+                  x-model="field.value"
+                  :min="field.min"
+                  :max="field.max"
+                  :step="field.step"
+                  @input="handleParamChange"
+                />
+
+                <div class="slider-container">
+                  <input
+                    :id="field.id + 'Slider'"
+                    type="range"
+                    class="param-slider"
+                    x-model="field.value"
+                    :min="field.min"
+                    :max="field.max"
+                    :step="field.step"
+                    @input="handleParamChange"
+                  />
+                </div>
+              </div>
+
+              <div class="param-range">
+                <span x-text="formatValue(field.min, field.isCurrency)"></span>
+                <span x-text="formatValue(field.max, field.isCurrency)"></span>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
 
-      <div class="insight-card" id="advisorText">
-        Smart financial guidance will appear here after simulation.
+      <!-- Action Button -->
+      <button
+        class="simulate-action"
+        @click="runSimulation"
+        :disabled="isCalculating"
+      >
+        <span class="action-content">
+          <svg
+            class="action-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            x-show="!isCalculating"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+          <span class="spinner-ring" x-show="isCalculating"></span>
+          <span
+            x-text="isCalculating ? 'Analyzing...' : 'Generate Projection'"
+          ></span>
+        </span>
+      </button>
+    </div>
+
+    <!-- Right Panel - Results Dashboard -->
+    <div class="dashboard-panel">
+      <!-- Status Bar -->
+      <div class="dashboard-status">
+        <div class="status-left">
+          <div class="status-badge" :class="statusType">
+            <span class="status-dot"></span>
+            <span x-text="statusMessage"></span>
+          </div>
+        </div>
+        <div class="status-right">
+          <div class="time-indicator">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="10" cy="10" r="9" />
+              <path d="M10 5v5l3 2" />
+            </svg>
+            <span
+              x-text="`${fields[3].value} Year${fields[3].value > 1 ? 's' : ''}`"
+            ></span>
+          </div>
+        </div>
       </div>
-    </main>
+
+      <!-- Main KPI -->
+      <div class="kpi-hero">
+        <div class="kpi-label-group">
+          <h2>Projected Portfolio Value</h2>
+          <div class="kpi-trend" :class="trendDirection">
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M2 17L7 12L11 16L18 7" />
+            </svg>
+            <span x-text="trendValue"></span>
+          </div>
+        </div>
+        <div class="kpi-number">
+          <span class="kpi-currency">$</span>
+          <span
+            class="kpi-digits"
+            x-text="formatLargeNumber(projectionData.median)"
+          ></span>
+        </div>
+        <div class="kpi-range">
+          <div class="range-item low">
+            <span class="range-label">Conservative</span>
+            <span
+              class="range-value"
+              x-text="formatCurrency(projectionData.worst)"
+            ></span>
+          </div>
+          <div class="range-divider"></div>
+          <div class="range-item high">
+            <span class="range-label">Optimistic</span>
+            <span
+              class="range-value"
+              x-text="formatCurrency(projectionData.best)"
+            ></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <!-- <div class="metrics-dashboard">
+        <div
+          class="metric-tile"
+          :class="metric.trend"
+          x-for="metric in displayMetrics"
+          :key="metric.label"
+        >
+          <div class="tile-header">
+            <span class="tile-label" x-text="metric.label"></span>
+            <div class="tile-icon" x-html="metric.icon"></div>
+          </div>
+          <div class="tile-value" x-text="metric.value"></div>
+          <div class="tile-footer" x-show="metric.description">
+            <span x-text="metric.description"></span>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Chart Section -->
+      <div class="chart-section">
+        <div class="chart-header">
+          <h3>Wealth Accumulation Timeline</h3>
+          <div class="chart-filters">
+            <button class="filter-btn active">1Y</button>
+            <button class="filter-btn">5Y</button>
+            <button class="filter-btn">Max</button>
+          </div>
+        </div>
+        <div id="wealthVisualization" class="chart-container"></div>
+        <div class="chart-legend">
+          <div class="legend-entry">
+            <span class="legend-color median"></span>
+            <span>Median Projection</span>
+          </div>
+          <div class="legend-entry">
+            <span class="legend-color best"></span>
+            <span>Best Case (90th Percentile)</span>
+          </div>
+          <div class="legend-entry">
+            <span class="legend-color worst"></span>
+            <span>Worst Case (10th Percentile)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insights & Actions -->
+      <div class="insights-section">
+        <!-- AI Analysis -->
+        <div class="analysis-card">
+          <div class="analysis-header">
+            <div class="ai-badge">
+              <span class="ai-icon">✨</span>
+              <span>AI Analysis</span>
+            </div>
+          </div>
+          <div class="analysis-content">
+            <template x-if="!isLoadingAnalysis">
+              <p class="analysis-text" x-text="aiAnalysis"></p>
+            </template>
+            <template x-if="isLoadingAnalysis">
+              <div class="analysis-loading">
+                <div class="loading-wave">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <span>Generating insights...</span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Action Items -->
+        <div
+          class="actions-card"
+          x-show="actionItems && actionItems.length > 0"
+        >
+          <div class="actions-header">
+            <h4>Recommended Actions</h4>
+            <span class="action-count" x-text="actionItems.length"></span>
+          </div>
+          <div class="actions-list">
+            <template x-for="(action, idx) in actionItems" :key="idx">
+              <div class="action-row">
+                <div class="action-marker" x-text="idx + 1"></div>
+                <div class="action-details">
+                  <p x-text="action"></p>
+                </div>
+                <div class="action-arrow">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M7 4l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 <script>
-  const chart = new ApexCharts(document.querySelector("#wealthChart"), {
-    chart: {
-      type: "line",
-      height: 420,
-      toolbar: { show: false },
-    },
-    stroke: {
-      curve: "smooth",
-      width: 3,
-    },
-    series: [
-      { name: "Median", data: [] },
-      { name: "Best Case", data: [] },
-      { name: "Worst Case", data: [] },
-    ],
-    xaxis: {
-      categories: [],
-    },
-  });
+  document.addEventListener("alpine:init", () => {
+    Alpine.data("wealthSimulator", () => ({
+      // Core State
+      strategy: "balanced",
+      isCalculating: false,
+      isLoadingAnalysis: false,
+      statusType: "ready",
+      statusMessage: "Ready for analysis",
 
-  chart.render();
-  window.wealthChart = chart;
-
-  async function runFinanceSimulation(payload) {
-    const response = await fetch("/sim_demo", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+      // Financial Data
+      projectionData: {
+        median: 0,
+        best: 0,
+        worst: 0,
+        successRate: 0,
       },
-      body: JSON.stringify(payload),
-    });
 
-    if (!response.ok) throw new Error("Simulation failed");
-    return response.json();
-  }
+      trendDirection: "positive",
+      trendValue: "+0%",
+      aiAnalysis:
+        "Configure your parameters and generate a projection to receive personalized insights.",
 
-  const form = document.getElementById("simulationForm");
+      actionItems: [],
 
-  function syncDualInputs(numberId, rangeId) {
-    const number = document.getElementById(numberId);
-    const range = document.getElementById(rangeId);
+      // Configuration
+      fields: [
+        {
+          id: "income",
+          label: "Monthly Income",
+          value: 4000,
+          min: 0,
+          max: 50000,
+          step: 100,
+          isCurrency: true,
+          unit: "USD",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M10 5v10M7 8l3-3 3 3M7 12l3 3 3-3"/></svg>',
+        },
+        {
+          id: "expenses",
+          label: "Monthly Expenses",
+          value: 2000,
+          min: 0,
+          max: 40000,
+          step: 50,
+          isCurrency: true,
+          unit: "USD",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M10 15V5M7 12l3 3 3-3M7 8l3-3 3 3"/></svg>',
+        },
+        {
+          id: "savings",
+          label: "Current Portfolio",
+          value: 30000,
+          min: 0,
+          max: 500000,
+          step: 1000,
+          isCurrency: true,
+          unit: "USD",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h14M5 14l-2-4 2-4M15 14l2-4-2-4"/><circle cx="10" cy="10" r="8"/></svg>',
+        },
+        {
+          id: "years",
+          label: "Time Horizon",
+          value: 10,
+          min: 1,
+          max: 50,
+          step: 1,
+          isCurrency: false,
+          unit: "years",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="9"/><path d="M10 4v6l3 2"/></svg>',
+        },
+      ],
 
-    number.addEventListener("input", () => {
-      range.value = number.value;
-      submitSimulation();
-    });
+      displayMetrics: [
+        {
+          label: "Monthly Contribution",
+          value: "$2,000",
+          trend: "neutral",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l4-4 3 3 5-7"/></svg>',
+          description: "From income surplus",
+        },
+        {
+          label: "Success Probability",
+          value: "0%",
+          trend: "positive",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M6 10l3 3 5-6"/></svg>',
+          description: "Achieving target",
+        },
+        {
+          label: "Risk-Adjusted Return",
+          value: "7.2%",
+          trend: "positive",
+          icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10h16M10 2v16"/></svg>',
+          description: "Annual projected",
+        },
+      ],
 
-    range.addEventListener("input", () => {
-      number.value = range.value;
-      submitSimulation();
-    });
-  }
+      // UI State
+      riskLevel: 50,
+      riskLabel: "Moderate",
+      strategyLabel: "Balanced Growth",
 
-  syncDualInputs("income", "incomeRange");
-  syncDualInputs("expenses", "expensesRange");
-  syncDualInputs("savings", "savingsRange");
-  syncDualInputs("years", "yearsRange");
+      chart: null,
+      updateTimer: null,
 
-  async function submitSimulation() {
-    const payload = {
-      income: +form.income.value,
-      expenses: +form.expenses.value,
-      savings: +form.savings.value,
-      years: +form.years.value,
-      strategy: form.strategy.value,
-    };
+      // Lifecycle
+      initialize() {
+        this.$nextTick(() => {
+          this.initChart();
+          this.updateStrategyLabels();
+          this.runSimulation();
+        });
+      },
 
-    const result = await runFinanceSimulation(payload);
-    updateDashboard(result);
-  }
+      // Strategy Management
+      setStrategy(type) {
+        this.strategy = type;
+        this.updateStrategyLabels();
 
-  function updateDashboard(result) {
-    medianOutcome.textContent = `$${result.summary.median.toLocaleString()}`;
-    bestOutcome.textContent = `$${result.summary.best.toLocaleString()}`;
-    worstOutcome.textContent = `$${result.summary.worst.toLocaleString()}`;
-    successRate.textContent = `${result.summary.successRate}%`;
+        // Apply preset values
+        const presets = {
+          safe: { income: 3000, expenses: 1600, savings: 20000 },
+          balanced: { income: 4000, expenses: 2000, savings: 30000 },
+          aggressive: { income: 5000, expenses: 2500, savings: 50000 },
+        };
 
-    window.wealthChart.updateOptions({
-      xaxis: { categories: result.chart.labels },
-    });
+        const preset = presets[type];
+        if (preset) {
+          this.fields[0].value = preset.income;
+          this.fields[1].value = preset.expenses;
+          this.fields[2].value = preset.savings;
+        }
 
-    window.wealthChart.updateSeries([
-      { name: "Median", data: result.chart.median },
-      { name: "Best Case", data: result.chart.best },
-      { name: "Worst Case", data: result.chart.worst },
-    ]);
+        this.runSimulation();
+      },
 
-    simpleSummary.textContent = result.advice.simple;
-    advisorText.textContent = result.advice.professional;
-  }
+      updateStrategyLabels() {
+        const config = {
+          safe: { risk: 25, riskLabel: "Conservative", label: "Safe Saver" },
+          balanced: {
+            risk: 50,
+            riskLabel: "Moderate",
+            label: "Balanced Growth",
+          },
+          aggressive: {
+            risk: 85,
+            riskLabel: "Growth",
+            label: "Aggressive Builder",
+          },
+        };
 
-  form.addEventListener("change", submitSimulation);
-  submitSimulation();
+        const cfg = config[this.strategy];
+        this.riskLevel = cfg.risk;
+        this.riskLabel = cfg.riskLabel;
+        this.strategyLabel = cfg.label;
+      },
+
+      // Formatting Utilities
+      formatValue(value, isCurrency) {
+        if (!isCurrency) return value;
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(value);
+      },
+
+      formatCurrency(value) {
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(value);
+      },
+
+      formatLargeNumber(value) {
+        if (value >= 1000000) {
+          return (value / 1000000).toFixed(2) + "M";
+        } else if (value >= 1000) {
+          return (value / 1000).toFixed(1) + "K";
+        }
+        return value.toString();
+      },
+
+      // Chart Initialization
+      initChart() {
+        const element = document.querySelector("#wealthVisualization");
+        if (!element) return;
+
+        this.chart = new ApexCharts(element, {
+          chart: {
+            type: "area",
+            height: 280,
+            toolbar: { show: false },
+            animations: {
+              enabled: true,
+              easing: "easeinout",
+              speed: 800,
+              animateGradually: { enabled: true, delay: 100 },
+            },
+            fontFamily: "Plus Jakarta Sans, sans-serif",
+            background: "transparent",
+          },
+          stroke: {
+            curve: "smooth",
+            width: [3, 2, 2],
+            dashArray: [0, 5, 5],
+          },
+          fill: {
+            type: "gradient",
+            gradient: {
+              shadeIntensity: 0,
+              opacityFrom: 0.15,
+              opacityTo: 0.02,
+              stops: [0, 90, 100],
+            },
+          },
+          colors: ["#6366f1", "#10b981", "#ef4444"],
+          series: [
+            { name: "Median", data: [] },
+            { name: "Best Case", data: [] },
+            { name: "Worst Case", data: [] },
+          ],
+          xaxis: {
+            categories: [],
+            labels: { style: { colors: "#64748b", fontSize: "12px" } },
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+          },
+          yaxis: {
+            labels: {
+              formatter: (val) => this.formatCurrency(val),
+              style: { colors: "#64748b", fontSize: "12px" },
+            },
+            grid: {
+              borderColor: "#e2e8f0",
+              strokeDashArray: 4,
+              xaxis: { lines: { show: true } },
+            },
+          },
+          tooltip: {
+            shared: true,
+            intersect: false,
+            y: { formatter: (val) => this.formatCurrency(val) },
+          },
+          legend: { show: false },
+          grid: {
+            show: true,
+            borderColor: "#e2e8f0",
+            strokeDashArray: 4,
+            padding: { top: 0, right: 10, bottom: 0, left: 10 },
+          },
+        });
+
+        this.chart.render();
+      },
+
+      // Event Handlers
+      handleParamChange() {
+        clearTimeout(this.updateTimer);
+        this.updateTimer = setTimeout(() => this.runSimulation(), 300);
+      },
+
+      resetToDefaults() {
+        this.setStrategy("balanced");
+      },
+
+      // Simulation Logic
+      async runSimulation() {
+        this.isCalculating = true;
+        this.statusType = "calculating";
+        this.statusMessage = "Processing...";
+
+        const payload = {
+          income: this.fields[0].value,
+          expenses: this.fields[1].value,
+          savings: this.fields[2].value,
+          years: this.fields[3].value,
+          strategy: this.strategy,
+        };
+
+        try {
+          // Simulate API delay
+          await new Promise((resolve) => setTimeout(resolve, 600));
+
+          const result = this.calculateProjection(payload);
+          this.updateDashboard(result);
+
+          this.statusType = "success";
+          this.statusMessage = "Analysis Complete";
+
+          setTimeout(() => {
+            this.statusType = "ready";
+            this.statusMessage = "Ready";
+          }, 2000);
+        } catch (error) {
+          console.error("Simulation error:", error);
+          this.statusType = "error";
+          this.statusMessage = "Calculation Failed";
+        } finally {
+          this.isCalculating = false;
+        }
+      },
+
+      calculateProjection(payload) {
+        const monthlySavings = Math.max(0, payload.income - payload.expenses);
+        const yearlyContribution = monthlySavings * 12;
+
+        const returnRates = {
+          safe: { base: 0.04, volatility: 0.03 },
+          balanced: { base: 0.07, volatility: 0.08 },
+          aggressive: { base: 0.1, volatility: 0.15 },
+        };
+
+        const rate = returnRates[payload.strategy];
+
+        let median = payload.savings;
+        let best = payload.savings;
+        let worst = payload.savings;
+
+        const labels = [];
+        const medianData = [];
+        const bestData = [];
+        const worstData = [];
+
+        for (let year = 0; year <= payload.years; year++) {
+          labels.push(`Y${year}`);
+          medianData.push(Math.round(median));
+          bestData.push(Math.round(best));
+          worstData.push(Math.round(worst));
+
+          median = median * (1 + rate.base) + yearlyContribution;
+          best = best * (1 + rate.base + rate.volatility) + yearlyContribution;
+          worst = Math.max(
+            worst * (1 + rate.base - rate.volatility) + yearlyContribution,
+            0,
+          );
+        }
+
+        const finalMedian = medianData[medianData.length - 1];
+        const finalBest = bestData[bestData.length - 1];
+        const finalWorst = worstData[worstData.length - 1];
+
+        const successRate = Math.min(
+          98,
+          60 +
+            (payload.strategy === "safe"
+              ? 25
+              : payload.strategy === "balanced"
+                ? 20
+                : 15) +
+            (monthlySavings / payload.income) * 20,
+        );
+
+        return {
+          chart: {
+            labels,
+            median: medianData,
+            best: bestData,
+            worst: worstData,
+          },
+          summary: {
+            median: finalMedian,
+            best: finalBest,
+            worst: finalWorst,
+            successRate,
+          },
+          monthlySavings,
+        };
+      },
+
+      updateDashboard(result) {
+        // Update projection data
+        this.projectionData = result.summary;
+
+        // Calculate trend
+        const initialInvestment = this.fields[2].value;
+        const change =
+          ((result.summary.median - initialInvestment) / initialInvestment) *
+          100;
+        this.trendValue = `${change > 0 ? "+" : ""}${change.toFixed(1)}%`;
+        this.trendDirection =
+          change > 20 ? "positive" : change > 0 ? "neutral" : "negative";
+
+        // Update metrics
+        const monthlyContribution = result.monthlySavings;
+        this.displayMetrics[0].value = this.formatCurrency(monthlyContribution);
+        this.displayMetrics[1].value = `${Math.round(result.summary.successRate)}%`;
+
+        const annualReturn =
+          this.strategy === "safe"
+            ? "4.2%"
+            : this.strategy === "balanced"
+              ? "7.2%"
+              : "10.5%";
+        this.displayMetrics[2].value = annualReturn;
+
+        // Update chart
+        if (this.chart) {
+          this.chart.updateOptions({
+            xaxis: { categories: result.chart.labels },
+          });
+          this.chart.updateSeries([
+            { name: "Median", data: result.chart.median },
+            { name: "Best Case", data: result.chart.best },
+            { name: "Worst Case", data: result.chart.worst },
+          ]);
+        }
+
+        // Generate insights
+        this.generateInsights(result);
+      },
+
+      generateInsights(result) {
+        this.isLoadingAnalysis = true;
+
+        setTimeout(() => {
+          const monthlySavings = result.monthlySavings;
+          const savingsRate = (
+            (monthlySavings / this.fields[0].value) *
+            100
+          ).toFixed(1);
+          const median = result.summary.median;
+          const years = this.fields[3].value;
+
+          // AI Analysis
+          if (result.summary.successRate > 75) {
+            this.aiAnalysis = `Excellent financial trajectory detected. With a ${savingsRate}% savings rate and ${this.strategy} strategy, your portfolio is projected to reach ${this.formatCurrency(median)} over ${years} years. The strong success probability of ${Math.round(result.summary.successRate)}% indicates robust portfolio construction. Consider optimizing tax efficiency through Roth conversions or municipal bonds for enhanced after-tax returns.`;
+          } else if (result.summary.successRate > 50) {
+            this.aiAnalysis = `Solid financial foundation with room for optimization. Your current ${savingsRate}% savings rate projects to ${this.formatCurrency(median)} over ${years} years with a ${Math.round(result.summary.successRate)}% success probability. Increasing monthly contributions by just 5% could add approximately ${this.formatCurrency(median * 0.15)} to your final portfolio value through compound growth.`;
+          } else {
+            this.aiAnalysis = `Your current trajectory requires strategic adjustments. With projected outcomes showing significant variance, consider increasing your savings rate from ${savingsRate}% to at least 20% of income. Even modest increases of $100-200 monthly can dramatically improve long-term outcomes through the power of compound returns over ${years} years.`;
+          }
+
+          // Action Items
+          this.actionItems = [];
+
+          if (parseFloat(savingsRate) < 20) {
+            this.actionItems.push(
+              `Increase savings rate from ${savingsRate}% to 20%+ for optimal wealth accumulation`,
+            );
+          }
+
+          if (this.strategy === "safe" && years > 10) {
+            this.actionItems.push(
+              `Consider Balanced Growth strategy for potentially ${this.formatCurrency(median * 0.25)} additional returns over ${years} years`,
+            );
+          }
+
+          if (this.fields[2].value < this.fields[0].value * 6) {
+            this.actionItems.push(
+              `Build emergency fund to ${this.formatCurrency(this.fields[0].value * 6)} (6 months expenses) before aggressive investing`,
+            );
+          }
+
+          if (this.fields[1].value > this.fields[0].value * 0.6) {
+            const targetExpense = this.fields[0].value * 0.5;
+            this.actionItems.push(
+              `Reduce monthly expenses by ${this.formatCurrency(this.fields[1].value - targetExpense)} to optimize savings rate`,
+            );
+          }
+
+          const taxTip = this.strategy === "aggressive" ? "15-20%" : "10-15%";
+          this.actionItems.push(
+            `Maximize tax-advantaged accounts (401k, IRA, HSA) for estimated ${taxTip} improvement in after-tax returns`,
+          );
+
+          // Limit to 4 items
+          this.actionItems = this.actionItems.slice(0, 4);
+
+          this.isLoadingAnalysis = false;
+        }, 800);
+      },
+    }));
+  });
 </script>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Design System */
+  .wealth-canvas {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --success: #10b981;
+    --success-light: #34d399;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --bg-primary: #fafbfc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --border-light: #e2e8f0;
+    --border-medium: #cbd5e1;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+
+    position: relative;
+    min-height: 100vh;
+    padding: 24px;
+    font-family:
+      "Plus Jakarta Sans",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(
+        circle at 20% 80%,
+        rgba(99, 102, 241, 0.03) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(16, 185, 129, 0.03) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .canvas-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 440px 1fr;
+    gap: 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  /* Left Panel - Configuration */
+  .config-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Brand Section */
+  .brand-section {
+    padding: 28px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .brand-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: var(--radius-md);
+    color: white;
+    margin-bottom: 20px;
+  }
+
+  .brand-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand-text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .brand-text h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .brand-text h1 span {
+    color: var(--primary);
+  }
+
+  .brand-badge {
+    padding: 4px 8px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: white;
+  }
+
+  .brand-tagline {
+    font-size: 14px;
+    color: var(--text-tertiary);
+  }
+
+  /* Strategy Card */
+  .strategy-card {
+    padding: 24px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-icon {
+    font-size: 20px;
+  }
+
+  .header-left h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .strategy-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .strategy-badge.safe {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .strategy-badge.balanced {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .strategy-badge.aggressive {
+    background: #fed7aa;
+    color: #92400e;
+  }
+
+  .strategy-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .strategy-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .strategy-option:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-light);
+  }
+
+  .strategy-option.active {
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .option-icon {
+    font-size: 24px;
+  }
+
+  .option-content {
+    flex: 1;
+  }
+
+  .option-content h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .option-content p {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  .option-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-medium);
+  }
+
+  .strategy-option.active .option-indicator {
+    border-color: var(--primary);
+    background: var(--primary);
+    position: relative;
+  }
+
+  .strategy-option.active .option-indicator::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+  }
+
+  .risk-profile {
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .risk-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .risk-header span:first-child {
+    color: var(--text-secondary);
+  }
+
+  .risk-value {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .risk-bar-container {
+    position: relative;
+  }
+
+  .risk-bar-bg {
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+
+  .risk-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 6px;
+    background: linear-gradient(
+      90deg,
+      var(--success),
+      var(--warning),
+      var(--danger)
+    );
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .risk-markers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* Parameters Section */
+  .params-section {
+    padding: 24px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .section-title span {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .reset-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+  }
+
+  .reset-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .params-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .param-card {
+    padding: 16px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+  }
+
+  .param-card:hover {
+    background: var(--bg-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .param-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .param-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .label-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--primary);
+  }
+
+  .label-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .param-value {
+    text-align: right;
+  }
+
+  .value-main {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .value-unit {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-left: 4px;
+  }
+
+  .param-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .param-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: all 0.2s;
+  }
+
+  .param-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .param-slider {
+    width: 100%;
+    height: 4px;
+    background: var(--border-light);
+    border-radius: 2px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .param-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+    border: 2px solid white;
+    transition: all 0.2s;
+  }
+
+  .param-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  .param-range {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* Simulate Button */
+  .simulate-action {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none;
+    border-radius: var(--radius-lg);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  }
+
+  .simulate-action:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+  }
+
+  .simulate-action:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .action-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .action-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .spinner-ring {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Right Panel - Dashboard */
+  .dashboard-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Status Bar */
+  .dashboard-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .status-badge.ready {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .status-badge.calculating {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-badge.success {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .time-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .time-indicator svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* KPI Hero */
+  .kpi-hero {
+    padding: 32px;
+    background: linear-gradient(135deg, var(--bg-secondary), #f8fafc);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-md);
+  }
+
+  .kpi-label-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .kpi-label-group h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .kpi-trend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .kpi-trend.positive {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .kpi-trend.negative {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .kpi-trend.neutral {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .kpi-trend svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .kpi-number {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-currency {
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+  }
+
+  .kpi-digits {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .kpi-range {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .range-item {
+    flex: 1;
+  }
+
+  .range-label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+  }
+
+  .range-value {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .range-item.low .range-value {
+    color: var(--danger);
+  }
+
+  .range-item.high .range-value {
+    color: var(--success);
+  }
+
+  .range-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border-light);
+  }
+
+  /* Metrics Grid */
+  .metrics-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .metric-tile {
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    transition: all 0.2s;
+  }
+
+  .metric-tile:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-medium);
+  }
+
+  .tile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .tile-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .tile-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
+  }
+
+  .tile-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tile-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .tile-footer {
+    font-size: 12px;
+    color: var(--success);
+  }
+
+  .metric-tile.negative .tile-footer {
+    color: var(--danger);
+  }
+
+  /* Chart Section */
+  .chart-section {
+    padding: 24px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+  }
+
+  .chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .chart-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .chart-filters {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+  }
+
+  .filter-btn {
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover {
+    color: var(--text-primary);
+  }
+
+  .filter-btn.active {
+    background: var(--bg-secondary);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .chart-container {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .legend-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .legend-color.median {
+    background: var(--primary);
+  }
+
+  .legend-color.best {
+    background: var(--success);
+  }
+
+  .legend-color.worst {
+    background: var(--danger);
+  }
+
+  /* Insights Section */
+  .insights-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .analysis-card {
+    padding: 24px;
+    background: linear-gradient(135deg, #f0fdf4, #faf5ff);
+    border-radius: var(--radius-lg);
+    border: 1px solid #d1fae5;
+  }
+
+  .analysis-header {
+    margin-bottom: 16px;
+  }
+
+  .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: white;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ai-icon {
+    font-size: 16px;
+  }
+
+  .analysis-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .analysis-loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .loading-wave {
+    display: flex;
+    gap: 4px;
+  }
+
+  .loading-wave span {
+    width: 4px;
+    height: 16px;
+    background: var(--primary);
+    border-radius: 2px;
+    animation: wave 1.2s infinite;
+  }
+
+  .loading-wave span:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .loading-wave span:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .loading-wave span:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes wave {
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(1.8);
+    }
+  }
+
+  .actions-card {
+    padding: 24px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+  }
+
+  .actions-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .actions-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .action-count {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .action-row:hover {
+    background: var(--bg-secondary);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(4px);
+  }
+
+  .action-marker {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .action-details {
+    flex: 1;
+  }
+
+  .action-details p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .action-arrow {
+    width: 20px;
+    height: 20px;
+    color: var(--text-tertiary);
+    opacity: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .action-row:hover .action-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+    color: var(--primary);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .canvas-container {
+      grid-template-columns: 1fr;
+    }
+
+    .metrics-dashboard {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .wealth-canvas {
+      padding: 16px;
+    }
+
+    .metrics-dashboard {
+      grid-template-columns: 1fr;
+    }
+
+    .kpi-digits {
+      font-size: 40px;
+    }
+
+    .kpi-range {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .range-divider {
+      width: 100%;
+      height: 1px;
+    }
+
+    .chart-legend {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
+  }
+
+  /* Remove number input spinners */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+</style>

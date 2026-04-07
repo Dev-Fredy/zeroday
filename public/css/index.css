@@ -1,78 +1,52 @@
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 100%;
-  box-sizing: inherit;
-  background-color: whitesmoke;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-h1 {
-  margin: 0;
-  padding: 0;
-  padding-bottom: 0.1;
-}
-
-h2 {
-  margin: 0;
-  padding: 0;
-  padding-bottom: 0.9rem;
-}
-
-h3 {
-  margin: 0;
-  padding: 0;
-  padding-bottom: 0.8rem;
-}
-
-h4 {
-  margin: 0;
-  padding: 0;
-  padding-bottom: 0.7rem;
-}
-
-h5 {
-  margin: 0;
-  padding: 0;
-  padding-bottom: 0.6rem;
-}
-
-h6 {
-  margin: 0;
-  padding: 0;
-  padding-bottom: 0.5rem;
-}
-
-p {
-  margin: 0;
-  padding: 0;
-  margin-bottom: 0.4rem;
-}/*# sourceMappingURL=index.css.map */  body {
-    gap: 0.2rem;
-  }
-}
-
-main {
+.simulations {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
+.simulations .burn {
+  flex: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.simulations .burn section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.simulations .burn section div {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  flex-direction: column;
+}
+.simulations .burn section div div {
+  flex: 0.5;
+}
+.simulations .burn section div a {
+  width: -moz-max-content;
+  width: max-content;
+  margin-inline: auto;
+}
+.simulations .burn section .lifestyle {
+  flex: 1;
+}
 
-.skeleton {
-  width: inherit;
-  height: inherit;
-  border-radius: inherit;
-  background-color: rgba(128, 128, 128, 0.2);
+.burnChart {
+  background-color: white;
+  border-radius: 0.4rem;
+  width: -moz-max-content;
+  width: max-content;
+  text-align: center;
+  height: 300px;
+}
+
+.burnSection {
+  flex: 1;
+  margin-inline: auto;
+}
+.burnSection h3 {
+  text-align: center;
+}/*# sourceMappingURL=index.css.map */ackground-color: rgba(128, 128, 128, 0.2);
 }
 
 header {
